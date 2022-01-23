@@ -1,0 +1,37 @@
+#include "stringutils.h"
+
+const string whiteSpaces(" \f\n\r\t\v");
+
+void StringUtils::trimRight(string& str)
+{
+	string::size_type pos = str.find_last_not_of(whiteSpaces);
+	str.erase(pos + 1);
+}
+
+void StringUtils::trimLeft(string& str)
+{
+	string::size_type pos = str.find_first_not_of(whiteSpaces);
+	str.erase(0, pos);
+}
+
+void StringUtils::trim(string& str)
+{
+	trimRight(str);
+	trimLeft(str);
+}
+
+//what does this template do?
+template <typename Out>
+void StringUtils::split(const std::string& s, char delim, Out result) {
+	std::istringstream iss(s);
+	std::string item;
+	while (std::getline(iss, item, delim)) {
+		*result++ = item;
+	}
+}
+
+std::vector<std::string> StringUtils::split(const std::string& s, char delim) {
+	std::vector<std::string> elems;
+	split(s, delim, std::back_inserter(elems));
+	return elems;
+}
