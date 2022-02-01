@@ -32,13 +32,11 @@ void Game::play() {
 	bool illegalMove = false;
 
 	while (!endOfGame()) {
-		Console::printBoard(color, board, illegalMove);
-		Console::printNodes(nodes, searchTime);
-
+		
 		Movelist movelist = Movelist();
 		movelist.generateMoves(color, board);
 
-		string input = Console::getUserInput(color, board);
+		string input = "";
 
 		Move move;
 		if (input == "e") {

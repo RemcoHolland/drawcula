@@ -48,8 +48,8 @@ void Perft::printRootNodes(Move move) {
 
 	int square_from = Utils::getLS1B(move.getFrom());
 	int square_to = Utils::getLS1B(move.getTo());
-	char promotion = ConsoleUtils::getPromotion(move.getPromotion());
+	char promotion = Piece::getPromotion(move.getPromotion());
 
-	std::cout << ConsoleUtils::getFile(square_from) << ConsoleUtils::getRank(square_from) << ConsoleUtils::getFile(square_to) << ConsoleUtils::getRank(square_to) << promotion << ' ' << root_nodes << std::endl;
+	std::cout << StringUtils::getFile(square_from) << StringUtils::getRank(square_from) << StringUtils::getFile(square_to) << StringUtils::getRank(square_to) << promotion << ' ' << root_nodes << std::endl;
 
 }

@@ -8,6 +8,10 @@ using std::string;
 
 namespace StringUtils
 {
+	int getSquare(char, char);
+	char getRank(int);
+	char getFile(int);
+
 	void trimRight(string&);
 	void trimLeft(string&);
 	void trim(string&);

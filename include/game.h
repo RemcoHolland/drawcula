@@ -4,7 +4,6 @@
 #include <list>
 #include <algorithm>
 #include "board.h"
-#include "console.h"
 #include "movelist.h"
 #include "search.h"
 #include "color.h"

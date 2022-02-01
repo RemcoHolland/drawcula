@@ -25,7 +25,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(drawculatest test/main.cpp test/perft_startposition.cpp test/perft_complexpositions test/matepositions.cpp test/stalematepositions.cpp src/perft.cpp src/magicmoves.cpp src/square.cpp src/stringutils.cpp src/moveinfo.cpp src/consoleutils.cpp src/utils.cpp src/move.cpp src/board.cpp src/movelist.cpp src/fenreader.cpp src/feninfo.cpp src/movelist.cpp src/search.cpp src/evaluation.cpp src/game.cpp src/console.cpp src/uci.cpp)
+add_executable(drawculatest test/main.cpp test/perft_startposition.cpp test/perft_complexpositions test/matepositions.cpp test/stalematepositions.cpp src/perft.cpp src/magicmoves.cpp src/square.cpp src/stringutils.cpp src/moveinfo.cpp src/piece.cpp src/utils.cpp src/move.cpp src/board.cpp src/movelist.cpp src/fenreader.cpp src/feninfo.cpp src/movelist.cpp src/search.cpp src/evaluation.cpp src/game.cpp src/uci.cpp)
 
 target_link_libraries(
   drawculatest

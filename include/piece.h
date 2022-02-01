@@ -1,4 +1,5 @@
 #pragma once
+#include "color.h"
 
 const int NO_PIECE = -1;
 const int WHITE_PAWN = 0;
@@ -16,3 +17,11 @@ const int BLACK_KING = 11;
 
 const int NR_PIECES = 6;
 const int TOTAL_PIECES = 12;
+
+class Piece {
+public:
+	Piece();
+	static char getPromotion(int);
+	static int getPromotion(char, int);
+	~Piece();
+};

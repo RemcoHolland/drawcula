@@ -1,11 +1,13 @@
 #pragma once
 
 #include <iostream>
-
 #include "board.h"
 #include "movelist.h"
 #include "utils.h"
-#include "consoleutils.h"
+#include "stringutils.h"
+
+using StringUtils::getFile;
+using StringUtils::getRank;
 
 class Perft {
 public:

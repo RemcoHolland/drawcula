@@ -2,6 +2,19 @@
 
 const string whiteSpaces(" \f\n\r\t\v");
 
+int StringUtils::getSquare(char file, char rank) {
+	int square = (file - 97) + (rank - 49) * 8;	// 97 and 49 are ascii codes
+	return square;
+}
+
+char StringUtils::getRank(int square) {
+	return (int)(square / 8) + 49;
+}
+
+char StringUtils::getFile(int square) {
+	return (int)(square % 8) + 97;;
+}
+
 void StringUtils::trimRight(string& str)
 {
 	string::size_type pos = str.find_last_not_of(whiteSpaces);

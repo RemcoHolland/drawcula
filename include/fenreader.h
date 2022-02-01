@@ -9,11 +9,13 @@
 #include "color.h"
 #include "castling.h"
 #include "utils.h"
-#include "consoleutils.h"
 #include "stringutils.h"
 
 using std::string;
+using StringUtils::getSquare;
+using StringUtils::trim;
 using StringUtils::split;
+
 
 class FenReader {
 public:

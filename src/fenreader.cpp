@@ -98,7 +98,7 @@ int FenReader::getCastlingRight(char castling_char) {
 }
 
 uint64_t FenReader::getEnpassantSquare(char file, char rank) {
-	return Utils::getPower(ConsoleUtils::getSquare(file, rank));
+	return Utils::getPower(StringUtils::getSquare(file, rank));
 }
 
 int FenReader::getNumber(char number) {
