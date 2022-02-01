@@ -79,7 +79,7 @@ void Uci::position(string input) {
 void Uci::go(string input) {
 	g_stop = false;
 	struct Time time;
-	int max_depth = INT_MAX;
+	int max_depth = std::numeric_limits<int>::max();
 
 	std::vector<string> commands = split(input, ' ');
 	for (std::vector<string>::size_type i = 0; i != commands.size(); i++) {
@@ -98,9 +98,9 @@ void Uci::go(string input) {
 			++i;
 		} else if (commands[i] == "depth") {
 			max_depth = std::stoi(commands[++i]);
-			time.movetime = std::chrono::milliseconds(LLONG_MAX);
+			time.movetime = std::chrono::milliseconds(std::numeric_limits<long long>::max());
 		} else if (commands[i] == "infinite") {
-			time.movetime = std::chrono::milliseconds(LLONG_MAX);
+			time.movetime = std::chrono::milliseconds(std::numeric_limits<long long>::max());
 		}
 	}
 	Search search = Search();

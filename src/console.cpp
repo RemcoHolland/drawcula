@@ -25,12 +25,7 @@ void Console::printBoard(int color, Board board, bool illegalMove) {
 
 		for (int j = (Board::SQUARES - Board::FILES - i * Board::RANKS); j < (Board::SQUARES - i * Board::RANKS); j++) {
 
-			char piece = getPieceChar(Utils::getPower(j), board);
-			if (piece <= upper_case) {
-				std::cout << "|  " << green << piece << cwhite << "  ";
-			} else {
-				std::cout << "|  " << red << piece << cwhite << "  ";
-			}
+			char piece = getPieceChar(Utils::getPower(j), board);			
 		}
 		std::cout << "|" << std::endl << split << std::endl;
 	}

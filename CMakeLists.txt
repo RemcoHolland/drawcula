@@ -1,11 +1,8 @@
-﻿# CMakeList.txt : CMake project for drawcula, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.8)
 
 project ("drawcula")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 # Bring the headers into the project
 include_directories(include)

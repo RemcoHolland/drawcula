@@ -4,7 +4,6 @@
 #include <string>
 #include <regex>
 
-#include "consolecolor.h"
 #include "consoleutils.h"
 #include "perft.h"
 

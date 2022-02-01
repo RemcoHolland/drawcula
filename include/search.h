@@ -1,6 +1,5 @@
 #include <list>
 #include <iostream>
-#include <conio.h>
 #include <chrono>
 #include <vector>
 #include <cmath>
