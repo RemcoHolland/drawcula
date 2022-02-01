@@ -40,12 +40,13 @@ public:
 	static const uint64_t QUEEN_SIDE_SQUARES = B1 | C1 | D1;
 
 	Board(FenInfo);
+	void setPosition(FenInfo);
 	uint64_t getPiece(int);
 	uint64_t getOccupiedBB();
 	uint64_t getColorBB(int);
 	uint64_t getKnightMoves(int);
 	uint64_t getKingMoves(int);
-	uint64_t getEnpassantSquare();	
+	uint64_t getEnpassantSquare();
 	int getCastlingRights();
 	MoveInfo makeMove(int, Move);
 	void unmakeMove(int, Move, MoveInfo);

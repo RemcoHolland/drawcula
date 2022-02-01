@@ -9,6 +9,16 @@ bool Movelist::containsMove(Move move) {
 	return found;
 }
 
+Move Movelist::getLegalMove(Move move) {
+	for (std::list<Move>::iterator it = moves.begin(); it != moves.end(); ++it) {
+		Move legalMove = *it;
+		if (legalMove == move) {
+			return move;
+		}
+	}
+	throw std::invalid_argument("Illegal move specified");
+}
+
 void Movelist::generateMoves(int color, Board board) {
 	if (color == WHITE) {
 		whitePawnsPush(board);
@@ -21,8 +31,7 @@ void Movelist::generateMoves(int color, Board board) {
 		whiteRookMoves(board);
 		whiteQueenMoves(board);
 		whiteKingMoves(board);
-	}
-	else {
+	} else {
 		blackPawnsPush(board);
 		blackPawnsDoublePush(board);
 		blackPawnsCaptureLeft(board);
@@ -52,8 +61,7 @@ void Movelist::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_
 				Move move = Move(piece, from, to, flag, promotion);
 				moves.push_back(move);
 			}
-		}
-		else {
+		} else {
 			Move move = Move(piece, from, to, flag);
 			moves.push_back(move);
 		}

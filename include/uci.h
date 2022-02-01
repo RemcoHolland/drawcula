@@ -1,7 +1,9 @@
 #pragma once
-#include "game.h"
 #include "stringutils.h"
 #include "perft.h"
+#include "movelist.h"
+#include "fenreader.h"
+#include "search.h"
 #include <iostream>
 #include <string>
 #include <chrono>
@@ -20,8 +22,11 @@ public:
 	~Uci();
 
 private:
+	int color = WHITE;
+	int half_moves = 0;
+	int full_moves = 1;
 	const string startpos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-	Game game = Game();
+	Board board = Board(FenReader::read(startpos));
 	void uci();
 	void ucinewgame();
 	void isready();
@@ -31,4 +36,5 @@ private:
 	void stop();
 	bool startsWith(string, string);
 	bool contains(string, string);
+	void changeColor();
 };

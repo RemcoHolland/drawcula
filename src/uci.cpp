@@ -45,11 +45,7 @@ void Uci::uci() {
 }
 
 void Uci::ucinewgame() {
-	// check if this works...
-	// otherwise, just clear all variables in 'game' object
-	// TODO: make engine stateless, i.e. remove Game class
-	(&game)->~Game();
-	new (&game) Game();
+	;
 }
 
 void Uci::isready() {
@@ -57,21 +53,31 @@ void Uci::isready() {
 }
 
 void Uci::position(string input) {
+	string fenStr;
 	if (startsWith(input, "startpos")) {
-		game.setPosition(FenReader::read(startpos));
+		fenStr = startpos;
 	} else if (startsWith(input, "fen")) {
 		string fen = input.substr(3);
 		fen = fen.substr(0, fen.find("moves"));
 		trim(fen);
-		game.setPosition(FenReader::read(fen));
+		fenStr = fen;
 	}
+	FenInfo position = FenInfo(FenReader::read(fenStr));
+	board.setPosition(position);
+	color = position.getColor();
+	half_moves = position.getHalfMoves(); // not used at the moment
+	full_moves = position.getFullMoves(); // not used at the moment
+
 	if (contains(input, "moves")) {
 		string moves = input.substr(input.find("moves") + 5);
 		trim(moves);
 		std::vector<std::string> stringMoves = split(moves, ' ');
-		for (string move : stringMoves) {
+		for (string moveStr : stringMoves) {
 			// TODO: remove color here
-			game.doMove(Move(move, game.color));
+			Movelist movelist = Movelist();
+			movelist.generateMoves(color, board);
+			Move move = movelist.getLegalMove(Move(moveStr, color));
+			board.makeMove(color, move);
 		}
 	}
 }
@@ -105,14 +111,14 @@ void Uci::go(string input) {
 	}
 	Search search = Search();
 	time.startTime = std::chrono::steady_clock::now();
-	std::thread t1(&Search::start, search, game.color, max_depth, game.board, time);
+	std::thread t1(&Search::start, search, color, max_depth, board, time);
 	t1.detach();
 }
 
 void Uci::perft(bool divide, string input) {
 	int depth = std::stoi(input);
 	Perft perft = Perft(divide, depth);
-	std::thread t1(&Perft::calculate, perft, game.color, game.board);
+	std::thread t1(&Perft::calculate, perft, color, board);
 	t1.detach();
 }
 
@@ -120,8 +126,7 @@ void Uci::stop() {
 	g_stop = true;
 }
 
-bool Uci::startsWith(string mainStr, string toMatch)
-{
+bool Uci::startsWith(string mainStr, string toMatch) {
 	return mainStr.find(toMatch) == 0;
 }
 
@@ -129,7 +134,9 @@ bool Uci::contains(string mainStr, string toMatch) {
 	return mainStr.find(toMatch) != std::string::npos;
 }
 
-Uci::~Uci() {
+void Uci::changeColor() {
+	color ^= 1;
 }
 
-
+Uci::~Uci() {
+}

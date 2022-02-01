@@ -4,6 +4,10 @@ Board::Board(FenInfo fenInfo) {
 	init(fenInfo);
 }
 
+void Board::setPosition(FenInfo fenInfo) {
+	init(fenInfo);
+}
+
 uint64_t Board::getPiece(int piece) {
 	return piece_list[piece];
 }
