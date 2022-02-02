@@ -8,10 +8,6 @@ void Board::setPosition(FenInfo fenInfo) {
 	init(fenInfo);
 }
 
-uint64_t Board::getPiece(int piece) {
-	return piece_list[piece];
-}
-
 uint64_t Board::getOccupiedBB() {
 	return occupiedBB;
 }

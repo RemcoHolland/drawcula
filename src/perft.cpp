@@ -30,7 +30,7 @@ void Perft::negaMax(int color, Board board, int depth) {
 		Move move = *it;
 		MoveInfo moveInfo = board.makeMove(color, move);
 
-		if (!Square::isAttacked(color, board, board.getPiece(color == WHITE ? WHITE_KING : BLACK_KING))) {
+		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			negaMax(color ^ 1, board, depth - 1);
 
 			if (divide && depth == search_depth) {

@@ -90,28 +90,28 @@ void Movelist::addPieceMoves(int piece, uint64_t from, uint64_t to_squares, uint
 }
 
 void Movelist::whitePawnsPush(Board board) {
-	uint64_t to_squares = (board.getPiece(WHITE_PAWN) << 8) & ~board.getOccupiedBB();
+	uint64_t to_squares = (board.piece_list[WHITE_PAWN] << 8) & ~board.getOccupiedBB();
 	uint64_t from_squares = to_squares >> 8;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::NO_FLAG);
 }
 
 void Movelist::whitePawnsDoublePush(Board board) {
-	uint64_t to_squares = ((((board.getPiece(WHITE_PAWN) & Board::RANK_2) << 8) & ~board.getOccupiedBB()) << 8) & ~board.getOccupiedBB();
+	uint64_t to_squares = ((((board.piece_list[WHITE_PAWN] & Board::RANK_2) << 8) & ~board.getOccupiedBB()) << 8) & ~board.getOccupiedBB();
 	uint64_t from_squares = to_squares >> 16;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::DOUBLE_PUSH);
 }
 
 void Movelist::whitePawnsCaptureLeft(Board board) {
-	uint64_t to_squares = ((board.getPiece(WHITE_PAWN) & ~Board::FILE_1) << 7) & board.getColorBB(BLACK);
+	uint64_t to_squares = ((board.piece_list[WHITE_PAWN] & ~Board::FILE_1) << 7) & board.getColorBB(BLACK);
 	uint64_t from_squares = to_squares >> 7;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::CAPTURE);
 }
 
 void Movelist::whitePawnsCaptureRight(Board board) {
-	uint64_t to_squares = ((board.getPiece(WHITE_PAWN) & ~Board::FILE_8) << 9) & board.getColorBB(BLACK);
+	uint64_t to_squares = ((board.piece_list[WHITE_PAWN] & ~Board::FILE_8) << 9) & board.getColorBB(BLACK);
 	uint64_t from_squares = to_squares >> 9;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::CAPTURE);
@@ -121,35 +121,35 @@ void Movelist::whitePawnsEnpassant(Board board) {
 	uint64_t enpassant_square = board.getEnpassantSquare();
 
 	if (enpassant_square != 0) {
-		uint64_t from_squares = ((enpassant_square >> 9) | (enpassant_square >> 7)) & board.getPiece(WHITE_PAWN) & Board::RANK_5;
+		uint64_t from_squares = ((enpassant_square >> 9) | (enpassant_square >> 7)) & board.piece_list[WHITE_PAWN] & Board::RANK_5;
 
 		addEnPassantMoves(WHITE_PAWN, from_squares, enpassant_square);
 	}
 }
 
 void Movelist::blackPawnsPush(Board board) {
-	uint64_t to_squares = (board.getPiece(BLACK_PAWN) >> 8) & ~board.getOccupiedBB();
+	uint64_t to_squares = (board.piece_list[BLACK_PAWN] >> 8) & ~board.getOccupiedBB();
 	uint64_t from_squares = to_squares << 8;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::NO_FLAG);
 }
 
 void Movelist::blackPawnsDoublePush(Board board) {
-	uint64_t to_squares = ((((board.getPiece(BLACK_PAWN) & Board::RANK_7) >> 8) & ~board.getOccupiedBB()) >> 8) & ~board.getOccupiedBB();
+	uint64_t to_squares = ((((board.piece_list[BLACK_PAWN] & Board::RANK_7) >> 8) & ~board.getOccupiedBB()) >> 8) & ~board.getOccupiedBB();
 	uint64_t from_squares = to_squares << 16;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::DOUBLE_PUSH);
 }
 
 void Movelist::blackPawnsCaptureLeft(Board board) {
-	uint64_t to_squares = ((board.getPiece(BLACK_PAWN) & ~Board::FILE_1) >> 9) & board.getColorBB(WHITE);
+	uint64_t to_squares = ((board.piece_list[BLACK_PAWN] & ~Board::FILE_1) >> 9) & board.getColorBB(WHITE);
 	uint64_t from_squares = to_squares << 9;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::CAPTURE);
 }
 
 void Movelist::blackPawnsCaptureRight(Board board) {
-	uint64_t to_squares = ((board.getPiece(BLACK_PAWN) & ~Board::FILE_8) >> 7) & board.getColorBB(WHITE);
+	uint64_t to_squares = ((board.piece_list[BLACK_PAWN] & ~Board::FILE_8) >> 7) & board.getColorBB(WHITE);
 	uint64_t from_squares = to_squares << 7;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::CAPTURE);
@@ -159,14 +159,14 @@ void Movelist::blackPawnsEnpassant(Board board) {
 	uint64_t enpassant_square = board.getEnpassantSquare();
 
 	if (enpassant_square != 0) {
-		uint64_t from_squares = ((enpassant_square << 9) | (enpassant_square << 7)) & board.getPiece(BLACK_PAWN) & Board::RANK_4;
+		uint64_t from_squares = ((enpassant_square << 9) | (enpassant_square << 7)) & board.piece_list[BLACK_PAWN] & Board::RANK_4;
 
 		addEnPassantMoves(BLACK_PAWN, from_squares, enpassant_square);
 	}
 }
 
 void Movelist::whiteKnightMoves(Board board) {
-	uint64_t knights = board.getPiece(WHITE_KNIGHT);
+	uint64_t knights = board.piece_list[WHITE_KNIGHT];
 
 	while (knights != 0) {
 		uint64_t from = Utils::getLSB(knights);
@@ -179,7 +179,7 @@ void Movelist::whiteKnightMoves(Board board) {
 }
 
 void Movelist::blackKnightMoves(Board board) {
-	uint64_t knights = board.getPiece(BLACK_KNIGHT);
+	uint64_t knights = board.piece_list[BLACK_KNIGHT];
 
 	while (knights != 0) {
 		uint64_t from = Utils::getLSB(knights);
@@ -192,7 +192,7 @@ void Movelist::blackKnightMoves(Board board) {
 }
 
 void Movelist::whiteBishopMoves(Board board) {
-	uint64_t bishops = board.getPiece(WHITE_BISHOP);
+	uint64_t bishops = board.piece_list[WHITE_BISHOP];
 
 	while (bishops != 0) {
 		uint64_t from = Utils::getLSB(bishops);
@@ -205,7 +205,7 @@ void Movelist::whiteBishopMoves(Board board) {
 }
 
 void Movelist::blackBishopMoves(Board board) {
-	uint64_t bishops = board.getPiece(BLACK_BISHOP);
+	uint64_t bishops = board.piece_list[BLACK_BISHOP];
 
 	while (bishops != 0) {
 		uint64_t from = Utils::getLSB(bishops);
@@ -218,7 +218,7 @@ void Movelist::blackBishopMoves(Board board) {
 }
 
 void Movelist::whiteRookMoves(Board board) {
-	uint64_t rooks = board.getPiece(WHITE_ROOK);
+	uint64_t rooks = board.piece_list[WHITE_ROOK];
 
 	while (rooks != 0) {
 		uint64_t from = Utils::getLSB(rooks);
@@ -231,7 +231,7 @@ void Movelist::whiteRookMoves(Board board) {
 }
 
 void Movelist::blackRookMoves(Board board) {
-	uint64_t rooks = board.getPiece(BLACK_ROOK);
+	uint64_t rooks = board.piece_list[BLACK_ROOK];
 
 	while (rooks != 0) {
 		uint64_t from = Utils::getLSB(rooks);
@@ -244,7 +244,7 @@ void Movelist::blackRookMoves(Board board) {
 }
 
 void Movelist::whiteQueenMoves(Board board) {
-	uint64_t queens = board.getPiece(WHITE_QUEEN);
+	uint64_t queens = board.piece_list[WHITE_QUEEN];
 
 	while (queens != 0) {
 		uint64_t from = Utils::getLSB(queens);
@@ -257,7 +257,7 @@ void Movelist::whiteQueenMoves(Board board) {
 }
 
 void Movelist::blackQueenMoves(Board board) {
-	uint64_t queens = board.getPiece(BLACK_QUEEN);
+	uint64_t queens = board.piece_list[BLACK_QUEEN];
 
 	while (queens != 0) {
 		uint64_t from = Utils::getLSB(queens);
@@ -270,7 +270,7 @@ void Movelist::blackQueenMoves(Board board) {
 }
 
 void Movelist::whiteKingMoves(Board board) {
-	uint64_t from = board.getPiece(WHITE_KING);
+	uint64_t from = board.piece_list[WHITE_KING];
 	int from_nr = Utils::getLS1B(from);
 	uint64_t to_squares = board.getKingMoves(from_nr) & ~board.getColorBB(WHITE);
 
@@ -278,7 +278,7 @@ void Movelist::whiteKingMoves(Board board) {
 }
 
 void Movelist::blackKingMoves(Board board) {
-	uint64_t from = board.getPiece(BLACK_KING);
+	uint64_t from = board.piece_list[BLACK_KING];
 	int from_nr = Utils::getLS1B(from);
 	uint64_t to_squares = board.getKingMoves(from_nr) & ~board.getColorBB(BLACK);
 
@@ -292,7 +292,7 @@ void Movelist::castling(int color, Board board) {
 		uint64_t short_castle = Board::KING_SIDE_SQUARES << color * 56;
 		if ((~board.getOccupiedBB() & short_castle) == short_castle) {
 			int king = WHITE_KING + color * NR_PIECES;
-			uint64_t king_square = board.getPiece(king);
+			uint64_t king_square = board.piece_list[king];
 
 			// TODO: delay isAttacked to the search algorithm
 			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square << 1)))) {
@@ -305,7 +305,7 @@ void Movelist::castling(int color, Board board) {
 		uint64_t long_castle = Board::QUEEN_SIDE_SQUARES << color * 56;
 		if ((~board.getOccupiedBB() & long_castle) == long_castle) {
 			int king = WHITE_KING + color * NR_PIECES;
-			uint64_t king_square = board.getPiece(king);
+			uint64_t king_square = board.piece_list[king];
 
 			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square >> 1)))) {
 				Move move = Move(king, king_square, king_square >> 2, Flag::CASTLING);

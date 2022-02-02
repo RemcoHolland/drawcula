@@ -59,7 +59,7 @@ int Search::negaMax(int color, int depth, Board& board, std::vector<Move>& PV) {
 		MoveInfo moveInfo = board.makeMove(color, move);
 		std::vector<Move> childPV;
 
-		if (!Square::isAttacked(color, board, board.getPiece(color == WHITE ? WHITE_KING : BLACK_KING))) {
+		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			int score = -negaMax(color ^ 1, depth - 1, board, childPV);
 			if (score > max) {
 				max = score;
@@ -70,7 +70,7 @@ int Search::negaMax(int color, int depth, Board& board, std::vector<Move>& PV) {
 	}
 	// no legal moves found, must be mate or stalemate
 	if (max == -std::numeric_limits<int>::max())
-		if (Square::isAttacked(color, board, board.getPiece(color == WHITE ? WHITE_KING : BLACK_KING))) {
+		if (Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			max = -MATE - depth; // prefer mate at larger depths as the losing side
 		} else {
 			max = STALE_MATE;

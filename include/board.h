@@ -41,7 +41,8 @@ public:
 
 	Board(FenInfo);
 	void setPosition(FenInfo);
-	uint64_t getPiece(int);
+
+	uint64_t piece_list[TOTAL_PIECES];
 	uint64_t getOccupiedBB();
 	uint64_t getColorBB(int);
 	uint64_t getKnightMoves(int);
@@ -57,8 +58,7 @@ private:
 	uint64_t occupiedBB;
 	uint64_t colorBB[2] = { 0 };
 	uint64_t enpassant_square = 0;
-	uint64_t piece_list[TOTAL_PIECES];
-
+	
 	//TODO: init pawn moves;
 	const uint64_t PAWN_MOVES[64] = {
 
