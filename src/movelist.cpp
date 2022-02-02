@@ -286,7 +286,7 @@ void Movelist::blackKingMoves(Board board) {
 }
 
 void Movelist::castling(int color, Board board) {
-	int castling_rights = board.getCastlingRights();
+	int castling_rights = board.castling_rights;
 
 	if (castling_rights & (Castling::KING_SIDE << color)) {
 		uint64_t short_castle = Board::KING_SIDE_SQUARES << color * 56;

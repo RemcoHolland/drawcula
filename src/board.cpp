@@ -8,10 +8,6 @@ void Board::setPosition(FenInfo fenInfo) {
 	init(fenInfo);
 }
 
-int Board::getCastlingRights() {
-	return castling_rights;
-}
-
 MoveInfo Board::makeMove(int color, Move move) {
 	occupiedBB = occupiedBB - move.getFrom() + move.getTo();
 	colorBB[color] = colorBB[color] - move.getFrom() + move.getTo();
