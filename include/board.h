@@ -43,22 +43,8 @@ public:
 	void setPosition(FenInfo);
 
 	uint64_t piece_list[TOTAL_PIECES];
-	uint64_t getOccupiedBB();
-	uint64_t getColorBB(int);
-	uint64_t getKnightMoves(int);
-	uint64_t getKingMoves(int);
-	uint64_t getEnpassantSquare();
-	int getCastlingRights();
-	MoveInfo makeMove(int, Move);
-	void unmakeMove(int, Move, MoveInfo);
-	~Board();
-
-private:
-	int castling_rights;
-	uint64_t occupiedBB;
+	uint64_t occupiedBB = 0;
 	uint64_t colorBB[2] = { 0 };
-	uint64_t enpassant_square = 0;
-	
 	//TODO: init pawn moves;
 	const uint64_t PAWN_MOVES[64] = {
 
@@ -86,6 +72,19 @@ private:
 		144959613005987840, 362258295026614272, 724516590053228544,	 1449033180106457088, 2898066360212914176, 5796132720425828352, 11592265440851656704, 4665729213955833856
 	};
 
+	uint64_t enpassant_square = 0;
+	int getCastlingRights();
+	MoveInfo makeMove(int, Move);
+	void unmakeMove(int, Move, MoveInfo);
+	~Board();
+
+private:
+	int castling_rights;
+
+
+	
+
+	
 	void init(FenInfo);
 	void setEnPassantSquare(int, Move);
 	void setCastlingRights(int, uint64_t, uint64_t);

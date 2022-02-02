@@ -8,26 +8,6 @@ void Board::setPosition(FenInfo fenInfo) {
 	init(fenInfo);
 }
 
-uint64_t Board::getOccupiedBB() {
-	return occupiedBB;
-}
-
-uint64_t Board::getColorBB(int color) {
-	return colorBB[color];
-}
-
-uint64_t Board::getKnightMoves(int from) {
-	return KNIGHT_MOVES[from];
-}
-
-uint64_t Board::getKingMoves(int from) {
-	return KING_MOVES[from];
-}
-
-uint64_t Board::getEnpassantSquare() {
-	return enpassant_square;
-}
-
 int Board::getCastlingRights() {
 	return castling_rights;
 }
