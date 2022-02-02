@@ -7,14 +7,14 @@ uint64_t Search::getNodes() {
 	return nodes;
 }
 
-void Search::start(int color, int max_depth, Board board, Time time) {
+void Search::start(int color, int max_depth, Board& board, const Time& time) {
 	int depth{ 1 };
 	this->time = time;
 	std::vector<Move> currentPV;
 	std::vector<Move> PV;
 
 	do {
-		int score = negaMax(color, board, depth, currentPV);
+		int score = negaMax(color, depth, board, currentPV);
 		if (g_stop == false) {
 			string scoreStr;
 			if (std::abs(score) >= MATE) {
@@ -35,7 +35,7 @@ void Search::start(int color, int max_depth, Board board, Time time) {
 }
 
 //Improvement: make a root negaMax, see chess programming network.
-int Search::negaMax(int color, Board board, int depth, std::vector<Move>& PV) {
+int Search::negaMax(int color, int depth, Board& board, std::vector<Move>& PV) {
 	if (g_stop) {
 		return 0;
 	}
@@ -60,7 +60,7 @@ int Search::negaMax(int color, Board board, int depth, std::vector<Move>& PV) {
 		std::vector<Move> childPV;
 
 		if (!Square::isAttacked(color, board, board.getPiece(color == WHITE ? WHITE_KING : BLACK_KING))) {
-			int score = -negaMax(color ^ 1, board, depth - 1, childPV);
+			int score = -negaMax(color ^ 1, depth - 1, board, childPV);
 			if (score > max) {
 				max = score;
 				updatePV(PV, childPV, move);

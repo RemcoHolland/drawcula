@@ -29,7 +29,7 @@ class Search {
 public:
 	Search();
 	uint64_t getNodes();
-	void start(int, int, Board, Time);
+	void start(int, int, Board&, const Time&);
 	~Search();
 
 private:
@@ -39,7 +39,7 @@ private:
 	Time time;
 	uint64_t nodes{ 0 };
 
-	int negaMax(int, Board, int, std::vector<Move>&);
+	int negaMax(int, int, Board&, std::vector<Move>&);
 	bool timeToMove(int);
 	void updatePV(std::vector<Move>&, std::vector<Move>, Move);
 	string printPV(std::vector<Move>);
