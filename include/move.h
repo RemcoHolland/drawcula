@@ -22,7 +22,7 @@ public:
 	uint64_t to;
 	Flag flag;
 	int promotion;
-	bool operator==(const Move other);
+	bool operator==(const Move& other);
 	string toString();
 	~Move();
 

@@ -8,7 +8,7 @@ void Board::setPosition(FenInfo fenInfo) {
 	init(fenInfo);
 }
 
-MoveInfo Board::makeMove(int color, Move move) {
+MoveInfo Board::makeMove(int color, const Move& move) {
 	occupiedBB = occupiedBB - move.from + move.to;
 	colorBB[color] = colorBB[color] - move.from + move.to;
 	piece_list[move.piece] = piece_list[move.piece] - move.from + move.to;
@@ -58,7 +58,7 @@ MoveInfo Board::makeMove(int color, Move move) {
 	return MoveInfo(captured_piece, enpassant_square, current_castling_rights);
 }
 
-void Board::unmakeMove(int color, Move move, MoveInfo moveInfo) {
+void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
 	// Unmake can be made faster by setting a pointer to the unmake info. 
 	occupiedBB = occupiedBB + move.from - move.to;
 	colorBB[color] = colorBB[color] + move.from - move.to;
@@ -68,7 +68,7 @@ void Board::unmakeMove(int color, Move move, MoveInfo moveInfo) {
 	if (move.flag == Flag::CAPTURE) {
 		occupiedBB += move.to;
 		colorBB[color ^ 1] += move.to;
-		piece_list[moveInfo.getCapturedPiece()] += move.to;
+		piece_list[moveInfo.captured_piece] += move.to;
 	} else if (move.flag == Flag::EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? move.to >> 8 : move.to << 8;
@@ -95,8 +95,8 @@ void Board::unmakeMove(int color, Move move, MoveInfo moveInfo) {
 		piece_list[move.promotion] -= move.to;
 	}
 
-	enpassant_square = moveInfo.getEnpassantSquare();
-	castling_rights = moveInfo.getCastlingRights();
+	enpassant_square = moveInfo.enpassant_square;
+	castling_rights = moveInfo.castling_rights;
 }
 
 void Board::init(FenInfo fenInfo) {
@@ -118,7 +118,7 @@ void Board::init(FenInfo fenInfo) {
 	castling_rights = fenInfo.getCastlingRights();
 }
 
-void Board::setEnPassantSquare(int color, Move move) {
+void Board::setEnPassantSquare(int color, const Move& move) {
 	if (move.flag == Flag::DOUBLE_PUSH) {
 		enpassant_square = color == WHITE ? move.to >> 8 : move.to << 8;
 	} else {

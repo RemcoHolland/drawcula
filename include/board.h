@@ -75,14 +75,14 @@ public:
 	uint64_t enpassant_square = 0;
 	int castling_rights;
 
-	MoveInfo makeMove(int, Move);
-	void unmakeMove(int, Move, MoveInfo);
+	MoveInfo makeMove(int, const Move&);
+	void unmakeMove(int, const Move&, const MoveInfo&);
 	~Board();
 
-private:	
-	
+private:
+
 	void init(FenInfo);
-	void setEnPassantSquare(int, Move);
+	void setEnPassantSquare(int, const Move&);
 	void setCastlingRights(int, uint64_t, uint64_t);
 };
 
