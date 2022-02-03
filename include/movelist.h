@@ -15,7 +15,6 @@ class Movelist {
 
 public:
 	Movelist();
-	bool containsMove(const Move&);
 	Move getLegalMove(const Move&);
 	void generateMoves(int, const Board&);
 	std::vector<Move> moves;

@@ -23,9 +23,6 @@ const int index64[64] = {
 	13, 18,  8, 12,  7,  6,  5, 63
 };
 
-Utils::Utils() {
-}
-
 uint64_t Utils::getPower(int exp) {
 	return power[exp];
 }
@@ -61,7 +58,4 @@ uint64_t Utils::flip1BBVertical(uint64_t bb) {
 int Utils::getLS1B(uint64_t bb) {
 	const uint64_t debruijn64 = uint64_t(0x03f79d71b4cb0a89);
 	return index64[((bb ^ (bb - 1)) * debruijn64) >> 58];
-}
-
-Utils::~Utils() {
 }

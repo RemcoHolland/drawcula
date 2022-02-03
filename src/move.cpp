@@ -1,6 +1,6 @@
 #include "move.h"
 
-Move::Move(string input, int color) {
+Move::Move(const string& input, int color) {
 	Move::piece = NO_PIECE;
 	Move::from = Utils::getPower(StringUtils::getSquare(input[0], input[1]));
 	Move::to = Utils::getPower(StringUtils::getSquare(input[2], input[3]));

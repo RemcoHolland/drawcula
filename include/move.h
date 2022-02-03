@@ -13,7 +13,7 @@ using StringUtils::getSquare;
 
 class Move {
 public:
-	Move(string, int);
+	Move(const string&, int);
 	Move(uint64_t, uint64_t);
 	Move(int, uint64_t, uint64_t, Flag);
 	Move(int, uint64_t, uint64_t, Flag, int);

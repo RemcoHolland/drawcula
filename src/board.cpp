@@ -59,7 +59,6 @@ MoveInfo Board::makeMove(int color, const Move& move) {
 }
 
 void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
-	// Unmake can be made faster by setting a pointer to the unmake info. 
 	occupiedBB = occupiedBB + move.from - move.to;
 	colorBB[color] = colorBB[color] + move.from - move.to;
 	piece_list[move.piece] = piece_list[move.piece] + move.from - move.to;

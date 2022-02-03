@@ -4,14 +4,8 @@
 Movelist::Movelist() {
 }
 
-bool Movelist::containsMove(const Move& move) {
-	bool found = (std::find(moves.begin(), moves.end(), move) != moves.end());
-	return found;
-}
-
 Move Movelist::getLegalMove(const Move& move) {
-	for (std::vector<Move>::iterator it = moves.begin(); it != moves.end(); ++it) {
-		Move legalMove = *it;
+	for (auto legalMove : moves) {
 		if (legalMove == move) {
 			return move;
 		}
@@ -114,12 +108,10 @@ void Movelist::whitePawnsCaptureRight(const Board& board) {
 }
 
 void Movelist::whitePawnsEnpassant(const Board& board) {
-	uint64_t enpassant_square = board.enpassant_square;
+	if (board.enpassant_square != 0) {
+		uint64_t from_squares = ((board.enpassant_square >> 9) | (board.enpassant_square >> 7)) & board.piece_list[WHITE_PAWN] & Board::RANK_5;
 
-	if (enpassant_square != 0) {
-		uint64_t from_squares = ((enpassant_square >> 9) | (enpassant_square >> 7)) & board.piece_list[WHITE_PAWN] & Board::RANK_5;
-
-		addEnPassantMoves(WHITE_PAWN, from_squares, enpassant_square);
+		addEnPassantMoves(WHITE_PAWN, from_squares, board.enpassant_square);
 	}
 }
 
@@ -282,9 +274,7 @@ void Movelist::blackKingMoves(const Board& board) {
 }
 
 void Movelist::castling(int color, const Board& board) {
-	int castling_rights = board.castling_rights;
-
-	if (castling_rights & (Castling::KING_SIDE << color)) {
+	if (board.castling_rights & (Castling::KING_SIDE << color)) {
 		uint64_t short_castle = Board::KING_SIDE_SQUARES << color * 56;
 		if ((~board.occupiedBB & short_castle) == short_castle) {
 			int king = WHITE_KING + color * NR_PIECES;
@@ -297,7 +287,7 @@ void Movelist::castling(int color, const Board& board) {
 			}
 		}
 	}
-	if (castling_rights & (Castling::QUEEN_SIDE << color)) {
+	if (board.castling_rights & (Castling::QUEEN_SIDE << color)) {
 		uint64_t long_castle = Board::QUEEN_SIDE_SQUARES << color * 56;
 		if ((~board.occupiedBB & long_castle) == long_castle) {
 			int king = WHITE_KING + color * NR_PIECES;
