@@ -14,6 +14,8 @@ void Search::start(int color, int max_depth, Board& board, const Time& time) {
 	std::vector<Move> PV;
 
 	do {
+		nodes = 0;
+		std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 		int score = negaMax(color, depth, board, currentPV);
 		if (g_stop == false) {
 			string scoreStr;
@@ -25,8 +27,8 @@ void Search::start(int color, int max_depth, Board& board, const Time& time) {
 				scoreStr = "cp " + std::to_string(score);
 			}
 			PV = currentPV;
-			long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - time.startTime).count();
-			searchtime = std::max(1LL, searchtime);
+			long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
+			searchtime = std::max(1LL, searchtime); // searchtime must be > 0 milliseconds
 			long long nps = nodes / searchtime * 1000;
 			std::cout << "info depth " << depth << " score " << scoreStr << " time " << searchtime << " nodes " << nodes << " nps " << nps << " pv " << printPV(currentPV) << std::endl;
 		}
