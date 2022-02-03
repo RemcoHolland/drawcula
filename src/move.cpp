@@ -1,8 +1,5 @@
 #include "move.h"
 
-Move::Move() {
-}
-
 Move::Move(string input, int color) {
 	Move::piece = NO_PIECE;
 	Move::from = Utils::getPower(StringUtils::getSquare(input[0], input[1]));
@@ -54,26 +51,6 @@ string Move::toString() {
 	}
 
 	return moveStr;
-}
-
-int Move::getPiece() {
-	return piece;
-}
-
-uint64_t Move::getFrom() {
-	return from;
-}
-
-uint64_t Move::getTo() {
-	return to;
-}
-
-Flag Move::getFlag() {
-	return flag;
-}
-
-int Move::getPromotion() {
-	return promotion;
 }
 
 Move::~Move() {
