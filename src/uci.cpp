@@ -64,9 +64,9 @@ void Uci::position(string input) {
 	}
 	FenInfo position = FenInfo(FenReader::read(fenStr));
 	board.setPosition(position);
-	color = position.getColor();
-	half_moves = position.getHalfMoves(); // not used at the moment
-	full_moves = position.getFullMoves(); // not used at the moment
+	color = position.color;
+	half_moves = position.half_moves; // not used at the moment
+	full_moves = position.full_moves; // not used at the moment
 
 	if (contains(input, "moves")) {
 		string moves = input.substr(input.find("moves") + 5);

@@ -7,7 +7,7 @@ FenInfo start_position = FenReader::read("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNB
 uint64_t perft(int depth) {
 	Perft perft = Perft(false, depth);
 	Board board = Board(start_position);
-	int color = start_position.getColor();
+	int color = start_position.color;
 	return perft.calculate(color, board);
 }
 

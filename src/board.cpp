@@ -1,10 +1,10 @@
 #include "board.h"
 
-Board::Board(FenInfo fenInfo) {
+Board::Board(const FenInfo& fenInfo) {
 	init(fenInfo);
 }
 
-void Board::setPosition(FenInfo fenInfo) {
+void Board::setPosition(const FenInfo& fenInfo) {
 	init(fenInfo);
 }
 
@@ -99,12 +99,12 @@ void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
 	castling_rights = moveInfo.castling_rights;
 }
 
-void Board::init(FenInfo fenInfo) {
+void Board::init(const FenInfo& fenInfo) {
 
 	for (int i = 0; i < 12; i++) {
-		piece_list[i] = fenInfo.getPieceList()[i];
+		piece_list[i] = fenInfo.piece_list[i];
 	}
-	piece_list[WHITE_PAWN] = fenInfo.getPieceList()[WHITE_PAWN];
+	piece_list[WHITE_PAWN] = fenInfo.piece_list[WHITE_PAWN];
 
 	for (int i = WHITE_PAWN; i <= WHITE_KING; i++) {
 		colorBB[0] += piece_list[i];
@@ -114,8 +114,8 @@ void Board::init(FenInfo fenInfo) {
 	}
 
 	occupiedBB = colorBB[0] | colorBB[1];
-	enpassant_square = fenInfo.getEnpassantSquare();
-	castling_rights = fenInfo.getCastlingRights();
+	enpassant_square = fenInfo.enpassant_square;
+	castling_rights = fenInfo.castling_rights;
 }
 
 void Board::setEnPassantSquare(int color, const Move& move) {

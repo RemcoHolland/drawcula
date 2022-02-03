@@ -5,7 +5,7 @@
 uint64_t perft(int depth, FenInfo position) {
 	Perft perft = Perft(false, depth);
 	Board board = Board(position);
-	int color = position.getColor();
+	int color = position.color;
 	return perft.calculate(color, board);
 }
 

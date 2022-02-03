@@ -39,8 +39,8 @@ public:
 	static const uint64_t KING_SIDE_SQUARES = F1 | G1;
 	static const uint64_t QUEEN_SIDE_SQUARES = B1 | C1 | D1;
 
-	Board(FenInfo);
-	void setPosition(FenInfo);
+	Board(const FenInfo&);
+	void setPosition(const FenInfo&);
 
 	uint64_t piece_list[TOTAL_PIECES];
 	uint64_t occupiedBB = 0;
@@ -81,10 +81,7 @@ public:
 
 private:
 
-	void init(FenInfo);
+	void init(const FenInfo&);
 	void setEnPassantSquare(int, const Move&);
 	void setCastlingRights(int, uint64_t, uint64_t);
 };
-
-
-

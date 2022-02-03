@@ -9,7 +9,7 @@ inline void startSearch(FenInfo position, int depth) {
 	time.movetime = std::chrono::milliseconds(LLONG_MAX);
 	Search search = Search();
 	testing::internal::CaptureStdout();
-	search.start(position.getColor(), depth, board, time);
+	search.start(position.color, depth, board, time);
 }
 
 TEST(mateposition, mate_in_1_with_king_and_rook) {
