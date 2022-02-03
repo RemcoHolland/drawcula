@@ -10,7 +10,7 @@ bool Movelist::containsMove(const Move& move) {
 }
 
 Move Movelist::getLegalMove(const Move& move) {
-	for (std::list<Move>::iterator it = moves.begin(); it != moves.end(); ++it) {
+	for (std::vector<Move>::iterator it = moves.begin(); it != moves.end(); ++it) {
 		Move legalMove = *it;
 		if (legalMove == move) {
 			return move;
@@ -44,10 +44,6 @@ void Movelist::generateMoves(int color, const Board& board) {
 		blackKingMoves(board);
 	}
 	castling(color, board);
-}
-
-std::list<Move> Movelist::getMoves() {
-	return moves;
 }
 
 void Movelist::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t to_squares, Flag flag) {

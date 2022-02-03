@@ -1,6 +1,4 @@
 #pragma once
-#include <list>
-#include <algorithm>
 #include "move.h"
 #include "board.h"
 #include "piece.h"
@@ -11,6 +9,8 @@
 #include "castling.h"
 #include "square.h"
 
+#include <vector>
+
 class Movelist {
 
 public:
@@ -18,11 +18,10 @@ public:
 	bool containsMove(const Move&);
 	Move getLegalMove(const Move&);
 	void generateMoves(int, const Board&);
-	std::list<Move> getMoves();
+	std::vector<Move> moves;
 	~Movelist();
 
-private:
-	std::list<Move> moves;
+private:	
 	void addPawnMoves(int, int, uint64_t, uint64_t, Flag);
 	void addEnPassantMoves(int, uint64_t, uint64_t);
 	void addPieceMoves(int, uint64_t, uint64_t, uint64_t);

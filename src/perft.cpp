@@ -24,10 +24,8 @@ void Perft::negaMax(int color, Board board, int depth) {
 
 	Movelist movelist = Movelist();
 	movelist.generateMoves(color, board);
-	std::list<Move> moves = movelist.getMoves();
 
-	for (std::list<Move>::iterator it = moves.begin(); it != moves.end(); ++it) {
-		Move move = *it;
+	for (auto move : movelist.moves) {
 		MoveInfo moveInfo = board.makeMove(color, move);
 
 		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
