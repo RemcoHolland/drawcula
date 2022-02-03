@@ -3,7 +3,7 @@
 Square::Square() {
 }
 
-bool Square::isAttacked(int color, Board board, uint64_t square) {
+bool Square::isAttacked(int color, const Board& board, uint64_t square) {
 
 	int from_nr = Utils::getLS1B(square);
 	int king_color = NR_PIECES * color;

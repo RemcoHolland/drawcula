@@ -41,7 +41,7 @@ private:
 
 	int negaMax(int, int, Board&, std::vector<Move>&);
 	bool timeToMove(int);
-	void updatePV(std::vector<Move>&, std::vector<Move>, Move);
-	string printPV(std::vector<Move>);
+	void updatePV(std::vector<Move>&, const std::vector<Move>&, const Move&);
+	string printPV(const std::vector<Move>&);
 };
 

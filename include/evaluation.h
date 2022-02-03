@@ -4,7 +4,7 @@
 class Evaluation {
 public:
 	Evaluation();
-	int getScore(Board);
+	int getScore(const Board&);
 	~Evaluation();
 
 private:
@@ -14,7 +14,7 @@ private:
 	const int ROOK_VALUE = 500;
 	const int QUEEN_VALUE = 900;
 
-	int materialScore(Board);
+	int materialScore(const Board&);
 	int popCount(uint64_t);
 };
 

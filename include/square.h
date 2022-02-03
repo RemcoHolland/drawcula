@@ -8,7 +8,7 @@
 class Square {
 public:
 	Square();
-	static bool isAttacked(int, Board, uint64_t);
+	static bool isAttacked(int, const Board&, uint64_t);
 	~Square();
 };
 

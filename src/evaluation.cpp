@@ -4,14 +4,11 @@
 Evaluation::Evaluation() {
 }
 
-int Evaluation::getScore(Board board) {
+int Evaluation::getScore(const Board& board) {
 	return materialScore(board);
 }
 
-Evaluation::~Evaluation() {
-}
-
-int Evaluation::materialScore(Board board) {
+int Evaluation::materialScore(const Board& board) {
 	return
 		popCount(board.piece_list[WHITE_PAWN]) * PAWN_VALUE +
 		popCount(board.piece_list[WHITE_KNIGHT]) * KNIGHT_VALUE +
@@ -33,3 +30,7 @@ int Evaluation::popCount(uint64_t pieces) {
 	}
 	return count;
 }
+
+Evaluation::~Evaluation() {
+}
+

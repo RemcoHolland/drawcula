@@ -90,13 +90,13 @@ bool Search::timeToMove(int color) {
 	return searchtime > movetime;
 }
 
-void Search::updatePV(std::vector<Move>& PV, std::vector<Move> childPV, Move move) {
+void Search::updatePV(std::vector<Move>& PV, const  std::vector<Move>& childPV, const Move& move) {
 	PV.clear();
 	PV.push_back(move);
 	std::copy(childPV.begin(), childPV.end(), back_inserter(PV));
 }
 
-string Search::printPV(std::vector<Move> PV) {
+string Search::printPV(const std::vector<Move>& PV) {
 	string pvStr = "";
 	for (Move move : PV) {
 		pvStr += move.toString();
