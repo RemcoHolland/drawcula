@@ -45,7 +45,7 @@ void Uci::uci() {
 }
 
 void Uci::ucinewgame() {
-	;
+	resetBoard(FenReader::read(startpos));
 }
 
 void Uci::isready() {
@@ -62,11 +62,7 @@ void Uci::position(string input) {
 		trim(fen);
 		fenStr = fen;
 	}
-	FenInfo position = FenInfo(FenReader::read(fenStr));
-	board.setPosition(position);
-	color = position.color;
-	half_moves = position.half_moves; // not used at the moment
-	full_moves = position.full_moves; // not used at the moment
+	resetBoard(FenReader::read(fenStr));
 
 	if (contains(input, "moves")) {
 		string moves = input.substr(input.find("moves") + 5);
@@ -78,6 +74,7 @@ void Uci::position(string input) {
 			movelist.generateMoves(color, board);
 			Move move = movelist.getLegalMove(Move(moveStr, color));
 			board.makeMove(color, move);
+			changeColor();
 		}
 	}
 }
@@ -136,6 +133,16 @@ bool Uci::contains(string mainStr, string toMatch) {
 
 void Uci::changeColor() {
 	color ^= 1;
+}
+
+void Uci::resetBoard(const FenInfo& position) {
+	// reset board and set new position
+	board.~Board();
+	new (&board) Board(position);
+
+	color = position.color;
+	half_moves = position.half_moves; // not used at the moment
+	full_moves = position.full_moves; // not used at the moment
 }
 
 Uci::~Uci() {

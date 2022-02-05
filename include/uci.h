@@ -37,4 +37,5 @@ private:
 	bool startsWith(string, string);
 	bool contains(string, string);
 	void changeColor();
+	void resetBoard(const FenInfo&);
 };

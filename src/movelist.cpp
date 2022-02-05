@@ -7,7 +7,7 @@ Movelist::Movelist() {
 Move Movelist::getLegalMove(const Move& move) {
 	for (auto legalMove : moves) {
 		if (legalMove == move) {
-			return move;
+			return legalMove;
 		}
 	}
 	throw std::invalid_argument("Illegal move specified");

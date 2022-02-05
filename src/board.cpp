@@ -62,7 +62,6 @@ void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
 	occupiedBB = occupiedBB + move.from - move.to;
 	colorBB[color] = colorBB[color] + move.from - move.to;
 	piece_list[move.piece] = piece_list[move.piece] + move.from - move.to;
-	int piece_color = color * NR_PIECES;
 
 	if (move.flag == Flag::CAPTURE) {
 		occupiedBB += move.to;
@@ -99,12 +98,9 @@ void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
 }
 
 void Board::init(const FenInfo& fenInfo) {
-
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < TOTAL_PIECES; i++) {
 		piece_list[i] = fenInfo.piece_list[i];
 	}
-	piece_list[WHITE_PAWN] = fenInfo.piece_list[WHITE_PAWN];
-
 	for (int i = WHITE_PAWN; i <= WHITE_KING; i++) {
 		colorBB[0] += piece_list[i];
 	}
