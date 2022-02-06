@@ -13,12 +13,13 @@
 
 using std::string;
 using StringUtils::split;
-using StringUtils::trim;
 
 class Uci {
 public:
 	Uci();
 	void loop();
+	void position(const std::vector<std::string>&);
+	void go(const std::vector<std::string>&);
 	~Uci();
 
 private:
@@ -30,12 +31,8 @@ private:
 	void uci();
 	void ucinewgame();
 	void isready();
-	void position(string);
-	void go(string);
-	void perft(bool, string);
+	void perft(bool, const std::vector<std::string>&);
 	void stop();
-	bool startsWith(string, string);
-	bool contains(string, string);
 	void changeColor();
 	void resetBoard(const FenInfo&);
 };

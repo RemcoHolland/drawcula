@@ -13,7 +13,6 @@
 
 using std::string;
 using StringUtils::getSquare;
-using StringUtils::trim;
 using StringUtils::split;
 
 

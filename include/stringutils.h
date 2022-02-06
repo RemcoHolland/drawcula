@@ -6,15 +6,10 @@
 
 using std::string;
 
-namespace StringUtils
-{
+namespace StringUtils {
 	int getSquare(char, char);
 	char getRank(int);
 	char getFile(int);
-
-	void trimRight(string&);
-	void trimLeft(string&);
-	void trim(string&);
 
 	//what does this template do?
 	template <typename Out>
