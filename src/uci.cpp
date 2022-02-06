@@ -53,7 +53,7 @@ void Uci::position(const std::vector<std::string>& commands) {
 		i++;
 	} else if (commands[i] == "fen") {
 		fenStr = commands[i + 1] + " " + commands[i + 2] + " " + commands[i + 3] + " " + commands[i + 4] + " " + commands[i + 5] + " " + commands[i + 6];
-		i += 6;
+		i += 7;
 	}
 	resetBoard(FenReader::read(fenStr));
 
