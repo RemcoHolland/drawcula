@@ -24,13 +24,11 @@ void Perft::negaMax(int color, Board board, int depth) {
 
 	Movelist movelist = Movelist();
 	movelist.generateMoves(color, board);
-	std::list<Move> moves = movelist.getMoves();
 
-	for (std::list<Move>::iterator it = moves.begin(); it != moves.end(); ++it) {
-		Move move = *it;
+	for (auto move : movelist.moves) {
 		MoveInfo moveInfo = board.makeMove(color, move);
 
-		if (!Square::isAttacked(color, board, board.getPiece(color == WHITE ? WHITE_KING : BLACK_KING))) {
+		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			negaMax(color ^ 1, board, depth - 1);
 
 			if (divide && depth == search_depth) {
@@ -46,9 +44,9 @@ void Perft::negaMax(int color, Board board, int depth) {
 void Perft::printRootNodes(Move move) {
 	// TODO: Use Move.toString() method
 
-	int square_from = Utils::getLS1B(move.getFrom());
-	int square_to = Utils::getLS1B(move.getTo());
-	char promotion = Piece::getPromotion(move.getPromotion());
+	int square_from = Utils::getLS1B(move.from);
+	int square_to = Utils::getLS1B(move.to);
+	char promotion = Piece::getPromotion(move.promotion);
 
 	std::cout << StringUtils::getFile(square_from) << StringUtils::getRank(square_from) << StringUtils::getFile(square_to) << StringUtils::getRank(square_to) << promotion << ' ' << root_nodes << std::endl;
 

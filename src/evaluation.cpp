@@ -4,25 +4,22 @@
 Evaluation::Evaluation() {
 }
 
-int Evaluation::getScore(Board board) {
+int Evaluation::getScore(const Board& board) {
 	return materialScore(board);
 }
 
-Evaluation::~Evaluation() {
-}
-
-int Evaluation::materialScore(Board board) {
+int Evaluation::materialScore(const Board& board) {
 	return
-		popCount(board.getPiece(WHITE_PAWN)) * PAWN_VALUE +
-		popCount(board.getPiece(WHITE_KNIGHT)) * KNIGHT_VALUE +
-		popCount(board.getPiece(WHITE_BISHOP)) * BISHOP_VALUE +
-		popCount(board.getPiece(WHITE_ROOK)) * ROOK_VALUE +
-		popCount(board.getPiece(WHITE_QUEEN)) * QUEEN_VALUE -
-		popCount(board.getPiece(BLACK_PAWN)) * PAWN_VALUE -
-		popCount(board.getPiece(BLACK_KNIGHT)) * KNIGHT_VALUE -
-		popCount(board.getPiece(BLACK_BISHOP)) * BISHOP_VALUE -
-		popCount(board.getPiece(BLACK_ROOK)) * ROOK_VALUE -
-		popCount(board.getPiece(BLACK_QUEEN)) * QUEEN_VALUE;
+		popCount(board.piece_list[WHITE_PAWN]) * PAWN_VALUE +
+		popCount(board.piece_list[WHITE_KNIGHT]) * KNIGHT_VALUE +
+		popCount(board.piece_list[WHITE_BISHOP]) * BISHOP_VALUE +
+		popCount(board.piece_list[WHITE_ROOK]) * ROOK_VALUE +
+		popCount(board.piece_list[WHITE_QUEEN]) * QUEEN_VALUE -
+		popCount(board.piece_list[BLACK_PAWN]) * PAWN_VALUE -
+		popCount(board.piece_list[BLACK_KNIGHT]) * KNIGHT_VALUE -
+		popCount(board.piece_list[BLACK_BISHOP]) * BISHOP_VALUE -
+		popCount(board.piece_list[BLACK_ROOK]) * ROOK_VALUE -
+		popCount(board.piece_list[BLACK_QUEEN]) * QUEEN_VALUE;
 }
 
 int Evaluation::popCount(uint64_t pieces) {
@@ -33,3 +30,7 @@ int Evaluation::popCount(uint64_t pieces) {
 	}
 	return count;
 }
+
+Evaluation::~Evaluation() {
+}
+

@@ -7,14 +7,16 @@ uint64_t Search::getNodes() {
 	return nodes;
 }
 
-void Search::start(int color, int max_depth, Board board, Time time) {
+void Search::start(int color, int max_depth, Board& board, const Time& time) {
 	int depth{ 1 };
 	this->time = time;
 	std::vector<Move> currentPV;
 	std::vector<Move> PV;
 
 	do {
-		int score = negaMax(color, board, depth, currentPV);
+		nodes = 0;
+		std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
+		int score = negaMax(color, depth, board, currentPV);
 		if (g_stop == false) {
 			string scoreStr;
 			if (std::abs(score) >= MATE) {
@@ -25,8 +27,8 @@ void Search::start(int color, int max_depth, Board board, Time time) {
 				scoreStr = "cp " + std::to_string(score);
 			}
 			PV = currentPV;
-			long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - time.startTime).count();
-			searchtime = std::max(1LL, searchtime);
+			long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
+			searchtime = std::max(1LL, searchtime); // searchtime must be > 0 milliseconds
 			long long nps = nodes / searchtime * 1000;
 			std::cout << "info depth " << depth << " score " << scoreStr << " time " << searchtime << " nodes " << nodes << " nps " << nps << " pv " << printPV(currentPV) << std::endl;
 		}
@@ -35,7 +37,7 @@ void Search::start(int color, int max_depth, Board board, Time time) {
 }
 
 //Improvement: make a root negaMax, see chess programming network.
-int Search::negaMax(int color, Board board, int depth, std::vector<Move>& PV) {
+int Search::negaMax(int color, int depth, Board& board, std::vector<Move>& PV) {
 	if (g_stop) {
 		return 0;
 	}
@@ -51,16 +53,13 @@ int Search::negaMax(int color, Board board, int depth, std::vector<Move>& PV) {
 	int max = -std::numeric_limits<int>::max();
 	Movelist movelist = Movelist();
 	movelist.generateMoves(color, board);
-	std::list<Move> moves = movelist.getMoves();
-
-	for (std::list<Move>::iterator it = moves.begin(); it != moves.end(); ++it) {
+	for (auto move : movelist.moves) {
 		nodes++;
-		Move move = *it;
 		MoveInfo moveInfo = board.makeMove(color, move);
 		std::vector<Move> childPV;
 
-		if (!Square::isAttacked(color, board, board.getPiece(color == WHITE ? WHITE_KING : BLACK_KING))) {
-			int score = -negaMax(color ^ 1, board, depth - 1, childPV);
+		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
+			int score = -negaMax(color ^ 1, depth - 1, board, childPV);
 			if (score > max) {
 				max = score;
 				updatePV(PV, childPV, move);
@@ -70,7 +69,7 @@ int Search::negaMax(int color, Board board, int depth, std::vector<Move>& PV) {
 	}
 	// no legal moves found, must be mate or stalemate
 	if (max == -std::numeric_limits<int>::max())
-		if (Square::isAttacked(color, board, board.getPiece(color == WHITE ? WHITE_KING : BLACK_KING))) {
+		if (Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			max = -MATE - depth; // prefer mate at larger depths as the losing side
 		} else {
 			max = STALE_MATE;
@@ -88,13 +87,13 @@ bool Search::timeToMove(int color) {
 	return searchtime > movetime;
 }
 
-void Search::updatePV(std::vector<Move>& PV, std::vector<Move> childPV, Move move) {
+void Search::updatePV(std::vector<Move>& PV, const  std::vector<Move>& childPV, const Move& move) {
 	PV.clear();
 	PV.push_back(move);
 	std::copy(childPV.begin(), childPV.end(), back_inserter(PV));
 }
 
-string Search::printPV(std::vector<Move> PV) {
+string Search::printPV(const std::vector<Move>& PV) {
 	string pvStr = "";
 	for (Move move : PV) {
 		pvStr += move.toString();

@@ -1,10 +1,11 @@
 #pragma once
 
-#include <iostream>
 #include "board.h"
 #include "movelist.h"
 #include "utils.h"
 #include "stringutils.h"
+
+#include <iostream>
 
 using StringUtils::getFile;
 using StringUtils::getRank;

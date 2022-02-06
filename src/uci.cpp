@@ -8,7 +8,8 @@ Uci::Uci() {
 void Uci::loop() {
 	string input;
 	do {
-		std::getline(std::cin, input, '\n');
+		std::getline(std::cin, input);
+		std::vector<std::string> commands = split(input, ' ');
 
 		if (input == "uci") {
 			uci();
@@ -16,22 +17,14 @@ void Uci::loop() {
 			ucinewgame();
 		} else if (input == "isready") {
 			isready();
-		} else if (startsWith(input, "position")) {
-			input = input.substr(8);
-			trim(input);
-			position(input);
-		} else if (startsWith(input, "go")) {
-			input = input.substr(2);
-			trim(input);
-			go(input);
-		} else if (startsWith(input, "perft")) {
-			input = input.substr(5);
-			trim(input);
-			perft(false, input);
-		} else if (startsWith(input, "divide")) {
-			input = input.substr(6);
-			trim(input);
-			perft(true, input);
+		} else if (commands[0] == "position") {
+			position(commands);
+		} else if (commands[0] == "go") {
+			go(commands);
+		} else if (commands[0] == "perft") {
+			perft(false, commands);
+		} else if (commands[0] == "divide") {
+			perft(true, commands);
 		} else if (input == "stop") {
 			stop();
 		}
@@ -45,50 +38,43 @@ void Uci::uci() {
 }
 
 void Uci::ucinewgame() {
-	;
+	resetBoard(FenReader::read(startpos));
 }
 
 void Uci::isready() {
 	std::cout << "readyok" << std::endl;
 }
 
-void Uci::position(string input) {
+void Uci::position(const std::vector<std::string>& commands) {
 	string fenStr;
-	if (startsWith(input, "startpos")) {
+	int i = 1;
+	if (commands[i] == "startpos") {
 		fenStr = startpos;
-	} else if (startsWith(input, "fen")) {
-		string fen = input.substr(3);
-		fen = fen.substr(0, fen.find("moves"));
-		trim(fen);
-		fenStr = fen;
+		i++;
+	} else if (commands[i] == "fen") {
+		fenStr = commands[i + 1] + " " + commands[i + 2] + " " + commands[i + 3] + " " + commands[i + 4] + " " + commands[i + 5] + " " + commands[i + 6];
+		i += 7;
 	}
-	FenInfo position = FenInfo(FenReader::read(fenStr));
-	board.setPosition(position);
-	color = position.getColor();
-	half_moves = position.getHalfMoves(); // not used at the moment
-	full_moves = position.getFullMoves(); // not used at the moment
+	resetBoard(FenReader::read(fenStr));
 
-	if (contains(input, "moves")) {
-		string moves = input.substr(input.find("moves") + 5);
-		trim(moves);
-		std::vector<std::string> stringMoves = split(moves, ' ');
-		for (string moveStr : stringMoves) {
+	if (commands.size() > i && commands[i] == "moves") {
+		for (i++; i < commands.size(); i++) {
 			// TODO: remove color here
 			Movelist movelist = Movelist();
 			movelist.generateMoves(color, board);
-			Move move = movelist.getLegalMove(Move(moveStr, color));
+			Move move = movelist.getLegalMove(Move(commands[i], color));
 			board.makeMove(color, move);
+			changeColor();
 		}
 	}
 }
 
-void Uci::go(string input) {
+void Uci::go(const std::vector<std::string>& commands) {
 	g_stop = false;
 	struct Time time;
 	int max_depth = std::numeric_limits<int>::max();
 
-	std::vector<string> commands = split(input, ' ');
-	for (std::vector<string>::size_type i = 0; i != commands.size(); i++) {
+	for (std::vector<string>::size_type i = 1; i != commands.size(); i++) {
 		if (commands[i] == "movetime") {
 			time.movetime = std::chrono::milliseconds(std::stoi(commands[++i]));
 		} else if (commands[i] == "wtime") {
@@ -115,8 +101,8 @@ void Uci::go(string input) {
 	t1.detach();
 }
 
-void Uci::perft(bool divide, string input) {
-	int depth = std::stoi(input);
+void Uci::perft(bool divide, const std::vector<std::string>& commands) {
+	int depth = std::stoi(commands[1]);
 	Perft perft = Perft(divide, depth);
 	std::thread t1(&Perft::calculate, perft, color, board);
 	t1.detach();
@@ -126,16 +112,18 @@ void Uci::stop() {
 	g_stop = true;
 }
 
-bool Uci::startsWith(string mainStr, string toMatch) {
-	return mainStr.find(toMatch) == 0;
-}
-
-bool Uci::contains(string mainStr, string toMatch) {
-	return mainStr.find(toMatch) != std::string::npos;
-}
-
 void Uci::changeColor() {
 	color ^= 1;
+}
+
+void Uci::resetBoard(const FenInfo& position) {
+	// reset board and set new position
+	board.~Board();
+	new (&board) Board(position);
+
+	color = position.color;
+	half_moves = position.half_moves; // not used at the moment
+	full_moves = position.full_moves; // not used at the moment
 }
 
 Uci::~Uci() {

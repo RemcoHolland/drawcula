@@ -39,26 +39,12 @@ public:
 	static const uint64_t KING_SIDE_SQUARES = F1 | G1;
 	static const uint64_t QUEEN_SIDE_SQUARES = B1 | C1 | D1;
 
-	Board(FenInfo);
-	void setPosition(FenInfo);
-	uint64_t getPiece(int);
-	uint64_t getOccupiedBB();
-	uint64_t getColorBB(int);
-	uint64_t getKnightMoves(int);
-	uint64_t getKingMoves(int);
-	uint64_t getEnpassantSquare();
-	int getCastlingRights();
-	MoveInfo makeMove(int, Move);
-	void unmakeMove(int, Move, MoveInfo);
-	~Board();
+	Board(const FenInfo&);
+	void setPosition(const FenInfo&);
 
-private:
-	int castling_rights;
-	uint64_t occupiedBB;
-	uint64_t colorBB[2] = { 0 };
-	uint64_t enpassant_square = 0;
 	uint64_t piece_list[TOTAL_PIECES];
-
+	uint64_t occupiedBB = 0;
+	uint64_t colorBB[2] = { 0 };
 	//TODO: init pawn moves;
 	const uint64_t PAWN_MOVES[64] = {
 
@@ -86,10 +72,16 @@ private:
 		144959613005987840, 362258295026614272, 724516590053228544,	 1449033180106457088, 2898066360212914176, 5796132720425828352, 11592265440851656704, 4665729213955833856
 	};
 
-	void init(FenInfo);
-	void setEnPassantSquare(int, Move);
+	uint64_t enpassant_square = 0;
+	int castling_rights;
+
+	MoveInfo makeMove(int, const Move&);
+	void unmakeMove(int, const Move&, const MoveInfo&);
+	~Board();
+
+private:
+
+	void init(const FenInfo&);
+	void setEnPassantSquare(int, const Move&);
 	void setCastlingRights(int, uint64_t, uint64_t);
 };
-
-
-

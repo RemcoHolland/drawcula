@@ -1,67 +1,39 @@
 #include "board.h"
 
-Board::Board(FenInfo fenInfo) {
+Board::Board(const FenInfo& fenInfo) {
 	init(fenInfo);
 }
 
-void Board::setPosition(FenInfo fenInfo) {
+void Board::setPosition(const FenInfo& fenInfo) {
 	init(fenInfo);
 }
 
-uint64_t Board::getPiece(int piece) {
-	return piece_list[piece];
-}
-
-uint64_t Board::getOccupiedBB() {
-	return occupiedBB;
-}
-
-uint64_t Board::getColorBB(int color) {
-	return colorBB[color];
-}
-
-uint64_t Board::getKnightMoves(int from) {
-	return KNIGHT_MOVES[from];
-}
-
-uint64_t Board::getKingMoves(int from) {
-	return KING_MOVES[from];
-}
-
-uint64_t Board::getEnpassantSquare() {
-	return enpassant_square;
-}
-
-int Board::getCastlingRights() {
-	return castling_rights;
-}
-
-MoveInfo Board::makeMove(int color, Move move) {
-	occupiedBB = occupiedBB - move.getFrom() + move.getTo();
-	colorBB[color] = colorBB[color] - move.getFrom() + move.getTo();
-	piece_list[move.getPiece()] = piece_list[move.getPiece()] - move.getFrom() + move.getTo();
+MoveInfo Board::makeMove(int color, const Move& move) {
+	occupiedBB = occupiedBB - move.from + move.to;
+	colorBB[color] = colorBB[color] - move.from + move.to;
+	piece_list[move.piece] = piece_list[move.piece] - move.from + move.to;
 	int captured_piece = NO_PIECE;
 
-	if (move.getFlag() == Flag::CAPTURE) {
+	if (move.flag == Flag::CAPTURE) {
 		int piece_color = color * NR_PIECES;
 		for (int piece = BLACK_PAWN - piece_color; piece <= BLACK_QUEEN - piece_color; piece++) {
-			if ((piece_list[piece] & move.getTo()) != 0) {
-				occupiedBB -= move.getTo();
-				colorBB[color ^ 1] -= move.getTo();
-				piece_list[piece] -= move.getTo();
+			if ((piece_list[piece] & move.to) != 0) {
+				occupiedBB -= move.to;
+				colorBB[color ^ 1] -= move.to;
+				piece_list[piece] -= move.to;
 				captured_piece = piece;
 				break;
 			}
 		}
-	} else if (move.getFlag() == Flag::EN_PASSANT) {
+	} else if (move.flag == Flag::EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
-		uint64_t capture_square = color == WHITE ? move.getTo() >> 8 : move.getTo() << 8;
+		uint64_t capture_square = color == WHITE ? move.to >> 8 : move.to << 8;
 		occupiedBB -= capture_square;
 		colorBB[color ^ 1] -= capture_square;
 		piece_list[captured_pawn] -= capture_square;
-	} else if (move.getFlag() == Flag::CASTLING) {
-		uint64_t king_from = move.getFrom();
-		uint64_t king_to = move.getTo();
+	} else if (move.flag == Flag::CASTLING) {
+		uint64_t king_from = move.from;
+		uint64_t king_to = move.to;
 		if (king_from < king_to) { // castling short			
 			uint64_t rook_shift = (king_to << 1) - (king_from << 1); // difference between rook_to (king_to << 1) and rook_from (king_from << 1) position 
 			occupiedBB -= rook_shift;
@@ -74,38 +46,36 @@ MoveInfo Board::makeMove(int color, Move move) {
 			piece_list[WHITE_ROOK + color * NR_PIECES] += rook_shift;
 		}
 	}
-	if (move.getPromotion() != NO_PIECE) {
-		piece_list[move.getPiece()] -= move.getTo();
-		piece_list[move.getPromotion()] += move.getTo();
+	if (move.promotion != NO_PIECE) {
+		piece_list[move.piece] -= move.to;
+		piece_list[move.promotion] += move.to;
 	}
 
 	setEnPassantSquare(color, move);
 	int current_castling_rights = castling_rights;
-	setCastlingRights(color, move.getFrom(), move.getTo());
+	setCastlingRights(color, move.from, move.to);
 
 	return MoveInfo(captured_piece, enpassant_square, current_castling_rights);
 }
 
-void Board::unmakeMove(int color, Move move, MoveInfo moveInfo) {
-	// Unmake can be made faster by setting a pointer to the unmake info. 
-	occupiedBB = occupiedBB + move.getFrom() - move.getTo();
-	colorBB[color] = colorBB[color] + move.getFrom() - move.getTo();
-	piece_list[move.getPiece()] = piece_list[move.getPiece()] + move.getFrom() - move.getTo();
-	int piece_color = color * NR_PIECES;
+void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
+	occupiedBB = occupiedBB + move.from - move.to;
+	colorBB[color] = colorBB[color] + move.from - move.to;
+	piece_list[move.piece] = piece_list[move.piece] + move.from - move.to;
 
-	if (move.getFlag() == Flag::CAPTURE) {
-		occupiedBB += move.getTo();
-		colorBB[color ^ 1] += move.getTo();
-		piece_list[moveInfo.getCapturedPiece()] += move.getTo();
-	} else if (move.getFlag() == Flag::EN_PASSANT) {
+	if (move.flag == Flag::CAPTURE) {
+		occupiedBB += move.to;
+		colorBB[color ^ 1] += move.to;
+		piece_list[moveInfo.captured_piece] += move.to;
+	} else if (move.flag == Flag::EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
-		uint64_t capture_square = color == WHITE ? move.getTo() >> 8 : move.getTo() << 8;
+		uint64_t capture_square = color == WHITE ? move.to >> 8 : move.to << 8;
 		occupiedBB += capture_square;
 		colorBB[color ^ 1] += capture_square;
 		piece_list[captured_pawn] += capture_square;
-	} else if (move.getFlag() == Flag::CASTLING) {
-		uint64_t king_from = move.getFrom();
-		uint64_t king_to = move.getTo();
+	} else if (move.flag == Flag::CASTLING) {
+		uint64_t king_from = move.from;
+		uint64_t king_to = move.to;
 		if (king_from < king_to) { // castling short			
 			uint64_t rook_shift = (king_to << 1) - (king_from << 1); // difference between rook_to (king_to << 1) and rook_from (king_from << 1) position 
 			occupiedBB += rook_shift;
@@ -118,22 +88,19 @@ void Board::unmakeMove(int color, Move move, MoveInfo moveInfo) {
 			piece_list[WHITE_ROOK + color * NR_PIECES] -= rook_shift;
 		}
 	}
-	if (move.getPromotion() != NO_PIECE) {
-		piece_list[move.getPiece()] += move.getTo();
-		piece_list[move.getPromotion()] -= move.getTo();
+	if (move.promotion != NO_PIECE) {
+		piece_list[move.piece] += move.to;
+		piece_list[move.promotion] -= move.to;
 	}
 
-	enpassant_square = moveInfo.getEnpassantSquare();
-	castling_rights = moveInfo.getCastlingRights();
+	enpassant_square = moveInfo.enpassant_square;
+	castling_rights = moveInfo.castling_rights;
 }
 
-void Board::init(FenInfo fenInfo) {
-
-	for (int i = 0; i < 12; i++) {
-		piece_list[i] = fenInfo.getPieceList()[i];
+void Board::init(const FenInfo& fenInfo) {
+	for (int i = 0; i < TOTAL_PIECES; i++) {
+		piece_list[i] = fenInfo.piece_list[i];
 	}
-	piece_list[WHITE_PAWN] = fenInfo.getPieceList()[WHITE_PAWN];
-
 	for (int i = WHITE_PAWN; i <= WHITE_KING; i++) {
 		colorBB[0] += piece_list[i];
 	}
@@ -142,13 +109,13 @@ void Board::init(FenInfo fenInfo) {
 	}
 
 	occupiedBB = colorBB[0] | colorBB[1];
-	enpassant_square = fenInfo.getEnpassantSquare();
-	castling_rights = fenInfo.getCastlingRights();
+	enpassant_square = fenInfo.enpassant_square;
+	castling_rights = fenInfo.castling_rights;
 }
 
-void Board::setEnPassantSquare(int color, Move move) {
-	if (move.getFlag() == Flag::DOUBLE_PUSH) {
-		enpassant_square = color == WHITE ? move.getTo() >> 8 : move.getTo() << 8;
+void Board::setEnPassantSquare(int color, const Move& move) {
+	if (move.flag == Flag::DOUBLE_PUSH) {
+		enpassant_square = color == WHITE ? move.to >> 8 : move.to << 8;
 	} else {
 		enpassant_square = 0;
 	}
