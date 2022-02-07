@@ -29,7 +29,7 @@ class Search {
 public:
 	Search();
 	uint64_t getNodes();
-	void start(int, int, Board&, const Time&);
+	void start(int, int, Board, Time);
 	~Search();
 
 private:

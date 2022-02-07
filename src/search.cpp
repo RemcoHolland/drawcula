@@ -7,7 +7,7 @@ uint64_t Search::getNodes() {
 	return nodes;
 }
 
-void Search::start(int color, int max_depth, Board& board, const Time& time) {
+void Search::start(int color, int max_depth, Board board, const Time time) {
 	int depth{ 1 };
 	this->time = time;
 	std::vector<Move> currentPV;
