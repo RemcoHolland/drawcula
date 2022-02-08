@@ -6,6 +6,7 @@
 #include "stringutils.h"
 
 #include <iostream>
+#include <chrono>
 
 using StringUtils::getFile;
 using StringUtils::getRank;

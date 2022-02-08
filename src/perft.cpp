@@ -6,8 +6,10 @@ Perft::Perft(bool divide, int search_depth) {
 }
 
 uint64_t Perft::calculate(int color, Board board) {
+	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 	negaMax(color, board, search_depth);
-	std::cout << "nodes: " << nodes << std::endl;
+	long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
+	std::cout << "nodes: " << nodes << " searchtime: " << searchtime << " ms"  << std::endl;
 	return nodes;
 }
 

@@ -1,8 +1,6 @@
-#include <list>
 #include <iostream>
 #include <chrono>
 #include <vector>
-#include <cmath>
 #include <limits>
 #include "move.h"
 #include "evaluation.h"
