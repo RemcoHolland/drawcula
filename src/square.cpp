@@ -8,19 +8,14 @@ bool Square::isAttacked(int color, const Board& board, uint64_t square) {
 	int from_nr = Utils::getLS1B(square);
 	int king_color = NR_PIECES * color;
 
-	// TODO: make a pawn attacks bb just like kings and knights
 	uint64_t pawnAttacks;
 	if (color == WHITE) {
-		// pawnAttacks = ((square & ~Board::FILE_A) << 7) | ((square & ~Board::FILE_H) << 9);
 		pawnAttacks = PAWN_ATTACKS_BLACK[from_nr];
-	} else {	
-	//	pawnAttacks = ((square & ~FILE_A) >> 9) | ((square & ~FILE_H) >> 7);		
+	} else {			
 		pawnAttacks = PAWN_ATTACKS_WHITE[from_nr];
 	}
 
 	uint64_t knightAttacks = KNIGHT_MOVES[from_nr];
-	//	uint64_t bishopAttacks = Bmagic(from_nr, board.occupiedBB) & ~board.colorBB[color];
-	//	uint64_t rookAttacks = Rmagic(from_nr, board.occupiedBB) & ~board.colorBB[color];
 	uint64_t bishopAttacks = Bmagic(from_nr, board.occupiedBB);
 	uint64_t rookAttacks = Rmagic(from_nr, board.occupiedBB);
 	uint64_t queenAttacks = bishopAttacks | rookAttacks;

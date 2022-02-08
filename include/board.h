@@ -92,7 +92,7 @@ public:
 	uint64_t enpassant_square = 0;
 	int castling_rights;
 
-	MoveInfo makeMove(int, const Move&);
+	const MoveInfo& makeMove(int, const Move&);
 	void unmakeMove(int, const Move&, const MoveInfo&);
 	~Board();
 

@@ -46,8 +46,8 @@ void Perft::negaMax(int color, Board board, int depth) {
 void Perft::printRootNodes(Move move) {
 	// TODO: Use Move.toString() method
 
-	int square_from = Utils::getLS1B(move.from);
-	int square_to = Utils::getLS1B(move.to);
+	int square_from = move.from;
+	int square_to = move.to;
 	char promotion = Piece::getPromotion(move.promotion);
 
 	std::cout << StringUtils::getFile(square_from) << StringUtils::getRank(square_from) << StringUtils::getFile(square_to) << StringUtils::getRank(square_to) << promotion << ' ' << root_nodes << std::endl;

@@ -14,12 +14,12 @@ using StringUtils::getSquare;
 class Move {
 public:
 	Move(const string&, int);
-	Move(uint64_t, uint64_t);
-	Move(int, uint64_t, uint64_t, Flag);
-	Move(int, uint64_t, uint64_t, Flag, int);
+	Move(int, int);
+	Move(int, int, int, Flag);
+	Move(int, int, int, Flag, int);
 	int piece;
-	uint64_t from;
-	uint64_t to;
+	int from;
+	int to;
 	Flag flag;
 	int promotion;
 	bool operator==(const Move& other);

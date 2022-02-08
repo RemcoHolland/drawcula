@@ -8,32 +8,34 @@ void Board::setPosition(const FenInfo& fenInfo) {
 	init(fenInfo);
 }
 
-MoveInfo Board::makeMove(int color, const Move& move) {
-	occupiedBB = occupiedBB - move.from + move.to;
-	colorBB[color] = colorBB[color] - move.from + move.to;
-	piece_list[move.piece] = piece_list[move.piece] - move.from + move.to;
+const MoveInfo& Board::makeMove(int color, const Move& move) {
+	uint64_t from = Utils::getPower(move.from);
+	uint64_t to = Utils::getPower(move.to);
+	occupiedBB = occupiedBB - from + to;
+	colorBB[color] = colorBB[color] - from + to;
+	piece_list[move.piece] = piece_list[move.piece] - from + to;
 	int captured_piece = NO_PIECE;
 
 	if (move.flag == Flag::CAPTURE) {
 		int piece_color = color * NR_PIECES;
 		for (int piece = BLACK_PAWN - piece_color; piece <= BLACK_QUEEN - piece_color; piece++) {
-			if ((piece_list[piece] & move.to) != 0) {
-				occupiedBB -= move.to;
-				colorBB[color ^ 1] -= move.to;
-				piece_list[piece] -= move.to;
+			if ((piece_list[piece] & to)) {
+				occupiedBB -= to;
+				colorBB[color ^ 1] -= to;
+				piece_list[piece] -= to;
 				captured_piece = piece;
 				break;
 			}
 		}
 	} else if (move.flag == Flag::EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
-		uint64_t capture_square = color == WHITE ? move.to >> 8 : move.to << 8;
+		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB -= capture_square;
 		colorBB[color ^ 1] -= capture_square;
 		piece_list[captured_pawn] -= capture_square;
 	} else if (move.flag == Flag::CASTLING) {
-		uint64_t king_from = move.from;
-		uint64_t king_to = move.to;
+		uint64_t king_from = from;
+		uint64_t king_to = to;
 		if (king_from < king_to) { // castling short			
 			uint64_t rook_shift = (king_to << 1) - (king_from << 1); // difference between rook_to (king_to << 1) and rook_from (king_from << 1) position 
 			occupiedBB -= rook_shift;
@@ -47,35 +49,38 @@ MoveInfo Board::makeMove(int color, const Move& move) {
 		}
 	}
 	if (move.promotion != NO_PIECE) {
-		piece_list[move.piece] -= move.to;
-		piece_list[move.promotion] += move.to;
+		piece_list[move.piece] -= to;
+		piece_list[move.promotion] += to;
 	}
 
 	setEnPassantSquare(color, move);
 	int current_castling_rights = castling_rights;
-	setCastlingRights(color, move.from, move.to);
+	setCastlingRights(color, from, to);
 
 	return MoveInfo(captured_piece, enpassant_square, current_castling_rights);
 }
 
 void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
-	occupiedBB = occupiedBB + move.from - move.to;
-	colorBB[color] = colorBB[color] + move.from - move.to;
-	piece_list[move.piece] = piece_list[move.piece] + move.from - move.to;
+	uint64_t from = Utils::getPower(move.from);
+	uint64_t to = Utils::getPower(move.to);
+	// TODO: use bitshift with move.from?
+	occupiedBB = occupiedBB + from - to;
+	colorBB[color] = colorBB[color] + from - to;
+	piece_list[move.piece] = piece_list[move.piece] + from - to;
 
 	if (move.flag == Flag::CAPTURE) {
-		occupiedBB += move.to;
-		colorBB[color ^ 1] += move.to;
-		piece_list[moveInfo.captured_piece] += move.to;
+		occupiedBB += to;
+		colorBB[color ^ 1] += to;
+		piece_list[moveInfo.captured_piece] += to;
 	} else if (move.flag == Flag::EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
-		uint64_t capture_square = color == WHITE ? move.to >> 8 : move.to << 8;
+		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB += capture_square;
 		colorBB[color ^ 1] += capture_square;
 		piece_list[captured_pawn] += capture_square;
 	} else if (move.flag == Flag::CASTLING) {
-		uint64_t king_from = move.from;
-		uint64_t king_to = move.to;
+		uint64_t king_from = from;
+		uint64_t king_to = to;
 		if (king_from < king_to) { // castling short			
 			uint64_t rook_shift = (king_to << 1) - (king_from << 1); // difference between rook_to (king_to << 1) and rook_from (king_from << 1) position 
 			occupiedBB += rook_shift;
@@ -89,8 +94,8 @@ void Board::unmakeMove(int color, const Move& move, const MoveInfo& moveInfo) {
 		}
 	}
 	if (move.promotion != NO_PIECE) {
-		piece_list[move.piece] += move.to;
-		piece_list[move.promotion] -= move.to;
+		piece_list[move.piece] += to;
+		piece_list[move.promotion] -= to;
 	}
 
 	enpassant_square = moveInfo.enpassant_square;
@@ -115,7 +120,7 @@ void Board::init(const FenInfo& fenInfo) {
 
 void Board::setEnPassantSquare(int color, const Move& move) {
 	if (move.flag == Flag::DOUBLE_PUSH) {
-		enpassant_square = color == WHITE ? move.to >> 8 : move.to << 8;
+		enpassant_square = color == WHITE ? Utils::getPower(move.to) >> 8 : Utils::getPower(move.to) << 8;
 	} else {
 		enpassant_square = 0;
 	}
