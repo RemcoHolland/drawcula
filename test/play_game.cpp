@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 TEST(play_game, startpos) {
 	Uci uci = Uci();
 	testing::internal::CaptureStdout();
-	uci.position({ "position", "startpos", "moves", "e2e4" });
+	uci.position({ "position", "startpos", "moves", "e2e4" "c7c5" "g1f3" });
 	uci.go({ "go", "movetime" ,"1000" });
 	std::this_thread::sleep_for(1500ms);
 	std::string output = testing::internal::GetCapturedStdout();
