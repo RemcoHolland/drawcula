@@ -27,7 +27,7 @@ void Perft::negaMax(int color, Board board, int depth) {
 	Movelist movelist = Movelist();
 	movelist.generateMoves(color, board);
 
-	for (auto move : movelist.moves) {
+	for (int move : movelist.moves) {
 		MoveInfo moveInfo = board.makeMove(color, move);
 
 		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
@@ -43,13 +43,6 @@ void Perft::negaMax(int color, Board board, int depth) {
 	return;
 }
 
-void Perft::printRootNodes(Move move) {
-	// TODO: Use Move.toString() method
-
-	int square_from = move.from;
-	int square_to = move.to;
-	char promotion = Piece::getPromotion(move.promotion);
-
-	std::cout << StringUtils::getFile(square_from) << StringUtils::getRank(square_from) << StringUtils::getFile(square_to) << StringUtils::getRank(square_to) << promotion << ' ' << root_nodes << std::endl;
-
+void Perft::printRootNodes(int move) {
+	std::cout << Move::moveToString(move) << ' ' << root_nodes << std::endl;
 }

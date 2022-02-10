@@ -11,22 +11,14 @@ using StringUtils::getFile;
 using StringUtils::getRank;
 using StringUtils::getSquare;
 
+
+
 class Move {
 public:
-	Move(const string&, int);
-	Move(int, int);
-	Move(int, int, int, Flag);
-	Move(int, int, int, Flag, int);
-	int piece;
-	int from;
-	int to;
-	Flag flag;
-	int promotion;
-	bool operator==(const Move& other);
-	string toString();
-	~Move();
+	static string moveToString(int);	
+
 
 private:
-
+	
 };
 

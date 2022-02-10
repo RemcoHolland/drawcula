@@ -15,13 +15,13 @@ class Movelist {
 
 public:
 	Movelist();
-	Move getLegalMove(const Move&);
+	int getLegalMove(int);
 	void generateMoves(int, const Board&);
-	std::vector<Move> moves;
+	std::vector<int> moves;
 	~Movelist();
 
 private:	
-	void addPawnMoves(int, int, uint64_t, uint64_t, Flag);
+	void addPawnMoves(int, int, uint64_t, uint64_t, int);
 	void addEnPassantMoves(int, uint64_t, uint64_t);
 	void addPieceMoves(int, int, uint64_t, uint64_t);
 	void whitePawnsPush(const Board&);

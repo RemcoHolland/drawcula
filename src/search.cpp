@@ -10,8 +10,8 @@ uint64_t Search::getNodes() {
 void Search::start(int color, int max_depth, Board board, const Time time) {
 	int depth{ 1 };
 	this->time = time;
-	std::vector<Move> currentPV;
-	std::vector<Move> PV;
+	std::vector<int> currentPV;
+	std::vector<int> PV;
 
 	do {
 		nodes = 0;
@@ -33,11 +33,11 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 			std::cout << "info depth " << depth << " score " << scoreStr << " time " << searchtime << " nodes " << nodes << " nps " << nps << " pv " << printPV(currentPV) << std::endl;
 		}
 	} while (g_stop == false && depth++ != max_depth);
-	std::cout << "bestmove " << PV.front().toString() << std::endl;
+	std::cout << "bestmove " << Move::moveToString(PV.front()) << std::endl;
 }
 
 //Improvement: make a root negaMax, see chess programming network.
-int Search::negaMax(int color, int depth, Board& board, std::vector<Move>& PV) {
+int Search::negaMax(int color, int depth, Board& board, std::vector<int>& PV) {
 	if (g_stop) {
 		return 0;
 	}
@@ -56,7 +56,7 @@ int Search::negaMax(int color, int depth, Board& board, std::vector<Move>& PV) {
 	for (auto move : movelist.moves) {
 		nodes++;
 		MoveInfo moveInfo = board.makeMove(color, move);
-		std::vector<Move> childPV;
+		std::vector<int> childPV;
 
 		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			int score = -negaMax(color ^ 1, depth - 1, board, childPV);
@@ -87,16 +87,16 @@ bool Search::timeToMove(int color) {
 	return searchtime > movetime;
 }
 
-void Search::updatePV(std::vector<Move>& PV, const  std::vector<Move>& childPV, const Move& move) {
+void Search::updatePV(std::vector<int>& PV, const  std::vector<int>& childPV, int move) {
 	PV.clear();
 	PV.push_back(move);
 	std::copy(childPV.begin(), childPV.end(), back_inserter(PV));
 }
 
-string Search::printPV(const std::vector<Move>& PV) {
+string Search::printPV(const std::vector<int>& PV) {
 	string pvStr = "";
-	for (Move move : PV) {
-		pvStr += move.toString();
+	for (int move : PV) {
+		pvStr += Move::moveToString(move);
 		pvStr += " ";
 	}
 	return (pvStr.substr(0, pvStr.size() - 1));

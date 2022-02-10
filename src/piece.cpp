@@ -29,7 +29,7 @@ int Piece::getPromotion(char piece, int color) {
 	case 'b': return WHITE_BISHOP + color * NR_PIECES;
 	case 'r': return WHITE_ROOK + color * NR_PIECES;
 	case 'q': return WHITE_QUEEN + color * NR_PIECES;
-	default: return NO_PIECE;
+	default: return NO_PROMOTION;
 	}
 }
 

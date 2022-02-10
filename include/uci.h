@@ -35,4 +35,5 @@ private:
 	void stop();
 	void changeColor();
 	void resetBoard(const FenInfo&);
+	int stringToMove(int, const string&);
 };

@@ -4,9 +4,16 @@
 Movelist::Movelist() {
 }
 
-Move Movelist::getLegalMove(const Move& move) {
-	for (auto legalMove : moves) {
-		if (legalMove == move) {
+int Movelist::getLegalMove(int move) {
+	// move is legal if 'from', 'to'  and 'promotion piece' are the same
+	for (int legalMove : moves) {
+		int lm_from = (legalMove & (0x3F << 6)) >> 6;
+		int	m_from = (move & (0x3F << 6)) >> 6;
+		int lm_to = (move & (0x3F << 12)) >> 12;
+		int m_to = (move & (0x3F << 12)) >> 12;
+		int lm_promotion = (move & (0x3F << 24)) >> 24;
+		int m_promotion = (move & (0x3F << 24)) >> 24;
+		if (lm_from == m_from && lm_to == m_to && lm_promotion == m_promotion) {
 			return legalMove;
 		}
 	}
@@ -40,7 +47,7 @@ void Movelist::generateMoves(int color, const Board& board) {
 	castling(color, board);
 }
 
-void Movelist::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t to_squares, Flag flag) {
+void Movelist::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t to_squares, int flag) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
 		int to = Utils::getLS1B(to_squares);
@@ -48,11 +55,11 @@ void Movelist::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				Move move = Move(piece, from, to, flag, promotion);
+				int move = piece + (from << 6) + (to << 12) + (flag << 18) + (promotion << 24);
 				moves.push_back(move);
 			}
 		} else {
-			Move move = Move(piece, from, to, flag);
+			int move = piece + (from << 6) + (to << 12) + (flag << 18);
 			moves.push_back(move);
 		}
 		from_squares = Utils::clearLSB(from_squares);
@@ -64,7 +71,7 @@ void Movelist::addEnPassantMoves(int piece, uint64_t from_squares, uint64_t to_s
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
 		int to = Utils::getLS1B(to_square);
-		Move move = Move(piece, from, to, Flag::EN_PASSANT);
+		int move = piece + (from << 6) + (to << 12) + (EN_PASSANT << 18);
 		moves.push_back(move);
 		from_squares = Utils::clearLSB(from_squares);
 	}
@@ -74,8 +81,8 @@ void Movelist::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t 
 	while (to_squares) {
 		int to = Utils::getLS1B(to_squares);
 		uint64_t to_square = Utils::getLSB(to_squares);
-		Flag flag = (to_square & enemies) ? Flag::CAPTURE : Flag::NO_FLAG;
-		Move move = Move(piece, from, to, flag);
+		int flag = (to_square & enemies) ? CAPTURE : NO_FLAG;
+		int move = piece + (from << 6) + (to << 12) + (flag << 18);
 		moves.push_back(move);
 		to_squares = Utils::clearLSB(to_squares);
 	}
@@ -85,28 +92,28 @@ void Movelist::whitePawnsPush(const Board& board) {
 	uint64_t to_squares = (board.piece_list[WHITE_PAWN] << 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares >> 8;
 
-	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::NO_FLAG);
+	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, NO_FLAG);
 }
 
 void Movelist::whitePawnsDoublePush(const Board& board) {
 	uint64_t to_squares = ((((board.piece_list[WHITE_PAWN] & RANK_2) << 8) & ~board.occupiedBB) << 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares >> 16;
 
-	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::DOUBLE_PUSH);
+	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, DOUBLE_PUSH);
 }
 
 void Movelist::whitePawnsCaptureLeft(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[WHITE_PAWN] & ~FILE_A) << 7) & board.colorBB[BLACK];
 	uint64_t from_squares = to_squares >> 7;
 
-	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::CAPTURE);
+	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, CAPTURE);
 }
 
 void Movelist::whitePawnsCaptureRight(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[WHITE_PAWN] & ~FILE_H) << 9) & board.colorBB[BLACK];
 	uint64_t from_squares = to_squares >> 9;
 
-	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, Flag::CAPTURE);
+	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, CAPTURE);
 }
 
 void Movelist::whitePawnsEnpassant(const Board& board) {
@@ -121,28 +128,28 @@ void Movelist::blackPawnsPush(const Board& board) {
 	uint64_t to_squares = (board.piece_list[BLACK_PAWN] >> 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares << 8;
 
-	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::NO_FLAG);
+	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, NO_FLAG);
 }
 
 void Movelist::blackPawnsDoublePush(const Board& board) {
 	uint64_t to_squares = ((((board.piece_list[BLACK_PAWN] & RANK_7) >> 8) & ~board.occupiedBB) >> 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares << 16;
 
-	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::DOUBLE_PUSH);
+	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, DOUBLE_PUSH);
 }
 
 void Movelist::blackPawnsCaptureLeft(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[BLACK_PAWN] & ~FILE_A) >> 9) & board.colorBB[WHITE];
 	uint64_t from_squares = to_squares << 9;
 
-	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::CAPTURE);
+	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, CAPTURE);
 }
 
 void Movelist::blackPawnsCaptureRight(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[BLACK_PAWN] & ~FILE_H) >> 7) & board.colorBB[WHITE];
 	uint64_t from_squares = to_squares << 7;
 
-	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, Flag::CAPTURE);
+	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, CAPTURE);
 }
 
 void Movelist::blackPawnsEnpassant(const Board& board) {
@@ -185,7 +192,7 @@ void Movelist::whiteBishopMoves(const Board& board) {
 	while (bishops) {
 		int from = Utils::getLS1B(bishops);
 		uint64_t to_squares = Bmagic(from, board.occupiedBB) & ~board.colorBB[WHITE];
-		
+
 		addPieceMoves(WHITE_BISHOP, from, to_squares, board.colorBB[BLACK]);
 
 		bishops = Utils::clearLSB(bishops);
@@ -279,7 +286,7 @@ void Movelist::castling(int color, const Board& board) {
 			// TODO: delay isAttacked to the search algorithm
 			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square << 1)))) {
 				int to = Utils::getLS1B(king_square << 2);
-				Move move = Move(king, king_square_nr, to, Flag::CASTLING);
+				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING << 18);
 				moves.push_back(move);
 			}
 		}
@@ -293,7 +300,7 @@ void Movelist::castling(int color, const Board& board) {
 
 			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square >> 1)))) {
 				int to = Utils::getLS1B(king_square >> 2);
-				Move move = Move(king, king_square_nr, to, Flag::CASTLING);
+				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING << 18);
 				moves.push_back(move);
 			}
 		}
