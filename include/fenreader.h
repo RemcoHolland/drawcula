@@ -5,7 +5,7 @@
 #include "board.h"
 #include "piece.h"
 #include "utils.h"
-#include "feninfo.h"
+#include "position.h"
 #include "color.h"
 #include "castling.h"
 #include "utils.h"

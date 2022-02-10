@@ -5,7 +5,7 @@
 #include "color.h"
 #include "moveinfo.h"
 #include "castling.h"
-#include "feninfo.h"
+#include "position.h"
 
 using std::string;
 

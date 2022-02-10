@@ -1,5 +1,11 @@
 #include "board.h"
 
+constexpr int PAWN_VALUE = 100;
+constexpr int KNIGHT_VALUE = 300;
+constexpr int BISHOP_VALUE = 300;
+constexpr int ROOK_VALUE = 500;
+constexpr int QUEEN_VALUE = 900;
+
 #pragma once
 class Evaluation {
 public:
@@ -8,12 +14,6 @@ public:
 	~Evaluation();
 
 private:
-	const int PAWN_VALUE = 100;
-	const int KNIGHT_VALUE = 300;
-	const int BISHOP_VALUE = 300;
-	const int ROOK_VALUE = 500;
-	const int QUEEN_VALUE = 900;
-
 	int materialScore(const Board&);
 	int popCount(uint64_t);
 };
