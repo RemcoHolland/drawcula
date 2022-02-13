@@ -1,10 +1,10 @@
 #include "board.h"
 
-Board::Board(const FenInfo& fenInfo) {
+Board::Board(const Position& fenInfo) {
 	init(fenInfo);
 }
 
-void Board::setPosition(const FenInfo& fenInfo) {
+void Board::setPosition(const Position& fenInfo) {
 	init(fenInfo);
 }
 
@@ -102,7 +102,7 @@ void Board::unmakeMove(int color, int move, const MoveInfo& moveInfo) {
 	castling_rights = moveInfo.castling_rights;
 }
 
-void Board::init(const FenInfo& fenInfo) {
+void Board::init(const Position& fenInfo) {
 	for (int i = 0; i < TOTAL_PIECES; i++) {
 		piece_list[i] = fenInfo.piece_list[i];
 	}

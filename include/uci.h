@@ -34,6 +34,6 @@ private:
 	void perft(bool, const std::vector<std::string>&);
 	void stop();
 	void changeColor();
-	void resetBoard(const FenInfo&);
+	void resetBoard(const Position&);
 	int stringToMove(int, const string&);
 };

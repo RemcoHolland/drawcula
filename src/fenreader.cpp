@@ -3,7 +3,7 @@
 FenReader::FenReader() {
 }
 
-FenInfo FenReader::read(string fen) {
+Position FenReader::read(string fen) {
 	// split FEN
 	std::vector<string> splitted_fen = split(fen, ' ');
 	if (splitted_fen.size() != 6) {
@@ -40,7 +40,7 @@ FenInfo FenReader::read(string fen) {
 	// full moves
 	int full_moves = std::stoi(splitted_fen.at(5));
 
-	return FenInfo(piece_list, color, castling_rights, enpassant_square, half_moves, full_moves);
+	return Position(piece_list, color, castling_rights, enpassant_square, half_moves, full_moves);
 }
 
 FenReader::~FenReader() {

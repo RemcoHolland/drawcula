@@ -116,7 +116,7 @@ void Uci::changeColor() {
 	color ^= 1;
 }
 
-void Uci::resetBoard(const FenInfo& position) {
+void Uci::resetBoard(const Position& position) {
 	// reset board and set new position
 	board.~Board();
 	new (&board) Board(position);

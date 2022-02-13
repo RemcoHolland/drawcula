@@ -83,8 +83,8 @@ constexpr uint64_t KING_MOVES[64] = {
 class Board {
 
 public:
-	Board(const FenInfo&);
-	void setPosition(const FenInfo&);
+	Board(const Position&);
+	void setPosition(const Position&);
 
 	uint64_t piece_list[TOTAL_PIECES];
 	uint64_t occupiedBB = 0;
@@ -97,7 +97,7 @@ public:
 	~Board();
 
 private:
-	void init(const FenInfo&);
+	void init(const Position&);
 	void setEnPassantSquare(int, int);
 	void setCastlingRights(int, uint64_t, uint64_t);
 };

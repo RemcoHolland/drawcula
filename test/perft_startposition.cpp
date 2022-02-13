@@ -2,7 +2,7 @@
 #include "perft.h"
 #include "fenreader.h"
 
-FenInfo start_position = FenReader::read("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+Position start_position = FenReader::read("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 uint64_t perft(int depth) {
 	Perft perft = Perft(false, depth);

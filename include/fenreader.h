@@ -19,7 +19,7 @@ using StringUtils::split;
 class FenReader {
 public:
 	FenReader();
-	static FenInfo read(string fen);
+	static Position read(string fen);
 	~FenReader();
 
 private:
