@@ -13,12 +13,13 @@ void Board::setPosition(const Position& fenInfo) {
 const int Board::makeMove(int color, int move) {
 	uint64_t from = Utils::getPower((move & FROM_MASK) >> 6);
 	uint64_t to = Utils::getPower((move & TO_MASK) >> 12);
+	
 	occupiedBB = occupiedBB - from + to;
 	colorBB[color] = colorBB[color] - from + to;
 	piece_list[move & PIECE_MASK] = piece_list[move & PIECE_MASK] - from + to;
 	int captured_piece = NO_PIECE;
 
-	if ((move & FLAG_MASK) >> 18 == CAPTURE) {
+	if ((move & FLAG_MASK)  == CAPTURE) {
 		int piece_color = color * NR_PIECES;
 		for (int piece = BLACK_PAWN - piece_color; piece <= BLACK_QUEEN - piece_color; piece++) {
 			if ((piece_list[piece] & to)) {
@@ -29,13 +30,13 @@ const int Board::makeMove(int color, int move) {
 				break;
 			}
 		}
-	} else if ((move & FLAG_MASK) >> 18 == EN_PASSANT) {
+	} else if ((move & FLAG_MASK) == EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB -= capture_square;
 		colorBB[color ^ 1] -= capture_square;
 		piece_list[captured_pawn] -= capture_square;
-	} else if ((move & FLAG_MASK) >> 18 == CASTLING) {
+	} else if ((move & FLAG_MASK)  == CASTLING) {
 		uint64_t king_from = from;
 		uint64_t king_to = to;
 		if (king_from < king_to) { // castling short			
@@ -65,22 +66,22 @@ const int Board::makeMove(int color, int move) {
 void Board::unmakeMove(int color, int move, int unmake_info) {
 	uint64_t from = Utils::getPower((move & FROM_MASK) >> 6);
 	uint64_t to = Utils::getPower((move & TO_MASK) >> 12);
-	// TODO: use bitshift with move.getFrom()?
+
 	occupiedBB = occupiedBB + from - to;
 	colorBB[color] = colorBB[color] + from - to;
 	piece_list[move & PIECE_MASK] = piece_list[move & PIECE_MASK] + from - to;
 
-	if ((move & FLAG_MASK) >> 18 == CAPTURE) {
+	if ((move & FLAG_MASK) == CAPTURE) {
 		occupiedBB += to;
 		colorBB[color ^ 1] += to;
 		piece_list[unmake_info & CAPTURE_MASK] += to;
-	} else if ((move & FLAG_MASK) >> 18 == EN_PASSANT) {
+	} else if ((move & FLAG_MASK)  == EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB += capture_square;
 		colorBB[color ^ 1] += capture_square;
 		piece_list[captured_pawn] += capture_square;
-	} else if ((move & FLAG_MASK) >> 18 == CASTLING) {
+	} else if ((move & FLAG_MASK)  == CASTLING) {
 		uint64_t king_from = from;
 		uint64_t king_to = to;
 		if (king_from < king_to) { // castling short			
@@ -121,7 +122,7 @@ void Board::init(const Position& fenInfo) {
 }
 
 void Board::setEnPassantSquare(int color, int move) {
-	if ((move & FLAG_MASK) >> 18 == DOUBLE_PUSH) {
+	if ((move & FLAG_MASK) == DOUBLE_PUSH) {
 		enpassant_square = color == WHITE ? ((move & TO_MASK) >> 12) - 8 : ((move & TO_MASK) >> 12) + 8;
 	} else {
 		enpassant_square = 0;

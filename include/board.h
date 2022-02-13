@@ -87,8 +87,8 @@ constexpr int FLAG_MASK = 0x3F << 18;
 constexpr int PROMOTION_MASK = 0x3F << 24;
 
 constexpr int CAPTURE_MASK = 0x3F;
-constexpr int ENPASSANT_MASK = 0xFC0;
-constexpr int CASTLING_MASK = 0x3F000;
+constexpr int ENPASSANT_MASK = 0x3F << 6;
+constexpr int CASTLING_MASK = 0x3F << 12;
 
 class Board {
 

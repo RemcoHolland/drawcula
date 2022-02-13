@@ -55,11 +55,11 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				int move = piece + (from << 6) + (to << 12) + (flag << 18) + (promotion << 24);
+				int move = piece + (from << 6) + (to << 12) + (flag) + (promotion << 24);
 				moves.push_back(move);
 			}
 		} else {
-			int move = piece + (from << 6) + (to << 12) + (flag << 18);
+			int move = piece + (from << 6) + (to << 12) + (flag);
 			moves.push_back(move);
 		}
 		from_squares = Utils::clearLSB(from_squares);
@@ -70,7 +70,7 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 void Movegen::addEnPassantMoves(int piece, uint64_t from_squares, int to) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
-		int move = piece + (from << 6) + (to << 12) + (EN_PASSANT << 18);
+		int move = piece + (from << 6) + (to << 12) + (EN_PASSANT);
 		moves.push_back(move);
 		from_squares = Utils::clearLSB(from_squares);
 	}
@@ -81,7 +81,7 @@ void Movegen::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t e
 		int to = Utils::getLS1B(to_squares);
 		uint64_t to_square = Utils::getLSB(to_squares);
 		int flag = (to_square & enemies) ? CAPTURE : NO_FLAG;
-		int move = piece + (from << 6) + (to << 12) + (flag << 18);
+		int move = piece + (from << 6) + (to << 12) + (flag);
 		moves.push_back(move);
 		to_squares = Utils::clearLSB(to_squares);
 	}
@@ -283,7 +283,7 @@ void Movegen::castling(int color, const Board& board) {
 			// TODO: delay isAttacked to the search algorithm
 			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square << 1)))) {
 				int to = Utils::getLS1B(king_square << 2);
-				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING << 18);
+				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING);
 				moves.push_back(move);
 			}
 		}
@@ -297,7 +297,7 @@ void Movegen::castling(int color, const Board& board) {
 
 			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square >> 1)))) {
 				int to = Utils::getLS1B(king_square >> 2);
-				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING << 18);
+				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING);
 				moves.push_back(move);
 			}
 		}
