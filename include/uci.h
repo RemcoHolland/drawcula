@@ -1,7 +1,7 @@
 #pragma once
 #include "stringutils.h"
 #include "perft.h"
-#include "movelist.h"
+#include "movegen.h"
 #include "fenreader.h"
 #include "search.h"
 #include <iostream>

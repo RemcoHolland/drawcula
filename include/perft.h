@@ -1,7 +1,7 @@
 #pragma once
 
 #include "board.h"
-#include "movelist.h"
+#include "movegen.h"
 #include "utils.h"
 #include "stringutils.h"
 

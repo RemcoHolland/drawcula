@@ -60,7 +60,7 @@ void Uci::position(const std::vector<std::string>& commands) {
 	if (commands.size() > i && commands[i] == "moves") {
 		for (i++; i < commands.size(); i++) {
 			// TODO: remove color here
-			Movelist movelist = Movelist();
+			Movegen movelist = Movegen();
 			movelist.generateMoves(color, board);
 			int move = movelist.getLegalMove(stringToMove(color, commands[i]));
 			board.makeMove(color, move);

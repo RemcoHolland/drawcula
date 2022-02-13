@@ -24,7 +24,7 @@ void Perft::negaMax(int color, Board board, int depth) {
 		return;
 	}
 
-	Movelist movelist = Movelist();
+	Movegen movelist = Movegen();
 	movelist.generateMoves(color, board);
 
 	for (int move : movelist.moves) {

@@ -51,7 +51,7 @@ int Search::negaMax(int color, int depth, Board& board, std::vector<int>& PV) {
 		return  (-color | 1) * evaluation.getScore(board);
 	}
 	int max = -std::numeric_limits<int>::max();
-	Movelist movelist = Movelist();
+	Movegen movelist = Movegen();
 	movelist.generateMoves(color, board);
 	for (auto move : movelist.moves) {
 		nodes++;

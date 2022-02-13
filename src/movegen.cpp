@@ -1,9 +1,9 @@
-#include "movelist.h"
+#include "movegen.h"
 
-Movelist::Movelist() {
+Movegen::Movegen() {
 }
 
-int Movelist::getLegalMove(int move) {
+int Movegen::getLegalMove(int move) {
 	int	m_from = (move & FROM_MASK) >> 6;
 	int m_to = (move & TO_MASK) >> 12;
 	int m_promotion = (move & PROMOTION_MASK) >> 24;
@@ -20,7 +20,7 @@ int Movelist::getLegalMove(int move) {
 	throw std::invalid_argument("Illegal move specified");
 }
 
-void Movelist::generateMoves(int color, const Board& board) {
+void Movegen::generateMoves(int color, const Board& board) {
 	if (color == WHITE) {
 		whitePawnsPush(board);
 		whitePawnsDoublePush(board);
@@ -47,7 +47,7 @@ void Movelist::generateMoves(int color, const Board& board) {
 	castling(color, board);
 }
 
-void Movelist::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t to_squares, int flag) {
+void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t to_squares, int flag) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
 		int to = Utils::getLS1B(to_squares);
@@ -67,7 +67,7 @@ void Movelist::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_
 	}
 }
 
-void Movelist::addEnPassantMoves(int piece, uint64_t from_squares, uint64_t to_square) {
+void Movegen::addEnPassantMoves(int piece, uint64_t from_squares, uint64_t to_square) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
 		int to = Utils::getLS1B(to_square);
@@ -77,7 +77,7 @@ void Movelist::addEnPassantMoves(int piece, uint64_t from_squares, uint64_t to_s
 	}
 }
 
-void Movelist::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t enemies) {
+void Movegen::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t enemies) {
 	while (to_squares) {
 		int to = Utils::getLS1B(to_squares);
 		uint64_t to_square = Utils::getLSB(to_squares);
@@ -88,35 +88,35 @@ void Movelist::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t 
 	}
 }
 
-void Movelist::whitePawnsPush(const Board& board) {
+void Movegen::whitePawnsPush(const Board& board) {
 	uint64_t to_squares = (board.piece_list[WHITE_PAWN] << 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares >> 8;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, NO_FLAG);
 }
 
-void Movelist::whitePawnsDoublePush(const Board& board) {
+void Movegen::whitePawnsDoublePush(const Board& board) {
 	uint64_t to_squares = ((((board.piece_list[WHITE_PAWN] & RANK_2) << 8) & ~board.occupiedBB) << 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares >> 16;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, DOUBLE_PUSH);
 }
 
-void Movelist::whitePawnsCaptureLeft(const Board& board) {
+void Movegen::whitePawnsCaptureLeft(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[WHITE_PAWN] & ~FILE_A) << 7) & board.colorBB[BLACK];
 	uint64_t from_squares = to_squares >> 7;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, CAPTURE);
 }
 
-void Movelist::whitePawnsCaptureRight(const Board& board) {
+void Movegen::whitePawnsCaptureRight(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[WHITE_PAWN] & ~FILE_H) << 9) & board.colorBB[BLACK];
 	uint64_t from_squares = to_squares >> 9;
 
 	addPawnMoves(WHITE, WHITE_PAWN, from_squares, to_squares, CAPTURE);
 }
 
-void Movelist::whitePawnsEnpassant(const Board& board) {
+void Movegen::whitePawnsEnpassant(const Board& board) {
 	if (board.enpassant_square) {
 		uint64_t from_squares = ((board.enpassant_square >> 9) | (board.enpassant_square >> 7)) & board.piece_list[WHITE_PAWN] & RANK_5;
 
@@ -124,35 +124,35 @@ void Movelist::whitePawnsEnpassant(const Board& board) {
 	}
 }
 
-void Movelist::blackPawnsPush(const Board& board) {
+void Movegen::blackPawnsPush(const Board& board) {
 	uint64_t to_squares = (board.piece_list[BLACK_PAWN] >> 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares << 8;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, NO_FLAG);
 }
 
-void Movelist::blackPawnsDoublePush(const Board& board) {
+void Movegen::blackPawnsDoublePush(const Board& board) {
 	uint64_t to_squares = ((((board.piece_list[BLACK_PAWN] & RANK_7) >> 8) & ~board.occupiedBB) >> 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares << 16;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, DOUBLE_PUSH);
 }
 
-void Movelist::blackPawnsCaptureLeft(const Board& board) {
+void Movegen::blackPawnsCaptureLeft(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[BLACK_PAWN] & ~FILE_A) >> 9) & board.colorBB[WHITE];
 	uint64_t from_squares = to_squares << 9;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, CAPTURE);
 }
 
-void Movelist::blackPawnsCaptureRight(const Board& board) {
+void Movegen::blackPawnsCaptureRight(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[BLACK_PAWN] & ~FILE_H) >> 7) & board.colorBB[WHITE];
 	uint64_t from_squares = to_squares << 7;
 
 	addPawnMoves(BLACK, BLACK_PAWN, from_squares, to_squares, CAPTURE);
 }
 
-void Movelist::blackPawnsEnpassant(const Board& board) {
+void Movegen::blackPawnsEnpassant(const Board& board) {
 	uint64_t enpassant_square = board.enpassant_square;
 
 	if (enpassant_square != 0) {
@@ -162,7 +162,7 @@ void Movelist::blackPawnsEnpassant(const Board& board) {
 	}
 }
 
-void Movelist::whiteKnightMoves(const Board& board) {
+void Movegen::whiteKnightMoves(const Board& board) {
 	uint64_t knights = board.piece_list[WHITE_KNIGHT];
 
 	while (knights) {
@@ -174,7 +174,7 @@ void Movelist::whiteKnightMoves(const Board& board) {
 	}
 }
 
-void Movelist::blackKnightMoves(const Board& board) {
+void Movegen::blackKnightMoves(const Board& board) {
 	uint64_t knights = board.piece_list[BLACK_KNIGHT];
 
 	while (knights) {
@@ -186,7 +186,7 @@ void Movelist::blackKnightMoves(const Board& board) {
 	}
 }
 
-void Movelist::whiteBishopMoves(const Board& board) {
+void Movegen::whiteBishopMoves(const Board& board) {
 	uint64_t bishops = board.piece_list[WHITE_BISHOP];
 
 	while (bishops) {
@@ -199,7 +199,7 @@ void Movelist::whiteBishopMoves(const Board& board) {
 	}
 }
 
-void Movelist::blackBishopMoves(const Board& board) {
+void Movegen::blackBishopMoves(const Board& board) {
 	uint64_t bishops = board.piece_list[BLACK_BISHOP];
 
 	while (bishops) {
@@ -211,7 +211,7 @@ void Movelist::blackBishopMoves(const Board& board) {
 	}
 }
 
-void Movelist::whiteRookMoves(const Board& board) {
+void Movegen::whiteRookMoves(const Board& board) {
 	uint64_t rooks = board.piece_list[WHITE_ROOK];
 
 	while (rooks) {
@@ -223,7 +223,7 @@ void Movelist::whiteRookMoves(const Board& board) {
 	}
 }
 
-void Movelist::blackRookMoves(const Board& board) {
+void Movegen::blackRookMoves(const Board& board) {
 	uint64_t rooks = board.piece_list[BLACK_ROOK];
 
 	while (rooks) {
@@ -235,7 +235,7 @@ void Movelist::blackRookMoves(const Board& board) {
 	}
 }
 
-void Movelist::whiteQueenMoves(const Board& board) {
+void Movegen::whiteQueenMoves(const Board& board) {
 	uint64_t queens = board.piece_list[WHITE_QUEEN];
 
 	while (queens) {
@@ -247,7 +247,7 @@ void Movelist::whiteQueenMoves(const Board& board) {
 	}
 }
 
-void Movelist::blackQueenMoves(const Board& board) {
+void Movegen::blackQueenMoves(const Board& board) {
 	uint64_t queens = board.piece_list[BLACK_QUEEN];
 
 	while (queens) {
@@ -259,7 +259,7 @@ void Movelist::blackQueenMoves(const Board& board) {
 	}
 }
 
-void Movelist::whiteKingMoves(const Board& board) {
+void Movegen::whiteKingMoves(const Board& board) {
 	uint64_t from = board.piece_list[WHITE_KING];
 	int from_nr = Utils::getLS1B(from);
 	uint64_t to_squares = KING_MOVES[from_nr] & ~board.colorBB[WHITE];
@@ -267,7 +267,7 @@ void Movelist::whiteKingMoves(const Board& board) {
 	addPieceMoves(WHITE_KING, from_nr, to_squares, board.colorBB[BLACK]);
 }
 
-void Movelist::blackKingMoves(const Board& board) {
+void Movegen::blackKingMoves(const Board& board) {
 	uint64_t from = board.piece_list[BLACK_KING];
 	int from_nr = Utils::getLS1B(from);
 	uint64_t to_squares = KING_MOVES[from_nr] & ~board.colorBB[BLACK];
@@ -275,7 +275,7 @@ void Movelist::blackKingMoves(const Board& board) {
 	addPieceMoves(BLACK_KING, from_nr, to_squares, board.colorBB[WHITE]);
 }
 
-void Movelist::castling(int color, const Board& board) {
+void Movegen::castling(int color, const Board& board) {
 	if (board.castling_rights & (Castling::KING_SIDE << color)) {
 		uint64_t short_castle = KING_SIDE_SQUARES << color * 56;
 		if ((~board.occupiedBB & short_castle) == short_castle) {
@@ -307,5 +307,5 @@ void Movelist::castling(int color, const Board& board) {
 	}
 }
 
-Movelist::~Movelist() {
+Movegen::~Movegen() {
 }

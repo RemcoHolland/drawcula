@@ -4,7 +4,7 @@
 #include <limits>
 #include "evaluation.h"
 #include "color.h"
-#include "movelist.h"
+#include "movegen.h"
 #include "square.h"
 #include "moveinfo.h"
 #include "stringutils.h"

@@ -10,14 +10,14 @@
 #include <stdexcept>
 #include <vector>
 
-class Movelist {
+class Movegen {
 
 public:
-	Movelist();
+	Movegen();
 	int getLegalMove(int);
 	void generateMoves(int, const Board&);
 	std::vector<int> moves;
-	~Movelist();
+	~Movegen();
 
 private:	
 	void addPawnMoves(int, int, uint64_t, uint64_t, int);
