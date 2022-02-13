@@ -1,11 +1,12 @@
 #pragma once
 #include <string>
 #include "piece.h"
-#include "move.h"
 #include "color.h"
 #include "moveinfo.h"
 #include "castling.h"
 #include "position.h"
+#include "utils.h"
+#include "flag.h"
 
 using std::string;
 
@@ -90,7 +91,6 @@ class Board {
 
 public:
 	Board(const Position&);
-	void setPosition(const Position&);
 
 	uint64_t piece_list[TOTAL_PIECES];
 	uint64_t occupiedBB = 0;
@@ -98,8 +98,10 @@ public:
 	uint64_t enpassant_square = 0;
 	int castling_rights;
 
+	void setPosition(const Position&);
 	const MoveInfo makeMove(int, int);
 	void unmakeMove(int, int, const MoveInfo&);
+
 	~Board();
 
 private:

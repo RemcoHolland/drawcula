@@ -1,5 +1,4 @@
 #pragma once
-#include "move.h"
 #include "board.h"
 #include "piece.h"
 #include "color.h"
@@ -8,7 +7,7 @@
 #include "magicmoves.h"
 #include "castling.h"
 #include "square.h"
-
+#include <stdexcept>
 #include <vector>
 
 class Movelist {

@@ -16,7 +16,7 @@ using StringUtils::split;
 
 class Uci {
 public:
-	Uci();
+	Uci();	
 	void loop();
 	void position(const std::vector<std::string>&);
 	void go(const std::vector<std::string>&);

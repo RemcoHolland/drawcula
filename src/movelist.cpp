@@ -1,6 +1,5 @@
 #include "movelist.h"
 
-
 Movelist::Movelist() {
 }
 

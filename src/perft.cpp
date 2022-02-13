@@ -9,7 +9,7 @@ uint64_t Perft::calculate(int color, Board board) {
 	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 	negaMax(color, board, search_depth);
 	long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
-	std::cout << "nodes: " << nodes << " searchtime: " << searchtime << " ms"  << std::endl;
+	std::cout << "nodes: " << nodes << " searchtime: " << searchtime << " ms" << std::endl;
 	return nodes;
 }
 
@@ -44,5 +44,5 @@ void Perft::negaMax(int color, Board board, int depth) {
 }
 
 void Perft::printRootNodes(int move) {
-	std::cout << Move::moveToString(move) << ' ' << root_nodes << std::endl;
+	std::cout << StringUtils::moveToString(move) << ' ' << root_nodes << std::endl;
 }

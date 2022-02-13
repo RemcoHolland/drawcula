@@ -2,12 +2,12 @@
 #include <chrono>
 #include <vector>
 #include <limits>
-#include "move.h"
 #include "evaluation.h"
 #include "color.h"
 #include "movelist.h"
 #include "square.h"
 #include "moveinfo.h"
+#include "stringutils.h"
 #include "atomic"
 
 #pragma once

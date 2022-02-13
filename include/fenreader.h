@@ -8,7 +8,6 @@
 #include "position.h"
 #include "color.h"
 #include "castling.h"
-#include "utils.h"
 #include "stringutils.h"
 
 using std::string;

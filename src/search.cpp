@@ -33,7 +33,7 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 			std::cout << "info depth " << depth << " score " << scoreStr << " time " << searchtime << " nodes " << nodes << " nps " << nps << " pv " << printPV(currentPV) << std::endl;
 		}
 	} while (g_stop == false && depth++ != max_depth);
-	std::cout << "bestmove " << Move::moveToString(PV.front()) << std::endl;
+	std::cout << "bestmove " << StringUtils::moveToString(PV.front()) << std::endl;
 }
 
 //Improvement: make a root negaMax, see chess programming network.
@@ -96,7 +96,7 @@ void Search::updatePV(std::vector<int>& PV, const  std::vector<int>& childPV, in
 string Search::printPV(const std::vector<int>& PV) {
 	string pvStr = "";
 	for (int move : PV) {
-		pvStr += Move::moveToString(move);
+		pvStr += StringUtils::moveToString(move);
 		pvStr += " ";
 	}
 	return (pvStr.substr(0, pvStr.size() - 1));
