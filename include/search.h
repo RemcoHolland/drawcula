@@ -6,7 +6,6 @@
 #include "color.h"
 #include "movegen.h"
 #include "square.h"
-#include "moveinfo.h"
 #include "stringutils.h"
 #include "atomic"
 

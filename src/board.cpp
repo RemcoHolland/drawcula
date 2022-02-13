@@ -10,7 +10,7 @@ void Board::setPosition(const Position& fenInfo) {
 	init(fenInfo);
 }
 
-const MoveInfo Board::makeMove(int color, int move) {
+const int Board::makeMove(int color, int move) {
 	uint64_t from = Utils::getPower((move & FROM_MASK) >> 6);
 	uint64_t to = Utils::getPower((move & TO_MASK) >> 12);
 	occupiedBB = occupiedBB - from + to;
@@ -58,11 +58,11 @@ const MoveInfo Board::makeMove(int color, int move) {
 	setEnPassantSquare(color, move);
 	int current_castling_rights = castling_rights;
 	setCastlingRights(color, from, to);
-
-	return MoveInfo(captured_piece, enpassant_square, current_castling_rights);
+	int moveinfo = captured_piece + (enpassant_square << 6) + (current_castling_rights << 12);
+	return moveinfo;
 }
 
-void Board::unmakeMove(int color, int move, const MoveInfo& moveInfo) {
+void Board::unmakeMove(int color, int move, int moveinfo) {
 	uint64_t from = Utils::getPower((move & FROM_MASK) >> 6);
 	uint64_t to = Utils::getPower((move & TO_MASK) >> 12);
 	// TODO: use bitshift with move.getFrom()?
@@ -73,7 +73,7 @@ void Board::unmakeMove(int color, int move, const MoveInfo& moveInfo) {
 	if ((move & FLAG_MASK) >> 18 == CAPTURE) {
 		occupiedBB += to;
 		colorBB[color ^ 1] += to;
-		piece_list[moveInfo.captured_piece] += to;
+		piece_list[moveinfo & CAPTURE_MASK] += to;
 	} else if ((move & FLAG_MASK) >> 18 == EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
@@ -100,8 +100,8 @@ void Board::unmakeMove(int color, int move, const MoveInfo& moveInfo) {
 		piece_list[(move & PROMOTION_MASK) >> 24] -= to;
 	}
 
-	enpassant_square = moveInfo.enpassant_square;
-	castling_rights = moveInfo.castling_rights;
+	enpassant_square = (moveinfo & ENPASSANT_MASK) >> 6;
+	castling_rights = (moveinfo & CASTLING_MASK) >> 12;
 }
 
 void Board::init(const Position& fenInfo) {

@@ -2,7 +2,6 @@
 #include <string>
 #include "piece.h"
 #include "color.h"
-#include "moveinfo.h"
 #include "castling.h"
 #include "position.h"
 #include "utils.h"
@@ -87,6 +86,10 @@ constexpr int TO_MASK = 0x3F << 12;
 constexpr int FLAG_MASK = 0x3F << 18;
 constexpr int PROMOTION_MASK = 0x3F << 24;
 
+constexpr int CAPTURE_MASK = 0x3F;
+constexpr int ENPASSANT_MASK = 0xFC0;
+constexpr int CASTLING_MASK = 0x3F000;
+
 class Board {
 
 public:
@@ -99,8 +102,8 @@ public:
 	int castling_rights;
 
 	void setPosition(const Position&);
-	const MoveInfo makeMove(int, int);
-	void unmakeMove(int, int, const MoveInfo&);
+	const int makeMove(int, int);
+	void unmakeMove(int, int, int);
 
 	~Board();
 

@@ -28,7 +28,7 @@ void Perft::negaMax(int color, Board board, int depth) {
 	movelist.generateMoves(color, board);
 
 	for (int move : movelist.moves) {
-		MoveInfo moveInfo = board.makeMove(color, move);
+		int moveinfo = board.makeMove(color, move);
 
 		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			negaMax(color ^ 1, board, depth - 1);
@@ -38,7 +38,7 @@ void Perft::negaMax(int color, Board board, int depth) {
 				root_nodes = 0;
 			}
 		}
-		board.unmakeMove(color, move, moveInfo);
+		board.unmakeMove(color, move, moveinfo);
 	}
 	return;
 }
