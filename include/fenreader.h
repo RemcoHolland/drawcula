@@ -26,7 +26,7 @@ private:
 	static int getColor(char);
 	static int getPiece(char);
 	static int getCastlingRight(char);
-	static uint64_t getEnpassantSquare(char, char);
+	static int getEnpassantSquare(char, char);
 	static int getNumber(char);
 };
 

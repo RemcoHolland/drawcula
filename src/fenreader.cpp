@@ -28,7 +28,7 @@ Position FenReader::read(string fen) {
 	}
 
 	// en passant
-	uint64_t enpassant_square{ 0 };
+	int enpassant_square = 0;
 	string enpassantStr = splitted_fen.at(3);
 	if (enpassantStr != "-") {
 		enpassant_square = getEnpassantSquare(enpassantStr[0], enpassantStr[1]);
@@ -97,8 +97,8 @@ int FenReader::getCastlingRight(char castling_char) {
 	}
 }
 
-uint64_t FenReader::getEnpassantSquare(char file, char rank) {
-	return Utils::getPower(StringUtils::getSquare(file, rank));
+int FenReader::getEnpassantSquare(char file, char rank) {
+	return StringUtils::getSquare(file, rank);
 }
 
 int FenReader::getNumber(char number) {

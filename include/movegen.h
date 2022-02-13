@@ -21,7 +21,7 @@ public:
 
 private:	
 	void addPawnMoves(int, int, uint64_t, uint64_t, int);
-	void addEnPassantMoves(int, uint64_t, uint64_t);
+	void addEnPassantMoves(int, uint64_t, int);
 	void addPieceMoves(int, int, uint64_t, uint64_t);
 	void whitePawnsPush(const Board&);
 	void whitePawnsDoublePush(const Board&);

@@ -7,7 +7,7 @@ int Movegen::getLegalMove(int move) {
 	int	m_from = (move & FROM_MASK) >> 6;
 	int m_to = (move & TO_MASK) >> 12;
 	int m_promotion = (move & PROMOTION_MASK) >> 24;
-	
+
 	for (int legalMove : moves) {
 		int lm_from = (legalMove & FROM_MASK) >> 6;
 		int lm_to = (move & TO_MASK) >> 12;
@@ -67,10 +67,9 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 	}
 }
 
-void Movegen::addEnPassantMoves(int piece, uint64_t from_squares, uint64_t to_square) {
+void Movegen::addEnPassantMoves(int piece, uint64_t from_squares, int to) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
-		int to = Utils::getLS1B(to_square);
 		int move = piece + (from << 6) + (to << 12) + (EN_PASSANT << 18);
 		moves.push_back(move);
 		from_squares = Utils::clearLSB(from_squares);
@@ -118,7 +117,7 @@ void Movegen::whitePawnsCaptureRight(const Board& board) {
 
 void Movegen::whitePawnsEnpassant(const Board& board) {
 	if (board.enpassant_square) {
-		uint64_t from_squares = ((board.enpassant_square >> 9) | (board.enpassant_square >> 7)) & board.piece_list[WHITE_PAWN] & RANK_5;
+		uint64_t from_squares = ((Utils::getPower(board.enpassant_square) >> 9) | (Utils::getPower(board.enpassant_square) >> 7)) & board.piece_list[WHITE_PAWN] & RANK_5;
 
 		addEnPassantMoves(WHITE_PAWN, from_squares, board.enpassant_square);
 	}
@@ -153,12 +152,10 @@ void Movegen::blackPawnsCaptureRight(const Board& board) {
 }
 
 void Movegen::blackPawnsEnpassant(const Board& board) {
-	uint64_t enpassant_square = board.enpassant_square;
+	if (board.enpassant_square) {
+		uint64_t from_squares = ((Utils::getPower(board.enpassant_square) << 9) | (Utils::getPower(board.enpassant_square) << 7)) & board.piece_list[BLACK_PAWN] & RANK_4;
 
-	if (enpassant_square != 0) {
-		uint64_t from_squares = ((enpassant_square << 9) | (enpassant_square << 7)) & board.piece_list[BLACK_PAWN] & RANK_4;
-
-		addEnPassantMoves(BLACK_PAWN, from_squares, enpassant_square);
+		addEnPassantMoves(BLACK_PAWN, from_squares, board.enpassant_square);
 	}
 }
 

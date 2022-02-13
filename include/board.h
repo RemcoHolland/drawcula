@@ -95,7 +95,7 @@ public:
 	uint64_t piece_list[TOTAL_PIECES];
 	uint64_t occupiedBB = 0;
 	uint64_t colorBB[2] = { 0 };
-	uint64_t enpassant_square = 0;
+	int enpassant_square = 0;
 	int castling_rights;
 
 	void setPosition(const Position&);

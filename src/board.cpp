@@ -122,7 +122,7 @@ void Board::init(const Position& fenInfo) {
 
 void Board::setEnPassantSquare(int color, int move) {
 	if ((move & FLAG_MASK) >> 18 == DOUBLE_PUSH) {
-		enpassant_square = color == WHITE ? Utils::getPower((move & TO_MASK) >> 12) >> 8 : Utils::getPower((move & TO_MASK) >> 12) << 8;
+		enpassant_square = color == WHITE ? ((move & TO_MASK) >> 12) - 8 : ((move & TO_MASK) >> 12) + 8;
 	} else {
 		enpassant_square = 0;
 	}
