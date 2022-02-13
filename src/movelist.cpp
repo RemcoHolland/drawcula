@@ -5,14 +5,15 @@ Movelist::Movelist() {
 }
 
 int Movelist::getLegalMove(int move) {
-	// move is legal if 'from', 'to'  and 'promotion piece' are the same
+	int	m_from = (move & FROM_MASK) >> 6;
+	int m_to = (move & TO_MASK) >> 12;
+	int m_promotion = (move & PROMOTION_MASK) >> 24;
+	
 	for (int legalMove : moves) {
-		int lm_from = (legalMove & (0x3F << 6)) >> 6;
-		int	m_from = (move & (0x3F << 6)) >> 6;
-		int lm_to = (move & (0x3F << 12)) >> 12;
-		int m_to = (move & (0x3F << 12)) >> 12;
-		int lm_promotion = (move & (0x3F << 24)) >> 24;
-		int m_promotion = (move & (0x3F << 24)) >> 24;
+		int lm_from = (legalMove & FROM_MASK) >> 6;
+		int lm_to = (move & TO_MASK) >> 12;
+		int lm_promotion = (move & PROMOTION_MASK) >> 24;
+		// move is legal if 'from', 'to'  and 'promotion piece' are the same
 		if (lm_from == m_from && lm_to == m_to && lm_promotion == m_promotion) {
 			return legalMove;
 		}
