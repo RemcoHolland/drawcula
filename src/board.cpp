@@ -13,13 +13,13 @@ void Board::setPosition(const Position& fenInfo) {
 const int Board::makeMove(int color, int move) {
 	uint64_t from = Utils::getPower((move & FROM_MASK) >> 6);
 	uint64_t to = Utils::getPower((move & TO_MASK) >> 12);
-	
+
 	occupiedBB = occupiedBB - from + to;
 	colorBB[color] = colorBB[color] - from + to;
 	piece_list[move & PIECE_MASK] = piece_list[move & PIECE_MASK] - from + to;
 	int captured_piece = NO_PIECE;
 
-	if ((move & FLAG_MASK)  == CAPTURE) {
+	if ((move & FLAG_MASK) == CAPTURE) {
 		int piece_color = color * NR_PIECES;
 		for (int piece = BLACK_PAWN - piece_color; piece <= BLACK_QUEEN - piece_color; piece++) {
 			if ((piece_list[piece] & to)) {
@@ -36,7 +36,7 @@ const int Board::makeMove(int color, int move) {
 		occupiedBB -= capture_square;
 		colorBB[color ^ 1] -= capture_square;
 		piece_list[captured_pawn] -= capture_square;
-	} else if ((move & FLAG_MASK)  == CASTLING) {
+	} else if ((move & FLAG_MASK) == CASTLING) {
 		uint64_t king_from = from;
 		uint64_t king_to = to;
 		if (king_from < king_to) { // castling short			
@@ -58,7 +58,7 @@ const int Board::makeMove(int color, int move) {
 
 	setEnPassantSquare(color, move);
 	int current_castling_rights = castling_rights;
-	setCastlingRights(color, from, to);
+	setCastlingRights(color, move & PIECE_MASK, move & FLAG_MASK, from, to);
 	int unmake_info = captured_piece + (enpassant_square << 6) + (current_castling_rights << 12);
 	return unmake_info;
 }
@@ -75,13 +75,13 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		occupiedBB += to;
 		colorBB[color ^ 1] += to;
 		piece_list[unmake_info & CAPTURE_MASK] += to;
-	} else if ((move & FLAG_MASK)  == EN_PASSANT) {
+	} else if ((move & FLAG_MASK) == EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB += capture_square;
 		colorBB[color ^ 1] += capture_square;
 		piece_list[captured_pawn] += capture_square;
-	} else if ((move & FLAG_MASK)  == CASTLING) {
+	} else if ((move & FLAG_MASK) == CASTLING) {
 		uint64_t king_from = from;
 		uint64_t king_to = to;
 		if (king_from < king_to) { // castling short			
@@ -129,32 +129,36 @@ void Board::setEnPassantSquare(int color, int move) {
 	}
 }
 
-void Board::setCastlingRights(int color, uint64_t from, uint64_t to) {
-	if (castling_rights != 0) {
-		int color_shift = color * 56;
+void Board::setCastlingRights(int color, int piece, int flag, uint64_t from, uint64_t to) {
+	if (castling_rights) {
+		// only update castling rights after a friendly rook or king move or a capture
+		if (piece == (WHITE_ROOK + (color * NR_PIECES)) || (piece == WHITE_KING + (color * NR_PIECES)) || (flag == CAPTURE)) {
 
-		// check own kingside castling rights when move is a king or rook move
-		if (castling_rights & (Castling::KING_SIDE << color)) {
-			if (from & (E1 << color_shift) || from & (H1 << color_shift)) {
-				castling_rights ^= Castling::KING_SIDE << color;
+			int color_shift = color * 56;
+
+			// check own kingside castling rights when move is a king or rook move
+			if (castling_rights & (Castling::KING_SIDE << color)) {
+				if (from & (E1 << color_shift) || from & (H1 << color_shift)) {
+					castling_rights ^= Castling::KING_SIDE << color;
+				}
 			}
-		}
-		// check enemies kingside castling rights when move is a capture
-		if (castling_rights & (Castling::KING_SIDE << (color ^ 1))) {
-			if (to & (H8 >> color_shift)) {
-				castling_rights ^= Castling::KING_SIDE << (color ^ 1);
+			// check enemies kingside castling rights when move is a rook capture
+			if (castling_rights & (Castling::KING_SIDE << (color ^ 1))) {
+				if (to & (H8 >> color_shift)) {
+					castling_rights ^= Castling::KING_SIDE << (color ^ 1);
+				}
 			}
-		}
-		// check own queenside castling rights when move is a king or rook move
-		if (castling_rights & (Castling::QUEEN_SIDE << color)) {
-			if (from & (E1 << color_shift) || from & (A1 << color_shift)) {
-				castling_rights ^= Castling::QUEEN_SIDE << color;
+			// check own queenside castling rights when move is a king or rook move
+			if (castling_rights & (Castling::QUEEN_SIDE << color)) {
+				if (from & (E1 << color_shift) || from & (A1 << color_shift)) {
+					castling_rights ^= Castling::QUEEN_SIDE << color;
+				}
 			}
-		}
-		// check enemies queenside castling rights when move is a capture
-		if (castling_rights & (Castling::QUEEN_SIDE << (color ^ 1))) {
-			if (to & (A8 >> color_shift)) {
-				castling_rights ^= Castling::QUEEN_SIDE << (color ^ 1);
+			// check enemies queenside castling rights when move is a rook capture
+			if (castling_rights & (Castling::QUEEN_SIDE << (color ^ 1))) {
+				if (to & (A8 >> color_shift)) {
+					castling_rights ^= Castling::QUEEN_SIDE << (color ^ 1);
+				}
 			}
 		}
 	}

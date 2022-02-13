@@ -110,5 +110,5 @@ public:
 private:
 	void init(const Position&);
 	void setEnPassantSquare(int, int);
-	void setCastlingRights(int, uint64_t, uint64_t);
+	void setCastlingRights(int, int, int, uint64_t, uint64_t);
 };
