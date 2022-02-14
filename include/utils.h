@@ -27,8 +27,6 @@ constexpr int index64[64] = {
 class Utils {
 public:
 	static uint64_t getPower(int);
-	static uint64_t getLSB(uint64_t);
-	static uint64_t clearLSB(uint64_t);
 	static uint64_t flipBitVertical(uint64_t);
 	static uint64_t flip1BBVertical(uint64_t);
 	static int getLS1B(uint64_t);

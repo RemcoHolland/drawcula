@@ -55,15 +55,15 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				int move = piece + (from << 6) + (to << 12) + (flag) + (promotion << 24);
+				int move = piece + (from << 6) + (to << 12) + (flag)+(promotion << 24);
 				moves.push_back(move);
 			}
 		} else {
 			int move = piece + (from << 6) + (to << 12) + (flag);
 			moves.push_back(move);
 		}
-		from_squares = Utils::clearLSB(from_squares);
-		to_squares = Utils::clearLSB(to_squares);
+		from_squares &= (from_squares - 1); // clear LSB
+		to_squares &= (to_squares - 1); // clear LSB
 	}
 }
 
@@ -72,18 +72,18 @@ void Movegen::addEnPassantMoves(int piece, uint64_t from_squares, int to) {
 		int from = Utils::getLS1B(from_squares);
 		int move = piece + (from << 6) + (to << 12) + (EN_PASSANT);
 		moves.push_back(move);
-		from_squares = Utils::clearLSB(from_squares);
+		from_squares &= (from_squares - 1); // clear LSB
 	}
 }
 
 void Movegen::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t enemies) {
 	while (to_squares) {
 		int to = Utils::getLS1B(to_squares);
-		uint64_t to_square = Utils::getLSB(to_squares);
+		uint64_t to_square = to_squares & (0 - to_squares); // get LSB
 		int flag = (to_square & enemies) ? CAPTURE : NO_FLAG;
 		int move = piece + (from << 6) + (to << 12) + (flag);
 		moves.push_back(move);
-		to_squares = Utils::clearLSB(to_squares);
+		to_squares &= (to_squares - 1); // clear LSB
 	}
 }
 
@@ -167,7 +167,7 @@ void Movegen::whiteKnightMoves(const Board& board) {
 		uint64_t to_squares = KNIGHT_MOVES[from] & ~board.colorBB[WHITE];
 
 		addPieceMoves(WHITE_KNIGHT, from, to_squares, board.colorBB[BLACK]);
-		knights = Utils::clearLSB(knights);
+		knights &= (knights - 1); // clear LSB
 	}
 }
 
@@ -179,7 +179,7 @@ void Movegen::blackKnightMoves(const Board& board) {
 		uint64_t to_squares = KNIGHT_MOVES[from] & ~board.colorBB[BLACK];
 
 		addPieceMoves(BLACK_KNIGHT, from, to_squares, board.colorBB[WHITE]);
-		knights = Utils::clearLSB(knights);
+		knights &= (knights - 1); // clear LSB
 	}
 }
 
@@ -192,7 +192,7 @@ void Movegen::whiteBishopMoves(const Board& board) {
 
 		addPieceMoves(WHITE_BISHOP, from, to_squares, board.colorBB[BLACK]);
 
-		bishops = Utils::clearLSB(bishops);
+		bishops &= (bishops - 1); // clear LSB
 	}
 }
 
@@ -204,7 +204,7 @@ void Movegen::blackBishopMoves(const Board& board) {
 		uint64_t to_squares = Bmagic(from, board.occupiedBB) & ~board.colorBB[BLACK];
 
 		addPieceMoves(BLACK_BISHOP, from, to_squares, board.colorBB[WHITE]);
-		bishops = Utils::clearLSB(bishops);
+		bishops &= (bishops - 1); // clear LSB
 	}
 }
 
@@ -216,7 +216,7 @@ void Movegen::whiteRookMoves(const Board& board) {
 		uint64_t to_squares = Rmagic(from, board.occupiedBB) & ~board.colorBB[WHITE];
 
 		addPieceMoves(WHITE_ROOK, from, to_squares, board.colorBB[BLACK]);
-		rooks = Utils::clearLSB(rooks);
+		rooks &= (rooks - 1); // clear LSB
 	}
 }
 
@@ -228,7 +228,7 @@ void Movegen::blackRookMoves(const Board& board) {
 		uint64_t to_squares = Rmagic(from, board.occupiedBB) & ~board.colorBB[BLACK];
 
 		addPieceMoves(BLACK_ROOK, from, to_squares, board.colorBB[WHITE]);
-		rooks = Utils::clearLSB(rooks);
+		rooks &= (rooks - 1); // clear LSB
 	}
 }
 
@@ -240,7 +240,7 @@ void Movegen::whiteQueenMoves(const Board& board) {
 		uint64_t to_squares = (Bmagic(from, board.occupiedBB) | Rmagic(from, board.occupiedBB)) & ~board.colorBB[WHITE];
 
 		addPieceMoves(WHITE_QUEEN, from, to_squares, board.colorBB[BLACK]);
-		queens = Utils::clearLSB(queens);
+		queens &= (queens - 1); // clear LSB
 	}
 }
 
@@ -252,7 +252,7 @@ void Movegen::blackQueenMoves(const Board& board) {
 		uint64_t to_squares = (Bmagic(from, board.occupiedBB) | Rmagic(from, board.occupiedBB)) & ~board.colorBB[BLACK];
 
 		addPieceMoves(BLACK_QUEEN, from, to_squares, board.colorBB[WHITE]);
-		queens = Utils::clearLSB(queens);
+		queens &= (queens - 1); // clear LSB
 	}
 }
 

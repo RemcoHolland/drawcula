@@ -4,14 +4,6 @@
 	return power[exp];
 }
 
-uint64_t Utils::getLSB(uint64_t bb) {
-	return bb & (0 - bb);
-}
-
-uint64_t Utils::clearLSB(uint64_t bb) {
-	return bb & (bb - 1);
-}
-
 uint64_t Utils::flipBitVertical(uint64_t bit) {
 	return bit ^ 56;
 }
@@ -33,6 +25,6 @@ uint64_t Utils::flip1BBVertical(uint64_t bb) {
 * @return index (0..63) of least significant one bit
 */
 int Utils::getLS1B(uint64_t bb) {
-	const uint64_t debruijn64 = uint64_t(0x03f79d71b4cb0a89);
+	constexpr uint64_t debruijn64 = uint64_t(0x03f79d71b4cb0a89);
 	return index64[((bb ^ (bb - 1)) * debruijn64) >> 58];
 }
