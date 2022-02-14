@@ -1,14 +1,21 @@
 #include "evaluation.h"
-#include "piece.h"
 
-Evaluation::Evaluation() {
+constexpr int PAWN_VALUE = 100;
+constexpr int KNIGHT_VALUE = 300;
+constexpr int BISHOP_VALUE = 300;
+constexpr int ROOK_VALUE = 500;
+constexpr int QUEEN_VALUE = 900;
+
+int popCount(uint64_t pieces) {
+	int count = 0;
+	while (pieces) {
+		count++;
+		pieces &= pieces - 1; // reset LS1B
+	}
+	return count;
 }
 
-int Evaluation::getScore(const Board& board) {
-	return materialScore(board);
-}
-
-int Evaluation::materialScore(const Board& board) {
+int materialScore(const Board& board) {
 	return
 		popCount(board.piece_list[WHITE_PAWN]) * PAWN_VALUE +
 		popCount(board.piece_list[WHITE_KNIGHT]) * KNIGHT_VALUE +
@@ -22,15 +29,6 @@ int Evaluation::materialScore(const Board& board) {
 		popCount(board.piece_list[BLACK_QUEEN]) * QUEEN_VALUE;
 }
 
-int Evaluation::popCount(uint64_t pieces) {
-	int count = 0;
-	while (pieces) {
-		count++;
-		pieces &= pieces - 1; // reset LS1B
-	}
-	return count;
+int evaluation::getScore(const Board& board) {
+	return materialScore(board);
 }
-
-Evaluation::~Evaluation() {
-}
-
