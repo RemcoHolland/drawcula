@@ -281,7 +281,7 @@ void Movegen::castling(int color, const Board& board) {
 			int king_square_nr = Utils::getLS1B(king_square);
 
 			// TODO: delay isAttacked to the search algorithm
-			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square << 1)))) {
+			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square << 1)))) {
 				int to = Utils::getLS1B(king_square << 2);
 				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING);
 				moves.push_back(move);
@@ -295,7 +295,7 @@ void Movegen::castling(int color, const Board& board) {
 			uint64_t king_square = board.piece_list[king];
 			int king_square_nr = Utils::getLS1B(king_square);
 
-			if (!(Square::isAttacked(color, board, king_square) || (Square::isAttacked(color, board, king_square >> 1)))) {
+			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square >> 1)))) {
 				int to = Utils::getLS1B(king_square >> 2);
 				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING);
 				moves.push_back(move);
