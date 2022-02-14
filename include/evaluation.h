@@ -3,8 +3,5 @@
 #include "piece.h"
 
 namespace evaluation {
-
-
 	int getScore(const Board&);
 }
-
