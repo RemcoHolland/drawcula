@@ -10,8 +10,8 @@ int Movegen::getLegalMove(int move) {
 
 	for (int legalMove : moves) {
 		int lm_from = (legalMove & FROM_MASK) >> 6;
-		int lm_to = (move & TO_MASK) >> 12;
-		int lm_promotion = (move & PROMOTION_MASK) >> 24;
+		int lm_to = (legalMove & TO_MASK) >> 12;
+		int lm_promotion = (legalMove & PROMOTION_MASK) >> 24;
 		// move is legal if 'from', 'to'  and 'promotion piece' are the same
 		if (lm_from == m_from && lm_to == m_to && lm_promotion == m_promotion) {
 			return legalMove;
