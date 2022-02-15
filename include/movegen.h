@@ -1,5 +1,4 @@
 #pragma once
-#include "move.h"
 #include "board.h"
 #include "piece.h"
 #include "color.h"
@@ -8,22 +7,22 @@
 #include "magicmoves.h"
 #include "castling.h"
 #include "square.h"
-
+#include <stdexcept>
 #include <vector>
 
-class Movelist {
+class Movegen {
 
 public:
-	Movelist();
-	Move getLegalMove(const Move&);
+	Movegen();
+	int getLegalMove(int);
 	void generateMoves(int, const Board&);
-	std::vector<Move> moves;
-	~Movelist();
+	std::vector<int> moves;
+	~Movegen();
 
 private:	
-	void addPawnMoves(int, int, uint64_t, uint64_t, Flag);
-	void addEnPassantMoves(int, uint64_t, uint64_t);
-	void addPieceMoves(int, uint64_t, uint64_t, uint64_t);
+	void addPawnMoves(int, int, uint64_t, uint64_t, int);
+	void addEnPassantMoves(int, uint64_t, int);
+	void addPieceMoves(int, int, uint64_t, uint64_t);
 	void whitePawnsPush(const Board&);
 	void whitePawnsDoublePush(const Board&);
 	void whitePawnsCaptureLeft(const Board&);

@@ -3,7 +3,7 @@
 FenReader::FenReader() {
 }
 
-FenInfo FenReader::read(string fen) {
+Position FenReader::read(string fen) {
 	// split FEN
 	std::vector<string> splitted_fen = split(fen, ' ');
 	if (splitted_fen.size() != 6) {
@@ -28,7 +28,7 @@ FenInfo FenReader::read(string fen) {
 	}
 
 	// en passant
-	uint64_t enpassant_square{ 0 };
+	int enpassant_square = 0;
 	string enpassantStr = splitted_fen.at(3);
 	if (enpassantStr != "-") {
 		enpassant_square = getEnpassantSquare(enpassantStr[0], enpassantStr[1]);
@@ -40,7 +40,7 @@ FenInfo FenReader::read(string fen) {
 	// full moves
 	int full_moves = std::stoi(splitted_fen.at(5));
 
-	return FenInfo(piece_list, color, castling_rights, enpassant_square, half_moves, full_moves);
+	return Position(piece_list, color, castling_rights, enpassant_square, half_moves, full_moves);
 }
 
 FenReader::~FenReader() {
@@ -97,8 +97,8 @@ int FenReader::getCastlingRight(char castling_char) {
 	}
 }
 
-uint64_t FenReader::getEnpassantSquare(char file, char rank) {
-	return Utils::getPower(StringUtils::getSquare(file, rank));
+int FenReader::getEnpassantSquare(char file, char rank) {
+	return StringUtils::getSquare(file, rank);
 }
 
 int FenReader::getNumber(char number) {

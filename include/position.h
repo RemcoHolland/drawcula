@@ -2,16 +2,16 @@
 #include <cstdint>
 #include "piece.h"
 
-class FenInfo {
+class Position {
 public:
-	FenInfo(uint64_t*, int, int, uint64_t, int, int);
+	Position(uint64_t*, int, int, int, int, int);
 	uint64_t piece_list[TOTAL_PIECES] = { 0 };
 	int color = 0;
 	int castling_rights = 0;
-	uint64_t enpassant_square = 0;
+	int enpassant_square = 0;
 	int half_moves = 0;
 	int full_moves = 0;
-	~FenInfo();
+	~Position();
 
 private:
 

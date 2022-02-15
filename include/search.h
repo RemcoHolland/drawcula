@@ -2,12 +2,11 @@
 #include <chrono>
 #include <vector>
 #include <limits>
-#include "move.h"
 #include "evaluation.h"
 #include "color.h"
-#include "movelist.h"
+#include "movegen.h"
 #include "square.h"
-#include "moveinfo.h"
+#include "stringutils.h"
 #include "atomic"
 
 #pragma once
@@ -37,9 +36,9 @@ private:
 	Time time;
 	uint64_t nodes{ 0 };
 
-	int negaMax(int, int, Board&, std::vector<Move>&);
+	int negaMax(int, int, Board&, std::vector<int>&);
 	bool timeToMove(int);
-	void updatePV(std::vector<Move>&, const std::vector<Move>&, const Move&);
-	string printPV(const std::vector<Move>&);
+	void updatePV(std::vector<int>&, const std::vector<int>&, int);
+	string printPV(const std::vector<int>&);
 };
 

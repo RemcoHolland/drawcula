@@ -3,7 +3,7 @@
 #include "board.h"
 #include "fenreader.h"
 
-inline void startSearch(FenInfo position, int depth) {	
+inline void startSearch(Position position, int depth) {	
 	Board board = Board(position);
 	struct Time time;
 	time.movetime = std::chrono::milliseconds(LLONG_MAX);

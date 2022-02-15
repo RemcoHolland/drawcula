@@ -1,7 +1,7 @@
 #pragma once
 
 #include "board.h"
-#include "movelist.h"
+#include "movegen.h"
 #include "utils.h"
 #include "stringutils.h"
 
@@ -23,5 +23,5 @@ private:
 	uint64_t root_nodes = 0;
 	int search_depth = 0;
 	void negaMax(int, Board, int);
-	void printRootNodes(Move);
+	void printRootNodes(int);
 };

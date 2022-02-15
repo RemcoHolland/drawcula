@@ -9,7 +9,9 @@ uint64_t Perft::calculate(int color, Board board) {
 	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 	negaMax(color, board, search_depth);
 	long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
-	std::cout << "nodes: " << nodes << " searchtime: " << searchtime << " ms"  << std::endl;
+	searchtime = std::max(1LL, searchtime);
+	long long nps = nodes / searchtime * 1000;
+	std::cout << "nodes: " << nodes << " searchtime: " << searchtime << " ms" << " nps: " << nps << std::endl;
 	return nodes;
 }
 
@@ -24,13 +26,13 @@ void Perft::negaMax(int color, Board board, int depth) {
 		return;
 	}
 
-	Movelist movelist = Movelist();
+	Movegen movelist = Movegen();
 	movelist.generateMoves(color, board);
 
-	for (auto move : movelist.moves) {
-		MoveInfo moveInfo = board.makeMove(color, move);
+	for (int move : movelist.moves) {
+		int unmake_info = board.makeMove(color, move);
 
-		if (!Square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
+		if (!square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			negaMax(color ^ 1, board, depth - 1);
 
 			if (divide && depth == search_depth) {
@@ -38,18 +40,11 @@ void Perft::negaMax(int color, Board board, int depth) {
 				root_nodes = 0;
 			}
 		}
-		board.unmakeMove(color, move, moveInfo);
+		board.unmakeMove(color, move, unmake_info);
 	}
 	return;
 }
 
-void Perft::printRootNodes(Move move) {
-	// TODO: Use Move.toString() method
-
-	int square_from = Utils::getLS1B(move.from);
-	int square_to = Utils::getLS1B(move.to);
-	char promotion = Piece::getPromotion(move.promotion);
-
-	std::cout << StringUtils::getFile(square_from) << StringUtils::getRank(square_from) << StringUtils::getFile(square_to) << StringUtils::getRank(square_to) << promotion << ' ' << root_nodes << std::endl;
-
+void Perft::printRootNodes(int move) {
+	std::cout << StringUtils::moveToString(move) << ' ' << root_nodes << std::endl;
 }

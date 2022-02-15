@@ -60,9 +60,9 @@ void Uci::position(const std::vector<std::string>& commands) {
 	if (commands.size() > i && commands[i] == "moves") {
 		for (i++; i < commands.size(); i++) {
 			// TODO: remove color here
-			Movelist movelist = Movelist();
+			Movegen movelist = Movegen();
 			movelist.generateMoves(color, board);
-			Move move = movelist.getLegalMove(Move(commands[i], color));
+			int move = movelist.getLegalMove(stringToMove(color, commands[i]));
 			board.makeMove(color, move);
 			changeColor();
 		}
@@ -116,7 +116,7 @@ void Uci::changeColor() {
 	color ^= 1;
 }
 
-void Uci::resetBoard(const FenInfo& position) {
+void Uci::resetBoard(const Position& position) {
 	// reset board and set new position
 	board.~Board();
 	new (&board) Board(position);
@@ -124,6 +124,17 @@ void Uci::resetBoard(const FenInfo& position) {
 	color = position.color;
 	half_moves = position.half_moves; // not used at the moment
 	full_moves = position.full_moves; // not used at the moment
+}
+
+int Uci::stringToMove(int color, const string& moveStr) {
+
+	int piece = NO_PIECE;
+	int from = StringUtils::getSquare(moveStr[0], moveStr[1]);
+	int to = StringUtils::getSquare(moveStr[2], moveStr[3]);
+	int flag = NO_FLAG;
+	int promotion = moveStr.length() == 5 ? Piece::getPromotion(moveStr[4], color) : NO_PROMOTION;
+
+	return piece + (from << 6) + (to << 12) + (flag << 18) + (promotion << 24);
 }
 
 Uci::~Uci() {

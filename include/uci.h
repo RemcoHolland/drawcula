@@ -1,7 +1,7 @@
 #pragma once
 #include "stringutils.h"
 #include "perft.h"
-#include "movelist.h"
+#include "movegen.h"
 #include "fenreader.h"
 #include "search.h"
 #include <iostream>
@@ -16,7 +16,7 @@ using StringUtils::split;
 
 class Uci {
 public:
-	Uci();
+	Uci();	
 	void loop();
 	void position(const std::vector<std::string>&);
 	void go(const std::vector<std::string>&);
@@ -34,5 +34,6 @@ private:
 	void perft(bool, const std::vector<std::string>&);
 	void stop();
 	void changeColor();
-	void resetBoard(const FenInfo&);
+	void resetBoard(const Position&);
+	int stringToMove(int, const string&);
 };

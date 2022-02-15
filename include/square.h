@@ -5,10 +5,7 @@
 #include "utils.h"
 #include "piece.h"
 
-class Square {
-public:
-	Square();
-	static bool isAttacked(int, const Board&, uint64_t);
-	~Square();
+namespace square {
+	bool isAttacked(int, const Board&, uint64_t);
 };
 

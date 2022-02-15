@@ -1,14 +1,25 @@
 #include "evaluation.h"
-#include "piece.h"
 
-Evaluation::Evaluation() {
+constexpr int PAWN_VALUE = 100;
+constexpr int KNIGHT_VALUE = 300;
+constexpr int BISHOP_VALUE = 300;
+constexpr int ROOK_VALUE = 500;
+constexpr int QUEEN_VALUE = 900;
+
+constexpr uint64_t k1 = uint64_t(0x5555555555555555); /*  -1/3   */
+constexpr uint64_t k2 = uint64_t(0x3333333333333333); /*  -1/5   */
+constexpr uint64_t k4 = uint64_t(0x0f0f0f0f0f0f0f0f); /*  -1/17  */
+constexpr uint64_t kf = uint64_t(0x0101010101010101); /*  -1/255 */
+
+int popCount(uint64_t x) {
+	x = x - ((x >> 1) & k1); /* put count of each 2 bits into those 2 bits */
+	x = (x & k2) + ((x >> 2) & k2); /* put count of each 4 bits into those 4 bits */
+	x = (x + (x >> 4)) & k4; /* put count of each 8 bits into those 8 bits */
+	x = (x * kf) >> 56; /* returns 8 most significant bits of x + (x<<8) + (x<<16) + (x<<24) + ...  */
+	return (int)x;
 }
 
-int Evaluation::getScore(const Board& board) {
-	return materialScore(board);
-}
-
-int Evaluation::materialScore(const Board& board) {
+int materialScore(const Board& board) {
 	return
 		popCount(board.piece_list[WHITE_PAWN]) * PAWN_VALUE +
 		popCount(board.piece_list[WHITE_KNIGHT]) * KNIGHT_VALUE +
@@ -22,15 +33,6 @@ int Evaluation::materialScore(const Board& board) {
 		popCount(board.piece_list[BLACK_QUEEN]) * QUEEN_VALUE;
 }
 
-int Evaluation::popCount(uint64_t pieces) {
-	int count = 0;
-	while (pieces) {
-		count++;
-		pieces &= pieces - 1; // reset LS1B
-	}
-	return count;
+int evaluation::getScore(const Board& board) {
+	return materialScore(board);
 }
-
-Evaluation::~Evaluation() {
-}
-
