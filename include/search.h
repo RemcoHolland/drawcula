@@ -36,7 +36,7 @@ private:
 	Time time;
 	uint64_t nodes{ 0 };
 
-	int negaMax(int, int, Board&, std::vector<int>&);
+	int alphaBeta(int, int, int, int, Board&, std::vector<int>&);
 	bool timeToMove(int);
 	void updatePV(std::vector<int>&, const std::vector<int>&, int);
 	string printPV(const std::vector<int>&);

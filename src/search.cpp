@@ -16,13 +16,13 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 	do {
 		nodes = 0;
 		std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
-		int score = negaMax(color, depth, board, currentPV);
+		int score = alphaBeta(color, -std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), depth, board, currentPV);
 		if (g_stop == false) {
 			string scoreStr;
 			if (std::abs(score) >= MATE) {
 				int multiplier = (score > 0) - (score < 0);
-				int64_t moves = multiplier * ((currentPV.size() + 1) / 2); // print negative values for losing mates
-				scoreStr = "mate " + std::to_string(moves);
+				int64_t nr_moves = multiplier * ((currentPV.size() + 1) / 2); // print negative values for losing mates
+				scoreStr = "mate " + std::to_string(nr_moves);
 			} else {
 				scoreStr = "cp " + std::to_string(score);
 			}
@@ -36,8 +36,8 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 	std::cout << "bestmove " << StringUtils::moveToString(PV.front()) << std::endl;
 }
 
-//Improvement: make a root negaMax, see chess programming network.
-int Search::negaMax(int color, int depth, Board& board, std::vector<int>& PV) {
+// Fail soft AlphaBeta search
+int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, std::vector<int>& PV) {
 	if (g_stop) {
 		return 0;
 	}
@@ -49,7 +49,7 @@ int Search::negaMax(int color, int depth, Board& board, std::vector<int>& PV) {
 		// -color | 1 changes to 1 or -1 when color is either 0 or 1
 		return  (-color | 1) * evaluation::getScore(board);
 	}
-	int max = -std::numeric_limits<int>::max();
+	int bestscore = -std::numeric_limits<int>::max();
 	Movegen movelist = Movegen();
 	movelist.generateMoves(color, board);
 	for (auto move : movelist.moves) {
@@ -58,22 +58,30 @@ int Search::negaMax(int color, int depth, Board& board, std::vector<int>& PV) {
 		std::vector<int> childPV;
 
 		if (!square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
-			int score = -negaMax(color ^ 1, depth - 1, board, childPV);
-			if (score > max) {
-				max = score;
-				updatePV(PV, childPV, move);
+			int score = -alphaBeta(color ^ 1, -beta, -alpha, depth - 1, board, childPV);
+			if (score >= beta) {
+				board.unmakeMove(color, move, unmake_info);
+				return score;
+			}
+			if (score > bestscore) {
+				bestscore = score;				
+				if (score > alpha) {
+					alpha = score;
+					updatePV(PV, childPV, move); // TODO: check is this the right place?
+				}
 			}
 		}
 		board.unmakeMove(color, move, unmake_info);
 	}
 	// no legal moves found, must be mate or stalemate
-	if (max == -std::numeric_limits<int>::max())
+	if (bestscore == -std::numeric_limits<int>::max()) {
 		if (square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
-			max = -MATE - depth; // prefer mate at larger depths as the losing side
+			bestscore = -MATE - depth; // prefer mate at larger depths as the losing side
 		} else {
-			max = STALE_MATE;
+			bestscore = STALE_MATE;
 		}
-	return max;
+	}
+	return bestscore;
 }
 
 bool Search::timeToMove(int color) {
