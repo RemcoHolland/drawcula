@@ -59,7 +59,7 @@ const int Board::makeMove(int color, int move) {
 	setEnPassantSquare(color, move);
 	int current_castling_rights = castling_rights;
 	setCastlingRights(color, move & PIECE_MASK, move & FLAG_MASK, from, to);
-	int unmake_info = captured_piece + (enpassant_square << 6) + (current_castling_rights << 12);
+	int unmake_info = captured_piece | (enpassant_square << 6) | (current_castling_rights << 12);
 	return unmake_info;
 }
 

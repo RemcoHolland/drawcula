@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int NO_FLAG = 0 << 18;
+constexpr int NO_FLAG = 0;
 constexpr int DOUBLE_PUSH = 1 << 18;
 constexpr int CAPTURE = 2 << 18;
 constexpr int EN_PASSANT = 3 << 18;

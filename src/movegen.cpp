@@ -55,7 +55,7 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				int move = piece + (from << 6) + (to << 12) + (flag)+(promotion << 24);
+				int move = piece | (from << 6) | (to << 12) | (flag) + (promotion << 24);
 				moves.push_back(move);
 			}
 		} else {
@@ -70,7 +70,7 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 void Movegen::addEnPassantMoves(int piece, uint64_t from_squares, int to) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
-		int move = piece + (from << 6) + (to << 12) + (EN_PASSANT);
+		int move = piece | (from << 6) | (to << 12) | (EN_PASSANT);
 		moves.push_back(move);
 		from_squares &= (from_squares - 1); // clear LSB
 	}
@@ -81,7 +81,7 @@ void Movegen::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t e
 		int to = Utils::getLS1B(to_squares);
 		uint64_t to_square = to_squares & (0 - to_squares); // get LSB
 		int flag = (to_square & enemies) ? CAPTURE : NO_FLAG;
-		int move = piece + (from << 6) + (to << 12) + (flag);
+		int move = piece | (from << 6) | (to << 12) | (flag);
 		moves.push_back(move);
 		to_squares &= (to_squares - 1); // clear LSB
 	}
