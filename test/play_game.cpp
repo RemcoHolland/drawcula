@@ -20,8 +20,8 @@ TEST(play_game, startpos) {
 TEST(play_game, fen) {
 	Uci uci = Uci();
 	testing::internal::CaptureStdout();
-	// FEN: 2bqkbn1/2pppp2/np2N3/r3P1p1/p2N2B1/5Q2/PPPPKPP1/RNB2r2 w KQkq - 0 1
-	uci.position({ "position", "fen", "2bqkbn1/2pppp2/np2N3/r3P1p1/p2N2B1/5Q2/PPPPKPP1/RNB2r2", "w", "KQkq", "-", "0", "1" });
+	// FEN: 2bqkbn1/2pppp2/np2N3/r3P1p1/p2N2B1/5Q2/PPPPKPP1/RNB2r2 w - - 0 1
+	uci.position({ "position", "fen", "2bqkbn1/2pppp2/np2N3/r3P1p1/p2N2B1/5Q2/PPPPKPP1/RNB2r2", "w", "-", "-", "0", "1" });
 	uci.go({ "go", "movetime" ,"3000" });
 	std::this_thread::sleep_for(3200ms);
 	std::string output = testing::internal::GetCapturedStdout();

@@ -55,7 +55,7 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				int move = piece | (from << 6) | (to << 12) | (flag) + (promotion << 24);
+				int move = piece | (from << 6) | (to << 12) | flag + (promotion << 24);
 				moves.push_back(move);
 			}
 		} else {
