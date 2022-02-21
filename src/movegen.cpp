@@ -4,14 +4,14 @@ Movegen::Movegen() {
 }
 
 int Movegen::getLegalMove(int move) {
-	int	m_from = (move & FROM_MASK) >> 6;
-	int m_to = (move & TO_MASK) >> 12;
-	int m_promotion = (move & PROMOTION_MASK) >> 24;
+	int	m_from = move & FROM_MASK;
+	int m_to = (move & TO_MASK) >> 6;
+	int m_promotion = (move & PROMOTION_MASK) >> 23;
 
 	for (int legalMove : moves) {
-		int lm_from = (legalMove & FROM_MASK) >> 6;
-		int lm_to = (legalMove & TO_MASK) >> 12;
-		int lm_promotion = (legalMove & PROMOTION_MASK) >> 24;
+		int lm_from = legalMove & FROM_MASK;
+		int lm_to = (legalMove & TO_MASK) >> 6;
+		int lm_promotion = (legalMove & PROMOTION_MASK) >> 23;
 		// move is legal if 'from', 'to'  and 'promotion piece' are the same
 		if (lm_from == m_from && lm_to == m_to && lm_promotion == m_promotion) {
 			return legalMove;
@@ -55,11 +55,11 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				int move = piece | (from << 6) | (to << 12) | flag + (promotion << 24);
+				int move = from | (to << 6) | (piece << 12) | flag + (promotion << 23);
 				moves.push_back(move);
 			}
 		} else {
-			int move = piece + (from << 6) + (to << 12) + (flag);
+			int move = from | (to << 6) | (piece << 12) | flag;
 			moves.push_back(move);
 		}
 		from_squares &= (from_squares - 1); // clear LSB
@@ -70,7 +70,7 @@ void Movegen::addPawnMoves(int color, int piece, uint64_t from_squares, uint64_t
 void Movegen::addEnPassantMoves(int piece, uint64_t from_squares, int to) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
-		int move = piece | (from << 6) | (to << 12) | (EN_PASSANT);
+		int move = from | (to << 6) | (piece << 12) | EN_PASSANT;
 		moves.push_back(move);
 		from_squares &= (from_squares - 1); // clear LSB
 	}
@@ -81,7 +81,7 @@ void Movegen::addPieceMoves(int piece, int from, uint64_t to_squares, uint64_t e
 		int to = Utils::getLS1B(to_squares);
 		uint64_t to_square = to_squares & (0 - to_squares); // get LSB
 		int flag = (to_square & enemies) ? CAPTURE : NO_FLAG;
-		int move = piece | (from << 6) | (to << 12) | (flag);
+		int move = from | (to << 6) | (piece << 12) | flag;
 		moves.push_back(move);
 		to_squares &= (to_squares - 1); // clear LSB
 	}
@@ -283,7 +283,7 @@ void Movegen::castling(int color, const Board& board) {
 			// TODO: delay isAttacked to the search algorithm
 			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square << 1)))) {
 				int to = Utils::getLS1B(king_square << 2);
-				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING);
+				int move = king_square_nr | (to << 6) | (king << 12) | CASTLING;
 				moves.push_back(move);
 			}
 		}
@@ -297,7 +297,7 @@ void Movegen::castling(int color, const Board& board) {
 
 			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square >> 1)))) {
 				int to = Utils::getLS1B(king_square >> 2);
-				int move = king + (king_square_nr << 6) + (to << 12) + (CASTLING);
+				int move = king_square_nr | (to << 6) | (king << 12) | CASTLING;
 				moves.push_back(move);
 			}
 		}

@@ -134,7 +134,7 @@ int Uci::stringToMove(int color, const string& moveStr) {
 	int flag = NO_FLAG;
 	int promotion = moveStr.length() == 5 ? Piece::getPromotion(moveStr[4], color) : NO_PROMOTION;
 
-	return piece + (from << 6) + (to << 12) + (flag << 18) + (promotion << 24);
+	return from + (to << 6) + (piece << 12) + (flag << 16) + (promotion << 23);
 }
 
 Uci::~Uci() {

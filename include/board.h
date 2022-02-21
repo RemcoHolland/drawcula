@@ -79,12 +79,15 @@ constexpr uint64_t KING_MOVES[64] = {
 	144959613005987840, 362258295026614272, 724516590053228544,	 1449033180106457088, 2898066360212914176, 5796132720425828352, 11592265440851656704, 4665729213955833856
 };
 
-constexpr int PIECE_MASK = 0x3F;
-constexpr int FROM_MASK = 0x3F << 6;
-constexpr int TO_MASK = 0x3F << 12;
-constexpr int FLAG_MASK = 0x3F << 18;
-constexpr int PROMOTION_MASK = 0x3F << 24;
+// move masks
+constexpr int FROM_MASK = 0x3F;
+constexpr int TO_MASK = 0x3F << 6;
+constexpr int PIECE_MASK = 0xF << 12;
+constexpr int FLAG_MASK = 0x7 << 16;
+constexpr int CAPTURED_PIECE_MASK = 0xF << 19;
+constexpr int PROMOTION_MASK = 0x3F << 23;
 
+// unmake move masks
 constexpr int CAPTURE_MASK = 0x3F;
 constexpr int ENPASSANT_MASK = 0x3F << 6;
 constexpr int CASTLING_MASK = 0x3F << 12;
