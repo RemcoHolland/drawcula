@@ -21,6 +21,7 @@ int Movegen::getLegalMove(int move) {
 }
 
 void Movegen::generateMoves(int color, const Board& board) {
+	moves.reserve(AVAILABLE_MOVES);
 	if (color == WHITE) {
 		whitePawnsPush(board);
 		whitePawnsDoublePush(board);
