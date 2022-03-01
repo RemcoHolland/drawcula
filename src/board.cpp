@@ -14,25 +14,20 @@ const int Board::makeMove(int color, int move) {
 	uint64_t from = Utils::getPower(move & FROM_MASK);
 	uint64_t to = Utils::getPower((move & TO_MASK) >> 6);
 
+	int piece = (move & PIECE_MASK) >> 12;
 	int flag = move & FLAG_MASK;
-	int captured_piece = NO_PIECE;
+	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 19;
+	int promotion_piece = (move & PROMOTION_MASK) >> 23;
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
-	piece_list[(move & PIECE_MASK) >> 12] ^= fromTo;
+	piece_list[piece] ^= fromTo;
 
 	if (flag == NO_FLAG || flag == DOUBLE_PUSH) {
 		occupiedBB ^= fromTo;
 	} else if (flag == CAPTURE) {
 		occupiedBB ^= from;
-		int piece_color = color * NR_PIECES;
-		for (int piece = BLACK_PAWN - piece_color; piece <= BLACK_QUEEN - piece_color; piece++) {
-			if ((piece_list[piece] & to)) {
-				colorBB[color ^ 1] ^= to;
-				piece_list[piece] ^= to;
-				captured_piece = piece;
-				break;
-			}
-		}
+		colorBB[color ^ 1] ^= to;
+		piece_list[captured_piece] ^= to;
 	} else if (flag == EN_PASSANT) {
 		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
@@ -50,9 +45,9 @@ const int Board::makeMove(int color, int move) {
 		colorBB[color] ^= rook_shift;
 		piece_list[WHITE_ROOK + color * NR_PIECES] ^= rook_shift;
 	}
-	if ((move & PROMOTION_MASK) >> 23 != NO_PROMOTION) {
-		piece_list[(move & PIECE_MASK) >> 12] ^= to;
-		piece_list[(move & PROMOTION_MASK) >> 23] ^= to;
+	if (promotion_piece != NO_PROMOTION) {
+		piece_list[piece] ^= to;
+		piece_list[promotion_piece] ^= to;
 	}
 	setEnPassantSquare(color, move);
 	int current_castling_rights = castling_rights;
@@ -65,7 +60,9 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 	uint64_t from = Utils::getPower(move & FROM_MASK);
 	uint64_t to = Utils::getPower((move & TO_MASK) >> 6);
 
+	int piece = (move & PIECE_MASK) >> 12;
 	int flag = move & FLAG_MASK;
+	int promotion_piece = (move & PROMOTION_MASK) >> 23;
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
 	piece_list[(move & PIECE_MASK) >> 12] ^= fromTo;
@@ -93,9 +90,9 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		colorBB[color] ^= rook_shift;
 		piece_list[WHITE_ROOK + color * NR_PIECES] ^= rook_shift;
 	}
-	if ((move & PROMOTION_MASK) >> 23 != NO_PROMOTION) {
-		piece_list[(move & PIECE_MASK) >> 12] ^= to;
-		piece_list[(move & PROMOTION_MASK) >> 23] ^= to;
+	if (promotion_piece != NO_PROMOTION) {
+		piece_list[piece] ^= to;
+		piece_list[promotion_piece] ^= to;
 	}
 
 	enpassant_square = (unmake_info & ENPASSANT_MASK) >> 6;

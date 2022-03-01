@@ -50,7 +50,7 @@ void FenReader::fillPieceList(string position, uint64_t(&piece_list)[TOTAL_PIECE
 	int rank{ 7 };
 	int file{ 0 };
 
-	for (int i{ 0 }; i < position.length(); i++) {
+	for (int i = 0; i < position.length(); ++i) {
 
 		if (position[i] == '/') {
 			rank--;
