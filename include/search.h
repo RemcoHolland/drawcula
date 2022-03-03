@@ -1,15 +1,9 @@
-#include <iostream>
-#include <chrono>
-#include <vector>
-#include <limits>
-#include "evaluation.h"
-#include "color.h"
-#include "movegen.h"
-#include "square.h"
-#include "stringutils.h"
-#include "atomic"
-
 #pragma once
+
+#include <chrono>
+#include <limits>
+#include "atomic"
+#include "evaluation.h"
 
 extern std::atomic<bool> g_stop;
 
@@ -21,6 +15,8 @@ struct Time {
 	std::chrono::milliseconds winc{ 0 };
 	std::chrono::milliseconds binc{ 0 };
 };
+
+constexpr int MAX_INT = std::numeric_limits<int>::max();
 
 class Search {
 public:

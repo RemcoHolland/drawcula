@@ -1,4 +1,11 @@
+#include "color.h"
+#include "movegen.h"
 #include "search.h"
+#include "square.h"
+#include "stringutils.h"
+
+#include <iostream>
+#include <vector>
 
 Search::Search() {
 }
@@ -16,7 +23,7 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 	do {
 		nodes = 0;
 		std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
-		int score = alphaBeta(color, -std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), depth, board, currentPV);
+		int score = alphaBeta(color, -MAX_INT, MAX_INT, depth, board, currentPV);
 		if (g_stop == false) {
 			string scoreStr;
 			if (std::abs(score) >= MATE) {
@@ -49,10 +56,10 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 		// -color | 1 changes to 1 or -1 when color is either 0 or 1
 		return  (-color | 1) * evaluation::getScore(board);
 	}
-	int bestscore = -std::numeric_limits<int>::max();
+	int bestscore = -MAX_INT;
 	Movegen movelist = Movegen();
 	movelist.generateMoves(color, board);
-	for (auto move : movelist.moves) {
+	for (int move : movelist.moves) {
 		nodes++;
 		int unmake_info = board.makeMove(color, move);
 		std::vector<int> childPV;
@@ -64,7 +71,7 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 				return score;
 			}
 			if (score > bestscore) {
-				bestscore = score;				
+				bestscore = score;
 				if (score > alpha) {
 					alpha = score;
 					updatePV(PV, childPV, move); // TODO: check is this the right place?
@@ -74,7 +81,7 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 		board.unmakeMove(color, move, unmake_info);
 	}
 	// no legal moves found, must be mate or stalemate
-	if (bestscore == -std::numeric_limits<int>::max()) {
+	if (bestscore == -MAX_INT) {
 		if (square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
 			bestscore = -MATE - depth; // prefer mate at larger depths as the losing side
 		} else {
