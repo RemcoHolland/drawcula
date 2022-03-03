@@ -1,4 +1,14 @@
+#include "board.h"
+#include "castling.h"
+#include "color.h"
+#include "flag.h"
+#include "magicmoves.h"
 #include "movegen.h"
+#include "piece.h"
+#include "square.h"
+#include "utils.h"
+
+#include <stdexcept>
 
 Movegen::Movegen() {
 }
@@ -53,20 +63,22 @@ void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t fr
 		int from = Utils::getLS1B(from_squares);
 		int to = Utils::getLS1B(to_squares);
 		int captured_piece = NO_PIECE;
+		int mvv_lva = 0;
 		if (flag == CAPTURE) {
 			uint64_t to_square = to_squares & (0 - to_squares); // get LSB
 			captured_piece = determineCapture(board, color, to_square);
+			mvv_lva = MVV_LVA[captured_piece - ((color ^ 1) * NR_PIECES)][WHITE_PAWN];
 		}
 
 		// check for promotion
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				int move = from | (to << 6) | (piece << 12) | flag | (captured_piece << 19) | (promotion << 23);
+				int move = from | (to << 6) | (piece << 12) | flag | (captured_piece << 19) | (promotion << 23) | (mvv_lva << 27);
 				moves.push_back(move);
 			}
 		} else {
-			int move = from | (to << 6) | (piece << 12) | flag | (captured_piece << 19);
+			int move = from | (to << 6) | (piece << 12) | flag | (captured_piece << 19) | (mvv_lva << 27);
 			moves.push_back(move);
 		}
 		from_squares &= (from_squares - 1); // clear LSB
@@ -78,7 +90,8 @@ void Movegen::addEnPassantMoves(int color, int piece, uint64_t from_squares, int
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
 		int captured_piece = color == WHITE ? BLACK_PAWN : WHITE_PAWN;
-		int move = from | (to << 6) | (piece << 12) | (captured_piece << 19) | EN_PASSANT;
+		int mvv_lva = MVV_LVA[WHITE_PAWN][WHITE_PAWN];
+		int move = from | (to << 6) | (piece << 12) | (captured_piece << 19) | EN_PASSANT | (mvv_lva << 27);
 		moves.push_back(move);
 		from_squares &= (from_squares - 1); // clear LSB
 	}
@@ -91,11 +104,13 @@ void Movegen::addPieceMoves(const Board& board, int color, int piece, int from, 
 
 		int flag = NO_FLAG;
 		int captured_piece = NO_PIECE;
+		int mvv_lva = 0;
 		if ((to_square & enemies)) {
 			flag = CAPTURE;
 			captured_piece = determineCapture(board, color, to_square);
-		}		
-		int move = from | (to << 6) | (piece << 12) | (captured_piece << 19) | flag;
+			mvv_lva = MVV_LVA[captured_piece - ((color ^ 1) * NR_PIECES)][piece - (color * NR_PIECES)];
+		}
+		int move = from | (to << 6) | (piece << 12) | (captured_piece << 19) | flag | (mvv_lva << 27);
 		moves.push_back(move);
 		to_squares &= (to_squares - 1); // clear LSB
 	}

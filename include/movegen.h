@@ -1,34 +1,28 @@
 #pragma once
+
 #include "board.h"
-#include "piece.h"
-#include "color.h"
-#include "flag.h"
-#include "utils.h"
-#include "magicmoves.h"
-#include "castling.h"
-#include "square.h"
-#include <stdexcept>
+
 #include <vector>
 
-/**************************
-* Move is built up like:
-* bit 0-5: from_square
-* bit 6-11 to_square
-* bit 12-15: piece type
-* bit 16-18 flag
-* bit 19-22 captured piece
-* bit 23-26 promotion piece
-**************************/
+/****************************
+* Move is built up like:    *
+* bit 0-5   from_square     *
+* bit 6-11  to_square       *
+* bit 12-15 piece type      *
+* bit 16-18 flag            *
+* bit 19-22 captured piece  *
+* bit 23-26 promotion piece *
+* bit 27-31 MVV/LVA         *
+*****************************/
 
-// MVV_VLA[victim][attacker]
-constexpr int MVV_LVA[NR_PIECES + 1][NR_PIECES + 1] = {
-	{0,   0,  0,  0,  0,  0, 0},  // victim King,   attacker K, Q, R, B, N, p, None
-	{50, 51, 52, 53, 54, 55, 0},  // victim Queen,  attacker K, Q, R, B, N, p, None
-	{40, 41, 42, 43, 44, 45, 0},  // victim Rook,   attacker K, Q, R, B, N, p, None
-	{30, 31, 32, 33, 34, 35, 0},  // victim Bishop, attacker K, Q, R, B, N, p, None
-	{20, 21, 22, 23, 24, 25, 0},  // victim Knight  attacker K, Q, R, B, N, p, None
-	{10, 11, 12, 13, 14, 15, 0},  // victim pawn,   attacker K, Q, R, B, N, p, None
-	{0,   0,  0,  0,  0,  0, 0}   // victim None,   attacker K, Q, R, B, N, p, None
+// MVV_LVA[victim][attacker]
+constexpr int MVV_LVA[NR_PIECES][NR_PIECES] = {
+	{ 6,  5,  4,  3,  2,  1},  // victim pawn,   attacker p, N, B, R, Q, K, None
+	{12, 11, 10,  9,  8,  7},  // victim Knight  attacker p, N, B, R, Q, K, None
+	{18, 17, 16, 15, 14, 13},  // victim Bishop, attacker p, N, B, R, Q, K, None
+	{24, 23, 22, 21, 20, 19},  // victim Rook,   attacker p, N, B, R, Q, K, None
+	{30, 29, 28, 27, 26, 25},  // victim Queen,  attacker p, N, B, R, Q, K, None
+	{0,   0,  0,  0,  0,  0}   // victim King,   attacker p, N, B, R, Q, K, None
 };
 
 // number of moves available in a position

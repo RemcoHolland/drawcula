@@ -85,7 +85,8 @@ constexpr int TO_MASK = 0x3F << 6;
 constexpr int PIECE_MASK = 0xF << 12;
 constexpr int FLAG_MASK = 0x7 << 16;
 constexpr int CAPTURED_PIECE_MASK = 0xF << 19;
-constexpr int PROMOTION_MASK = 0x3F << 23;
+constexpr int PROMOTION_MASK = 0xF << 23;
+constexpr int MVV_LVA_MASK = 0x1F << 27;
 
 // unmake move masks
 constexpr int CAPTURE_MASK = 0x3F;

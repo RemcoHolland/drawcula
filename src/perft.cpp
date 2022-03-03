@@ -1,4 +1,5 @@
 #include "perft.h"
+#include "square.h"
 
 Perft::Perft(bool divide, int search_depth) {
 	Perft::divide = divide;
