@@ -17,6 +17,9 @@ struct Time {
 };
 
 constexpr int MAX_INT = std::numeric_limits<int>::max();
+constexpr int MATE{ 100000 };
+constexpr int STALE_MATE{ 0 };
+constexpr int EXPECTED_NR_MOVES = 40;
 
 class Search {
 public:
@@ -25,10 +28,7 @@ public:
 	void start(int, int, Board, Time);
 	~Search();
 
-private:
-	const int MATE{ 100000 };
-	const int STALE_MATE{ 0 };
-	const int EXPECTED_NR_MOVES = 40;
+private:	
 	Time time;
 	uint64_t nodes{ 0 };
 

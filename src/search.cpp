@@ -57,9 +57,10 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 		return  (-color | 1) * evaluation::getScore(board);
 	}
 	int bestscore = -MAX_INT;
-	Movegen movelist = Movegen();
-	movelist.generateMoves(color, board);
-	for (int move : movelist.moves) {
+	Movegen movegen = Movegen();
+	movegen.generateMoves(color, board);
+	movegen.sortMoves();
+	for (int move : movegen.moves) {
 		nodes++;
 		int unmake_info = board.makeMove(color, move);
 		std::vector<int> childPV;

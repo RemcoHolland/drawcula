@@ -27,10 +27,10 @@ void Perft::negaMax(int color, Board board, int depth) {
 		return;
 	}
 
-	Movegen movelist = Movegen();
-	movelist.generateMoves(color, board);
+	Movegen movegen = Movegen();
+	movegen.generateMoves(color, board);
 
-	for (int move : movelist.moves) {
+	for (int move : movegen.moves) {
 		int unmake_info = board.makeMove(color, move);
 
 		if (!square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {

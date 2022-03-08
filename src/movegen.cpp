@@ -9,6 +9,7 @@
 #include "utils.h"
 
 #include <stdexcept>
+#include <algorithm>
 
 Movegen::Movegen() {
 }
@@ -30,32 +31,36 @@ int Movegen::getLegalMove(int move) {
 	throw std::invalid_argument("Illegal move specified");
 }
 
+void Movegen::sortMoves() {
+	std::sort(moves.begin(), moves.end(), std::greater<int>());
+}
+
 void Movegen::generateMoves(int color, const Board& board) {
 	moves.reserve(AVAILABLE_MOVES);
+	castling(color, board);
 	if (color == WHITE) {
-		whitePawnsPush(board);
-		whitePawnsDoublePush(board);
 		whitePawnsCaptureLeft(board);
 		whitePawnsCaptureRight(board);
 		whitePawnsEnpassant(board);
 		whiteKnightMoves(board);
 		whiteBishopMoves(board);
+		whitePawnsDoublePush(board);
+		whitePawnsPush(board);
 		whiteRookMoves(board);
 		whiteQueenMoves(board);
 		whiteKingMoves(board);
 	} else {
-		blackPawnsPush(board);
-		blackPawnsDoublePush(board);
 		blackPawnsCaptureLeft(board);
 		blackPawnsCaptureRight(board);
 		blackPawnsEnpassant(board);
 		blackKnightMoves(board);
 		blackBishopMoves(board);
+		blackPawnsDoublePush(board);
+		blackPawnsPush(board);
 		blackRookMoves(board);
 		blackQueenMoves(board);
 		blackKingMoves(board);
 	}
-	castling(color, board);
 }
 
 void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t from_squares, uint64_t to_squares, int flag) {
@@ -123,6 +128,7 @@ int Movegen::determineCapture(const Board& board, int color, uint64_t capture_sq
 			return piece;
 		}
 	}
+	throw std::invalid_argument("No captured piece found");
 }
 
 void Movegen::whitePawnsPush(const Board& board) {
