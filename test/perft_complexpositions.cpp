@@ -8,7 +8,6 @@ uint64_t perft(int depth, Position position) {
 	int color = position.color;
 	return perft.calculate(color, board);
 }
-
 TEST(complexposition, illegal_enpassant_1) {
 	Position position = FenReader::read("3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1");
 	uint64_t nodes = perft(6, position);
