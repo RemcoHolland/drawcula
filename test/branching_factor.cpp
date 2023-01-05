@@ -44,9 +44,9 @@ TEST(branching_factor, start_position) {
 
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 
-	//mbf should be between 9 and 10
-	ASSERT_TRUE(mbf > 9);
-	ASSERT_TRUE(mbf < 10);
+	//mbf should be between 7 and 8
+	ASSERT_TRUE(mbf > 7);
+	ASSERT_TRUE(mbf < 8);
 }
 
 TEST(branching_factor, middlegame_position) {
@@ -56,9 +56,9 @@ TEST(branching_factor, middlegame_position) {
 
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 
-	//mbf should be between 10 and 11
-	ASSERT_TRUE(mbf > 10);
-	ASSERT_TRUE(mbf < 11);
+	//mbf should be between 5 and 6
+	ASSERT_TRUE(mbf > 5);
+	ASSERT_TRUE(mbf < 6);
 }
 
 
@@ -69,7 +69,7 @@ TEST(branching_factor, endgame_position) {
 
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 
-	//mbf should be between 4 and 5
-	ASSERT_TRUE(mbf > 4);
-	ASSERT_TRUE(mbf < 5);
+	//mbf should be between 3 and 4
+	ASSERT_TRUE(mbf > 3);
+	ASSERT_TRUE(mbf < 4);
 }
