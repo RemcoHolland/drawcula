@@ -11,13 +11,13 @@ void Board::setPosition(const Position& fenInfo) {
 }
 
 const int Board::makeMove(int color, int move) {
-	uint64_t from = Utils::getPower(move & FROM_MASK);
-	uint64_t to = Utils::getPower((move & TO_MASK) >> 6);
+	uint64_t from = Utils::getPower((move & FROM_MASK) >> 4);
+	uint64_t to = Utils::getPower((move & TO_MASK) >> 10);
 
-	int piece = (move & PIECE_MASK) >> 12;
+	int piece = (move & PIECE_MASK) >> 16;
 	int flag = move & FLAG_MASK;
-	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 19;
-	int promotion_piece = (move & PROMOTION_MASK) >> 23;
+	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 23;
+	int promotion_piece = (move & PROMOTION_MASK) >> 27;
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
 	piece_list[piece] ^= fromTo;
@@ -51,21 +51,21 @@ const int Board::makeMove(int color, int move) {
 	}
 	setEnPassantSquare(color, move);
 	int current_castling_rights = castling_rights;
-	setCastlingRights(color, (move & PIECE_MASK) >> 12, move & FLAG_MASK, from, to);
+	setCastlingRights(color, (move & PIECE_MASK) >> 16, move & FLAG_MASK, from, to);
 	int unmake_info = captured_piece | (enpassant_square << 6) | (current_castling_rights << 12);
 	return unmake_info;
 }
 
 void Board::unmakeMove(int color, int move, int unmake_info) {
-	uint64_t from = Utils::getPower(move & FROM_MASK);
-	uint64_t to = Utils::getPower((move & TO_MASK) >> 6);
+	uint64_t from = Utils::getPower((move & FROM_MASK) >> 4);
+	uint64_t to = Utils::getPower((move & TO_MASK) >> 10);
 
-	int piece = (move & PIECE_MASK) >> 12;
+	int piece = (move & PIECE_MASK) >> 16;
 	int flag = move & FLAG_MASK;
-	int promotion_piece = (move & PROMOTION_MASK) >> 23;
+	int promotion_piece = (move & PROMOTION_MASK) >> 27;
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
-	piece_list[(move & PIECE_MASK) >> 12] ^= fromTo;
+	piece_list[(move & PIECE_MASK) >> 16] ^= fromTo;
 
 	if (flag == NO_FLAG || flag == DOUBLE_PUSH) {
 		occupiedBB ^= fromTo;
@@ -117,7 +117,7 @@ void Board::init(const Position& fenInfo) {
 
 void Board::setEnPassantSquare(int color, int move) {
 	if ((move & FLAG_MASK) == DOUBLE_PUSH) {
-		enpassant_square = color == WHITE ? ((move & TO_MASK) >> 6) - 8 : ((move & TO_MASK) >> 6) + 8;
+		enpassant_square = color == WHITE ? ((move & TO_MASK) >> 10) - 8 : ((move & TO_MASK) >> 10) + 8;
 	} else {
 		enpassant_square = 0;
 	}

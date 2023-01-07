@@ -16,10 +16,10 @@ char StringUtils::getFile(int square) {
 }
 
 string StringUtils::moveToString(int move) {
-	int from = move & 0x3F;
-	int to = (move & (0x3F << 6)) >> 6;
-	int promotion = (move & (0x3F << 23)) >> 23;
-	char promotion_char = Piece::getPromotion((move & (0x3F << 23)) >> 23);
+	int from = (move & 0b111111 << 4) >> 4;
+	int to = (move & (0b111111 << 10)) >> 10;
+	int promotion = (move & (0b1111 << 27)) >> 27;
+	char promotion_char = Piece::getPromotion(promotion);
 
 	string moveStr("");
 	moveStr += StringUtils::getFile(from);

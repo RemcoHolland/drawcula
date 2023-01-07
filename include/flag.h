@@ -1,7 +1,7 @@
 #pragma once
 
-constexpr int NO_FLAG = 0;
-constexpr int DOUBLE_PUSH = 1 << 16;
-constexpr int CAPTURE = 2 << 16;
-constexpr int EN_PASSANT = 3 << 16;
-constexpr int CASTLING = 4 << 16;
+constexpr int NO_FLAG = 0b000;
+constexpr int DOUBLE_PUSH = 0b001 << 20;
+constexpr int CAPTURE = 0b010 << 20;   // Remove capture as a flag? Can be seen when captured piece is filled
+constexpr int EN_PASSANT = 0b011 << 20;
+constexpr int CASTLING = 0b100 << 20;

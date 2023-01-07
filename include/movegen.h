@@ -6,13 +6,13 @@
 
 /****************************
 * Move is built up like:    *
-* bit 0-5   from_square     *
-* bit 6-11  to_square       *
-* bit 12-15 piece type      *
-* bit 16-18 flag            *
-* bit 19-22 captured piece  *
-* bit 23-26 promotion piece *
-* bit 27-31 MVV/LVA         *
+* bit 0-3   sort_key        *
+* bit 4-9   from_square     *
+* bit 10-15 to_square       *
+* bit 16-19 piece type      *
+* bit 20-22 flag            *
+* bit 23-26 captured piece  *
+* bit 27-31 promotion piece *
 *****************************/
 
 // MVV_LVA[victim][attacker]
@@ -26,12 +26,12 @@
 //};
 
 constexpr int MVV_LVA[NR_PIECES][NR_PIECES] = {
-	{ 2,  2,  2,  1,  1,  1},  // victim pawn,   attacker p, N, B, R, Q, K, None
-	{4, 4,  4,  3,  3,  3},  // victim Knight  attacker p, N, B, R, Q, K, None
-	{6, 6, 6, 5, 5, 5},  // victim Bishop, attacker p, N, B, R, Q, K, None
-	{8, 8, 8, 7, 7, 7},  // victim Rook,   attacker p, N, B, R, Q, K, None
-	{10, 10, 10, 9, 9, 9},  // victim Queen,  attacker p, N, B, R, Q, K, None
-	{0,   0,  0,  0,  0,  0}   // victim King,   attacker p, N, B, R, Q, K, None
+	{2,   2,  2,  1,  1, 1},  // victim pawn,   attacker p, N, B, R, Q, K, None
+	{4,   4,  4,  3,  3, 3},  // victim Knight  attacker p, N, B, R, Q, K, None
+	{6,   6,  6,  5,  5, 5},  // victim Bishop, attacker p, N, B, R, Q, K, None
+	{8,   8,  8,  7,  7, 7},  // victim Rook,   attacker p, N, B, R, Q, K, None
+	{10, 10, 10,  9,  9, 9},  // victim Queen,  attacker p, N, B, R, Q, K, None
+	{0,   0,  0,  0,  0, 0}   // victim King,   attacker p, N, B, R, Q, K, None
 };
 
 // number of moves available in a position
@@ -74,6 +74,3 @@ private:
 	void blackKingMoves(const Board&);
 	void castling(int, const Board&);
 };
-
-
-
