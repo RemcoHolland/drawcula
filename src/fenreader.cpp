@@ -59,7 +59,7 @@ void FenReader::fillPieceList(string position, uint64_t(&piece_list)[TOTAL_PIECE
 			file += getNumber((position[i])); // convert to int
 		} else {
 			int piece = getPiece(position[i]);
-			piece_list[piece] += Utils::getPower(rank * RANKS + file);
+			piece_list[piece] += (uint64_t)1 << (rank * RANKS + file);
 			file++;
 		}
 	}

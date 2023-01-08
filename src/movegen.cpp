@@ -69,9 +69,8 @@ void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t fr
 		int to = Utils::getLS1B(to_squares);
 		int captured_piece = NO_PIECE;
 		int sort_key = 0b00000;
-		if (flag == CAPTURE) {
-			uint64_t to_square = to_squares & (0 - to_squares); // get LSB
-			captured_piece = determineCapture(board, color, to_square);
+		if (flag == CAPTURE) {			
+			captured_piece = determineCapture(board, color, (uint64_t)1 << to);
 			sort_key = MVV_LVA[captured_piece - ((color ^ 1) * NR_PIECES)][WHITE_PAWN];
 		}
 
@@ -79,7 +78,7 @@ void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t fr
 		if (to <= 7 || to >= 56) {
 			int color_shift = color * NR_PIECES;
 			for (int promotion = WHITE_QUEEN + color_shift; promotion >= WHITE_KNIGHT + color_shift; promotion--) {
-				int move = sort_key | (from << 4) | (to << 10) | (piece << 16) | flag | (captured_piece << 23) | (promotion << 27);
+				int move = sort_key | (from << 4) | (to << 10) | (piece << 16) | (flag == CAPTURE ? PROMOCAPT : PROMOTION) | (captured_piece << 23) | (promotion << 27);
 				moves.push_back(move);
 			}
 		} else { // no promotion
@@ -110,7 +109,7 @@ void Movegen::addPieceMoves(const Board& board, int color, int piece, int from, 
 		int flag = NO_FLAG;
 		int captured_piece = NO_PIECE;
 		int sort_key = 0b00000;
-		if ((to_square & enemies)) {
+		if (to_square & enemies) {
 			flag = CAPTURE;
 			captured_piece = determineCapture(board, color, to_square);
 			sort_key = MVV_LVA[captured_piece - ((color ^ 1) * NR_PIECES)][piece - (color * NR_PIECES)];
@@ -124,7 +123,7 @@ void Movegen::addPieceMoves(const Board& board, int color, int piece, int from, 
 int Movegen::determineCapture(const Board& board, int color, uint64_t capture_square) {
 	int piece_color = color * NR_PIECES;
 	for (int piece = BLACK_PAWN - piece_color; piece <= BLACK_QUEEN - piece_color; ++piece) {
-		if ((board.piece_list[piece] & capture_square)) {
+		if (board.piece_list[piece] & capture_square) {
 			return piece;
 		}
 	}
@@ -161,7 +160,7 @@ void Movegen::whitePawnsCaptureRight(const Board& board) {
 
 void Movegen::whitePawnsEnpassant(const Board& board) {
 	if (board.enpassant_square) {
-		uint64_t from_squares = ((Utils::getPower(board.enpassant_square) >> 9) | (Utils::getPower(board.enpassant_square) >> 7)) & board.piece_list[WHITE_PAWN] & RANK_5;
+		uint64_t from_squares = (((uint64_t)1 << (board.enpassant_square) >> 9) | ((uint64_t)1 << (board.enpassant_square) >> 7)) & board.piece_list[WHITE_PAWN] & RANK_5;
 
 		addEnPassantMoves(WHITE, WHITE_PAWN, from_squares, board.enpassant_square);
 	}
@@ -197,7 +196,7 @@ void Movegen::blackPawnsCaptureRight(const Board& board) {
 
 void Movegen::blackPawnsEnpassant(const Board& board) {
 	if (board.enpassant_square) {
-		uint64_t from_squares = ((Utils::getPower(board.enpassant_square) << 9) | (Utils::getPower(board.enpassant_square) << 7)) & board.piece_list[BLACK_PAWN] & RANK_4;
+		uint64_t from_squares = (((uint64_t)1 << (board.enpassant_square) << 9) | ((uint64_t)1 << (board.enpassant_square) << 7)) & board.piece_list[BLACK_PAWN] & RANK_4;
 
 		addEnPassantMoves(BLACK, BLACK_PAWN, from_squares, board.enpassant_square);
 	}

@@ -1,9 +1,5 @@
 #include "utils.h"
 
- uint64_t Utils::getPower(int exp) {
-	return power[exp];
-}
-
 uint64_t Utils::flipBitVertical(uint64_t bit) {
 	return bit ^ 56;
 }

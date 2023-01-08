@@ -4,7 +4,6 @@
 #include <vector>
 #include "board.h"
 #include "piece.h"
-#include "utils.h"
 #include "position.h"
 #include "color.h"
 #include "castling.h"

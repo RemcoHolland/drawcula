@@ -11,8 +11,8 @@ void Board::setPosition(const Position& fenInfo) {
 }
 
 const int Board::makeMove(int color, int move) {
-	uint64_t from = Utils::getPower((move & FROM_MASK) >> 4);
-	uint64_t to = Utils::getPower((move & TO_MASK) >> 10);
+	uint64_t from = (uint64_t)1 << ((move & FROM_MASK) >> 4);
+	uint64_t to = (uint64_t)1 << ((move & TO_MASK) >> 10);
 
 	int piece = (move & PIECE_MASK) >> 16;
 	int flag = move & FLAG_MASK;
@@ -21,21 +21,24 @@ const int Board::makeMove(int color, int move) {
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
 	piece_list[piece] ^= fromTo;
+	enpassant_square = 0;    // clear previous enpassant square
 
-	if (flag == NO_FLAG || flag == DOUBLE_PUSH) {
+	if (flag == NO_FLAG) {
 		occupiedBB ^= fromTo;
+	} else if (flag == DOUBLE_PUSH) {
+		occupiedBB ^= fromTo;
+		enpassant_square = ((move & TO_MASK) >> 10) - (-color | 1) * 8; // (-color | 1) changes to 1 or -1 when color is either 0 or 1
 	} else if (flag == CAPTURE) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;
 		piece_list[captured_piece] ^= to;
 	} else if (flag == EN_PASSANT) {
-		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB ^= fromTo | capture_square;
 		colorBB[color ^ 1] ^= capture_square;
-		piece_list[captured_pawn] ^= capture_square;
+		piece_list[captured_piece] ^= capture_square;
 	} else if (flag == CASTLING) {
-		uint64_t rook_shift{ 0 };
+		uint64_t rook_shift = 0;
 		if (from < to) { // castling short			
 			rook_shift = (to << 1) ^ (from << 1);
 		} else { // castling long
@@ -44,21 +47,27 @@ const int Board::makeMove(int color, int move) {
 		occupiedBB ^= fromTo | rook_shift;
 		colorBB[color] ^= rook_shift;
 		piece_list[WHITE_ROOK + color * NR_PIECES] ^= rook_shift;
-	}
-	if (promotion_piece != NO_PROMOTION) {
+	} else if (flag == PROMOTION) {
+		occupiedBB ^= fromTo;
 		piece_list[piece] ^= to;
 		piece_list[promotion_piece] ^= to;
+	} else if (flag == PROMOCAPT) {
+		occupiedBB ^= from;
+		colorBB[color ^ 1] ^= to;
+		piece_list[piece] ^= to;
+		piece_list[captured_piece] ^= to;
+		piece_list[promotion_piece] ^= to;
 	}
-	setEnPassantSquare(color, move);
+
 	int current_castling_rights = castling_rights;
-	setCastlingRights(color, (move & PIECE_MASK) >> 16, move & FLAG_MASK, from, to);
+	setCastlingRights(color, piece, flag, from, to);
 	int unmake_info = captured_piece | (enpassant_square << 6) | (current_castling_rights << 12);
 	return unmake_info;
 }
 
 void Board::unmakeMove(int color, int move, int unmake_info) {
-	uint64_t from = Utils::getPower((move & FROM_MASK) >> 4);
-	uint64_t to = Utils::getPower((move & TO_MASK) >> 10);
+	uint64_t from = (uint64_t)1 << ((move & FROM_MASK) >> 4);
+	uint64_t to = (uint64_t)1 << ((move & TO_MASK) >> 10);
 
 	int piece = (move & PIECE_MASK) >> 16;
 	int flag = move & FLAG_MASK;
@@ -74,11 +83,10 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		colorBB[color ^ 1] ^= to;
 		piece_list[unmake_info & CAPTURE_MASK] ^= to;
 	} else if (flag == EN_PASSANT) {
-		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
 		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB ^= capture_square | fromTo;
 		colorBB[color ^ 1] ^= capture_square;
-		piece_list[captured_pawn] ^= capture_square;
+		piece_list[unmake_info & CAPTURE_MASK] ^= capture_square;
 	} else if (flag == CASTLING) {
 		uint64_t rook_shift{ 0 };
 		if (from < to) { // castling short			
@@ -89,9 +97,15 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		occupiedBB ^= fromTo | rook_shift;
 		colorBB[color] ^= rook_shift;
 		piece_list[WHITE_ROOK + color * NR_PIECES] ^= rook_shift;
-	}
-	if (promotion_piece != NO_PROMOTION) {
+	} else if (flag == PROMOTION) {
+		occupiedBB ^= fromTo;
 		piece_list[piece] ^= to;
+		piece_list[promotion_piece] ^= to;
+	} else if (flag == PROMOCAPT) {
+		occupiedBB ^= from;
+		colorBB[color ^ 1] ^= to;
+		piece_list[piece] ^= to;
+		piece_list[unmake_info & CAPTURE_MASK] ^= to;
 		piece_list[promotion_piece] ^= to;
 	}
 
@@ -113,14 +127,6 @@ void Board::init(const Position& fenInfo) {
 	occupiedBB = colorBB[0] | colorBB[1];
 	enpassant_square = fenInfo.enpassant_square;
 	castling_rights = fenInfo.castling_rights;
-}
-
-void Board::setEnPassantSquare(int color, int move) {
-	if ((move & FLAG_MASK) == DOUBLE_PUSH) {
-		enpassant_square = color == WHITE ? ((move & TO_MASK) >> 10) - 8 : ((move & TO_MASK) >> 10) + 8;
-	} else {
-		enpassant_square = 0;
-	}
 }
 
 void Board::setCastlingRights(int color, int piece, int flag, uint64_t from, uint64_t to) {

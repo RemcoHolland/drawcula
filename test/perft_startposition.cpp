@@ -31,10 +31,10 @@ TEST(startposition, perft_4) {
 	EXPECT_EQ(nodes, 197281);
 }
 
-//TEST(startposition, perft_5) {
-//	uint64_t nodes = perft(5);
-//	EXPECT_EQ(nodes, 4865609);
-//}
+TEST(startposition, perft_5) {
+	uint64_t nodes = perft(5);
+	EXPECT_EQ(nodes, 4865609);
+}
 
 //TEST(startposition, perft_6) {
 //	uint64_t nodes = perft(6);

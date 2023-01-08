@@ -4,7 +4,6 @@
 #include "color.h"
 #include "castling.h"
 #include "position.h"
-#include "utils.h"
 #include "flag.h"
 
 using std::string;
@@ -112,6 +111,5 @@ public:
 
 private:
 	void init(const Position&);
-	void setEnPassantSquare(int, int);
 	void setCastlingRights(int, int, int, uint64_t, uint64_t);
 };

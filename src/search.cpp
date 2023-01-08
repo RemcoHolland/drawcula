@@ -62,10 +62,10 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 	movegen.sortMoves();
 	for (int move : movegen.moves) {
 		nodes++;
-		int unmake_info = board.makeMove(color, move);
-		std::vector<int> childPV;
+		int unmake_info = board.makeMove(color, move);		
 
 		if (!square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
+			std::vector<int> childPV;
 			int score = -alphaBeta(color ^ 1, -beta, -alpha, depth - 1, board, childPV);
 			if (score >= beta) {
 				board.unmakeMove(color, move, unmake_info);

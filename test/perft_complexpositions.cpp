@@ -109,3 +109,9 @@ TEST(complexposition, bug_catcher) {
 	uint64_t nodes = perft(4, position);
 	EXPECT_EQ(nodes, 2103487);
 }
+
+TEST(complexposition, complex_middlegame) {
+	Position position = FenReader::read("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
+	uint64_t nodes = perft(5, position);
+	EXPECT_EQ(nodes, 15833292);
+}
