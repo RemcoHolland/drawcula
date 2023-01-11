@@ -62,9 +62,9 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 	movegen.sortMoves();
 	for (int move : movegen.moves) {
 		nodes++;
-		int unmake_info = board.makeMove(color, move);		
+		int unmake_info = board.makeMove(color, move);
 
-		if (!square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
+		if (!square::isAttacked(color, board, board.piece_list[color][KING])) {
 			std::vector<int> childPV;
 			int score = -alphaBeta(color ^ 1, -beta, -alpha, depth - 1, board, childPV);
 			if (score >= beta) {
@@ -83,7 +83,7 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 	}
 	// no legal moves found, must be mate or stalemate
 	if (bestscore == -MAX_INT) {
-		if (square::isAttacked(color, board, board.piece_list[color == WHITE ? WHITE_KING : BLACK_KING])) {
+		if (square::isAttacked(color, board, board.piece_list[color][KING])) {
 			bestscore = -MATE - depth; // prefer mate at larger depths as the losing side
 		} else {
 			bestscore = STALE_MATE;

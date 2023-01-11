@@ -3,21 +3,14 @@
 
 constexpr int NO_PIECE = 0;
 constexpr int NO_PROMOTION = 0;
-constexpr int WHITE_PAWN = 0;
-constexpr int WHITE_KNIGHT = 1;
-constexpr int WHITE_BISHOP = 2;
-constexpr int WHITE_ROOK = 3;
-constexpr int WHITE_QUEEN = 4;
-constexpr int WHITE_KING = 5;
-constexpr int BLACK_PAWN = 6;
-constexpr int BLACK_KNIGHT = 7;
-constexpr int BLACK_BISHOP = 8;
-constexpr int BLACK_ROOK = 9;
-constexpr int BLACK_QUEEN = 10;
-constexpr int BLACK_KING = 11;
+constexpr int PAWN = 0;
+constexpr int KNIGHT = 1;
+constexpr int BISHOP = 2;
+constexpr int ROOK = 3;
+constexpr int QUEEN = 4;
+constexpr int KING = 5;
 
-constexpr int NR_PIECES = 6;
-constexpr int TOTAL_PIECES = 12;
+constexpr int PIECES = 6;
 
 class Piece {
 public:

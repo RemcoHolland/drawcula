@@ -4,8 +4,8 @@
 
 class Position {
 public:
-	Position(uint64_t*, int, int, int, int, int);
-	uint64_t piece_list[TOTAL_PIECES] = { 0 };
+	Position(uint64_t(&)[COLORS][PIECES], int, int, int, int, int);
+	uint64_t piece_list[COLORS][PIECES] = { {0} };
 	int color = 0;
 	int castling_rights = 0;
 	int enpassant_square = 0;

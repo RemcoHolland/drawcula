@@ -25,7 +25,7 @@
 //	{0,   0,  0,  0,  0,  0}   // victim King,   attacker p, N, B, R, Q, K, None
 //};
 
-constexpr int MVV_LVA[NR_PIECES][NR_PIECES] = {
+constexpr int MVV_LVA[PIECES][PIECES] = {
 	{2,   2,  2,  1,  1, 1},  // victim pawn,   attacker p, N, B, R, Q, K, None
 	{4,   4,  4,  3,  3, 3},  // victim Knight  attacker p, N, B, R, Q, K, None
 	{6,   6,  6,  5,  5, 5},  // victim Bishop, attacker p, N, B, R, Q, K, None

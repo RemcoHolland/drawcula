@@ -6,29 +6,24 @@ Piece::Piece() {
 char Piece::getPromotion(int piece) {
 	char promotion = '\0';
 	switch (piece) {
-	case WHITE_KNIGHT:
-	case BLACK_KNIGHT:
+	case KNIGHT:
 		return 'n';
-	case WHITE_BISHOP:
-	case BLACK_BISHOP:
+	case BISHOP:
 		return 'b';
-	case WHITE_ROOK:
-	case BLACK_ROOK:
+	case ROOK:
 		return 'r';
-	case WHITE_QUEEN:
-	case BLACK_QUEEN:
+	case QUEEN:
 		return 'q';
 	default: return '\0';
 	}
 }
 
 int Piece::getPromotion(char piece, int color) {
-	// TODO: remove color for this promotion check. Only use KNIGHT, BISHOP, etc...
 	switch (piece) {
-	case 'n': return WHITE_KNIGHT + color * NR_PIECES;
-	case 'b': return WHITE_BISHOP + color * NR_PIECES;
-	case 'r': return WHITE_ROOK + color * NR_PIECES;
-	case 'q': return WHITE_QUEEN + color * NR_PIECES;
+	case 'n': return KNIGHT;
+	case 'b': return BISHOP;
+	case 'r': return ROOK;
+	case 'q': return QUEEN;
 	default: return NO_PROMOTION;
 	}
 }

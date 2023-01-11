@@ -21,16 +21,16 @@ int popCount(uint64_t x) {
 
 int materialScore(const Board& board) {
 	return
-		popCount(board.piece_list[WHITE_PAWN]) * PAWN_VALUE +
-		popCount(board.piece_list[WHITE_KNIGHT]) * KNIGHT_VALUE +
-		popCount(board.piece_list[WHITE_BISHOP]) * BISHOP_VALUE +
-		popCount(board.piece_list[WHITE_ROOK]) * ROOK_VALUE +
-		popCount(board.piece_list[WHITE_QUEEN]) * QUEEN_VALUE -
-		popCount(board.piece_list[BLACK_PAWN]) * PAWN_VALUE -
-		popCount(board.piece_list[BLACK_KNIGHT]) * KNIGHT_VALUE -
-		popCount(board.piece_list[BLACK_BISHOP]) * BISHOP_VALUE -
-		popCount(board.piece_list[BLACK_ROOK]) * ROOK_VALUE -
-		popCount(board.piece_list[BLACK_QUEEN]) * QUEEN_VALUE;
+		popCount(board.piece_list[WHITE][PAWN]) * PAWN_VALUE +
+		popCount(board.piece_list[WHITE][KNIGHT]) * KNIGHT_VALUE +
+		popCount(board.piece_list[WHITE][BISHOP]) * BISHOP_VALUE +
+		popCount(board.piece_list[WHITE][ROOK]) * ROOK_VALUE +
+		popCount(board.piece_list[WHITE][QUEEN]) * QUEEN_VALUE -
+		popCount(board.piece_list[BLACK][PAWN]) * PAWN_VALUE -
+		popCount(board.piece_list[BLACK][KNIGHT]) * KNIGHT_VALUE -
+		popCount(board.piece_list[BLACK][BISHOP]) * BISHOP_VALUE -
+		popCount(board.piece_list[BLACK][ROOK]) * ROOK_VALUE -
+		popCount(board.piece_list[BLACK][QUEEN]) * QUEEN_VALUE;
 }
 
 int evaluation::getScore(const Board& board) {
