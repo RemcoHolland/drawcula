@@ -131,10 +131,9 @@ int Uci::stringToMove(int color, const string& moveStr) {
 	int piece = NO_PIECE;
 	int from = StringUtils::getSquare(moveStr[0], moveStr[1]);
 	int to = StringUtils::getSquare(moveStr[2], moveStr[3]);
-	int flag = NO_FLAG;
 	int promotion = moveStr.length() == 5 ? Piece::getPromotion(moveStr[4], color) : NO_PROMOTION;
 
-	return (from << 4) + (to << 10) + (piece << 16) + (flag << 20) + (promotion << 27);
+	return (from << 6) + (to << 12) + (piece << 18) + (promotion << 27);
 }
 
 Uci::~Uci() {

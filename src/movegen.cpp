@@ -15,13 +15,13 @@ Movegen::Movegen() {
 }
 
 int Movegen::getLegalMove(int move) {
-	int	m_from = (move & FROM_MASK) >> 4;
-	int m_to = (move & TO_MASK) >> 10;
+	int	m_from = (move & FROM_MASK) >> 6;
+	int m_to = (move & TO_MASK) >> 12;
 	int m_promotion = (move & PROMOTION_MASK) >> 27;
 
 	for (int legalMove : moves) {
-		int lm_from = (legalMove & FROM_MASK) >> 4;
-		int lm_to = (legalMove & TO_MASK) >> 10;
+		int lm_from = (legalMove & FROM_MASK) >> 6;
+		int lm_to = (legalMove & TO_MASK) >> 12;
 		int lm_promotion = (legalMove & PROMOTION_MASK) >> 27;
 		// move is legal if 'from', 'to'  and 'promotion piece' are the same
 		if (lm_from == m_from && lm_to == m_to && lm_promotion == m_promotion) {
@@ -77,11 +77,11 @@ void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t fr
 		// check for promotion
 		if (to <= 7 || to >= 56) {
 			for (int promotion = QUEEN; promotion >= KNIGHT; promotion--) {
-				int move = sort_key | (from << 4) | (to << 10) | (piece << 16) | (flag == CAPTURE ? PROMOCAPT : PROMOTION) | (captured_piece << 23) | (promotion << 27);
+				int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | (flag == CAPTURE ? PROMOCAPT : PROMOTION) | (captured_piece << 24) | (promotion << 27);
 				moves.push_back(move);
 			}
 		} else { // no promotion
-			int move = sort_key | (from << 4) | (to << 10) | (piece << 16) | flag | (captured_piece << 23);
+			int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | flag | (captured_piece << 24);
 			moves.push_back(move);
 		}
 		from_squares &= (from_squares - 1); // clear LSB
@@ -94,7 +94,7 @@ void Movegen::addEnPassantMoves(int color, int piece, uint64_t from_squares, int
 		int from = Utils::getLS1B(from_squares);
 		int captured_piece = PAWN;
 		int sort_key = MVV_LVA[PAWN][PAWN];
-		int move = sort_key | (from << 4) | (to << 10) | (piece << 16) | EN_PASSANT | (captured_piece << 23);
+		int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | EN_PASSANT | (captured_piece << 24);
 		moves.push_back(move);
 		from_squares &= (from_squares - 1); // clear LSB
 	}
@@ -113,7 +113,7 @@ void Movegen::addPieceMoves(const Board& board, int color, int piece, int from, 
 			captured_piece = determineCapture(board, color, to_square);
 			sort_key = MVV_LVA[captured_piece][piece];
 		}
-		int move = sort_key | (from << 4) | (to << 10) | (piece << 16) | flag | (captured_piece << 23);
+		int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | flag | (captured_piece << 24);
 		moves.push_back(move);
 		to_squares &= (to_squares - 1); // clear LSB
 	}
@@ -323,7 +323,7 @@ void Movegen::castling(int color, const Board& board) {
 			// TODO: delay isAttacked to the search algorithm
 			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square << 1)))) {
 				int to = Utils::getLS1B(king_square << 2);
-				int move = (king_square_nr << 4) | (to << 10) | (KING << 16) | CASTLING;
+				int move = (king_square_nr << 6) | (to << 12) | (KING << 18) | CASTLING;
 				moves.push_back(move);
 			}
 		}
@@ -336,7 +336,7 @@ void Movegen::castling(int color, const Board& board) {
 
 			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square >> 1)))) {
 				int to = Utils::getLS1B(king_square >> 2);
-				int move = (king_square_nr << 4) | (to << 10) | (KING << 16) | CASTLING;
+				int move = (king_square_nr << 6) | (to << 12) | (KING << 18) | CASTLING;
 				moves.push_back(move);
 			}
 		}

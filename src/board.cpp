@@ -11,12 +11,12 @@ void Board::setPosition(const Position& postion) {
 }
 
 const int Board::makeMove(int color, int move) {
-	uint64_t from = (uint64_t)1 << ((move & FROM_MASK) >> 4);
-	uint64_t to = (uint64_t)1 << ((move & TO_MASK) >> 10);
+	uint64_t from = (uint64_t)1 << ((move & FROM_MASK) >> 6);
+	uint64_t to = (uint64_t)1 << ((move & TO_MASK) >> 12);
 
-	int piece = (move & PIECE_MASK) >> 16;
+	int piece = (move & PIECE_MASK) >> 18;
 	int flag = move & FLAG_MASK;
-	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 23;
+	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 24;
 	int promotion_piece = (move & PROMOTION_MASK) >> 27;
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
@@ -27,7 +27,7 @@ const int Board::makeMove(int color, int move) {
 		occupiedBB ^= fromTo;
 	} else if (flag == DOUBLE_PUSH) {
 		occupiedBB ^= fromTo;
-		enpassant_square = ((move & TO_MASK) >> 10) - (-color | 1) * 8; // (-color | 1) changes to 1 or -1 when color is either 0 or 1
+		enpassant_square = ((move & TO_MASK) >> 12) - (-color | 1) * 8; // (-color | 1) changes to 1 or -1 when color is either 0 or 1
 	} else if (flag == CAPTURE) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;
@@ -66,15 +66,15 @@ const int Board::makeMove(int color, int move) {
 }
 
 void Board::unmakeMove(int color, int move, int unmake_info) {
-	uint64_t from = (uint64_t)1 << ((move & FROM_MASK) >> 4);
-	uint64_t to = (uint64_t)1 << ((move & TO_MASK) >> 10);
+	uint64_t from = (uint64_t)1 << ((move & FROM_MASK) >> 6);
+	uint64_t to = (uint64_t)1 << ((move & TO_MASK) >> 12);
 
-	int piece = (move & PIECE_MASK) >> 16;
+	int piece = (move & PIECE_MASK) >> 18;
 	int flag = move & FLAG_MASK;
 	int promotion_piece = (move & PROMOTION_MASK) >> 27;
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
-	piece_list[color][(move & PIECE_MASK) >> 16] ^= fromTo;
+	piece_list[color][(move & PIECE_MASK) >> 18] ^= fromTo;
 
 	if (flag == NO_FLAG || flag == DOUBLE_PUSH) {
 		occupiedBB ^= fromTo;

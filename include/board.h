@@ -79,16 +79,16 @@ constexpr uint64_t KING_MOVES[SQUARES] = {
 };
 
 // move masks
-constexpr int SORT_KEY_MASK = 0b11111;
-constexpr int FROM_MASK = 0b111111 << 4;
-constexpr int TO_MASK = 0b111111 << 10;
-constexpr int PIECE_MASK = 0b1111 << 16;
-constexpr int FLAG_MASK = 0b111 << 20;
-constexpr int CAPTURED_PIECE_MASK = 0b1111 << 23;
-constexpr int PROMOTION_MASK = 0b1111 << 27;
+constexpr int SORT_KEY_MASK = 0b111111;
+constexpr int FROM_MASK = 0b111111 << 6;
+constexpr int TO_MASK = 0b111111 << 12;
+constexpr int PIECE_MASK = 0b111 << 18;
+constexpr int FLAG_MASK = 0b111 << 21;
+constexpr int CAPTURED_PIECE_MASK = 0b111 << 24;
+constexpr int PROMOTION_MASK = 0b111 << 27;
 
 // unmake move masks
-constexpr int CAPTURE_MASK = 0b111111;
+constexpr int CAPTURE_MASK = 0b111111;   // USE SHORT OR SOMETHING INSTEAD OF INT???
 constexpr int ENPASSANT_MASK = 0b111111 << 6;
 constexpr int CASTLING_MASK = 0b111111 << 12;
 

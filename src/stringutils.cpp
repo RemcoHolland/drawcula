@@ -16,8 +16,8 @@ char StringUtils::getFile(int square) {
 }
 
 string StringUtils::moveToString(int move) {
-	int from = (move & 0b111111 << 4) >> 4;
-	int to = (move & (0b111111 << 10)) >> 10;
+	int from = (move & 0b111111 << 6) >> 6;
+	int to = (move & (0b111111 << 12)) >> 12;
 	int promotion = (move & (0b1111 << 27)) >> 27;
 	char promotion_char = Piece::getPromotion(promotion);
 
