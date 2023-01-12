@@ -24,13 +24,13 @@ constexpr int EXPECTED_NR_MOVES = 40;
 class Search {
 public:
 	Search();
-	uint64_t getNodes();
+	U64 getNodes();
 	void start(int, int, Board, Time);
 	~Search();
 
 private:	
 	Time time;
-	uint64_t nodes{ 0 };
+	U64 nodes{ 0 };
 
 	int alphaBeta(int, int, int, int, Board&, std::vector<int>&);
 	bool timeToMove(int);

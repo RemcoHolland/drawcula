@@ -7,35 +7,36 @@
 #include "flag.h"
 
 using std::string;
+typedef uint64_t U64;
 
 constexpr int RANKS = 8;
 constexpr int FILES = 8;
 constexpr int SQUARES = RANKS * FILES;
-constexpr uint64_t RANK_1 = 255;
-constexpr uint64_t RANK_2 = 65280;
-constexpr uint64_t RANK_4 = 4278190080;
-constexpr uint64_t RANK_5 = 1095216660480;
-constexpr uint64_t RANK_7 = 71776119061217280;
-constexpr uint64_t RANK_8 = 18374686479671623680;
-constexpr uint64_t PROMOTION_RANK = RANK_1 | RANK_8;
-constexpr uint64_t FILE_A = 72340172838076673;
-constexpr uint64_t FILE_H = 9259542123273814144;
+constexpr U64 RANK_1 = 255;
+constexpr U64 RANK_2 = 65280;
+constexpr U64 RANK_4 = 4278190080;
+constexpr U64 RANK_5 = 1095216660480;
+constexpr U64 RANK_7 = 71776119061217280;
+constexpr U64 RANK_8 = 18374686479671623680;
+constexpr U64 PROMOTION_RANK = RANK_1 | RANK_8;
+constexpr U64 FILE_A = 72340172838076673;
+constexpr U64 FILE_H = 9259542123273814144;
 
-constexpr uint64_t A1 = 1;
-constexpr uint64_t B1 = 2;
-constexpr uint64_t C1 = 4;
-constexpr uint64_t D1 = 8;
-constexpr uint64_t E1 = 16;
-constexpr uint64_t F1 = 32;
-constexpr uint64_t G1 = 64;
-constexpr uint64_t H1 = 128;
-constexpr uint64_t A8 = 72057594037927936;
-constexpr uint64_t H8 = 9223372036854775808;
+constexpr U64 A1 = 1;
+constexpr U64 B1 = 2;
+constexpr U64 C1 = 4;
+constexpr U64 D1 = 8;
+constexpr U64 E1 = 16;
+constexpr U64 F1 = 32;
+constexpr U64 G1 = 64;
+constexpr U64 H1 = 128;
+constexpr U64 A8 = 72057594037927936;
+constexpr U64 H8 = 9223372036854775808;
 
-constexpr uint64_t KING_SIDE_SQUARES = F1 | G1;
-constexpr uint64_t QUEEN_SIDE_SQUARES = B1 | C1 | D1;
+constexpr U64 KING_SIDE_SQUARES = F1 | G1;
+constexpr U64 QUEEN_SIDE_SQUARES = B1 | C1 | D1;
 
-constexpr uint64_t PAWN_ATTACKS[COLORS][SQUARES] = { {
+constexpr U64 PAWN_ATTACKS[COLORS][SQUARES] = { {
 	512,				1280,				2560,				5120,			     10240,			      20480,			   40960,			     16384,
 	131072,			    327680,			    655360,			    1310720,			 2621440,		      5242880,			   10485760,			 4194304,
 	33554432,           83886080,           167772160,          335544320,           671088640,           1342177280,          2684354560,           1073741824,
@@ -56,7 +57,7 @@ constexpr uint64_t PAWN_ATTACKS[COLORS][SQUARES] = { {
 	562949953421312,    1407374883553280,   2814749767106560,   5629499534213120,    11258999068426240,   22517998136852480,   45035996273704960,    18014398509481984
 } };
 
-constexpr uint64_t KNIGHT_MOVES[SQUARES] = {
+constexpr U64 KNIGHT_MOVES[SQUARES] = {
 	132096,				329728,				659712,				 1319424,			  2638848,			   5277696,				10489856,			  4202496,
 	33816580,			84410376,			168886289,			 337772578,			  675545156,		   1351090312,			2685403152,			  1075839008,
 	8657044482,		    21609056261,		43234889994,		 86469779988,		  172939559976,		   345879119952,		687463207072,		  275414786112,
@@ -67,7 +68,7 @@ constexpr uint64_t KNIGHT_MOVES[SQUARES] = {
 	1128098930098176,   2257297371824128,	4796069720358912,	 9592139440717824,	  19184278881435648,   38368557762871296,	4679521487814656,	  9077567998918656
 };
 
-constexpr uint64_t KING_MOVES[SQUARES] = {
+constexpr U64 KING_MOVES[SQUARES] = {
 	770,				1797,				3594,				 7188,				  14376,			   28752,				57504,				  49216,
 	197123,				460039,				920078,				 1840156,			  3680312,			   7360624,				14721248,			  12599488,
 	50463488,			117769984,			235539968,			 471079936,			  942159872,		   1884319744,			3768639488,			  3225468928,
@@ -97,9 +98,9 @@ class Board {
 public:
 	Board(const Position&);
 
-	uint64_t piece_list[COLORS][PIECES];
-	uint64_t occupiedBB = 0;
-	uint64_t colorBB[2] = { 0 };
+	U64 piece_list[COLORS][PIECES];
+	U64 occupiedBB = 0;
+	U64 colorBB[2] = { 0 };
 	int enpassant_square = 0;
 	int castling_rights = 0;
 
@@ -111,5 +112,5 @@ public:
 
 private:
 	void init(const Position&);
-	void setCastlingRights(int, int, int, uint64_t, uint64_t);
+	void setCastlingRights(int, int, int, U64, U64);
 };

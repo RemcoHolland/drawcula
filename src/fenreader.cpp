@@ -11,7 +11,7 @@ Position FenReader::read(string fen) {
 	}
 
 	// position
-	uint64_t piece_list[COLORS][PIECES] = { { 0 } };
+	U64 piece_list[COLORS][PIECES] = { { 0 } };
 	string positionStr = splitted_fen.at(0);
 	fillPieceList(positionStr, piece_list);
 
@@ -46,7 +46,7 @@ Position FenReader::read(string fen) {
 FenReader::~FenReader() {
 }
 
-void FenReader::fillPieceList(string position, uint64_t(&piece_list)[COLORS][PIECES]) {
+void FenReader::fillPieceList(string position, U64(&piece_list)[COLORS][PIECES]) {
 	int rank = 7;
 	int file = 0;
 
@@ -60,7 +60,7 @@ void FenReader::fillPieceList(string position, uint64_t(&piece_list)[COLORS][PIE
 		} else {
 			int color = getPieceColor(position[i]);
 			int piece = getPiece(position[i]);
-			piece_list[color][piece] += (uint64_t)1 << (rank * RANKS + file);
+			piece_list[color][piece] += (U64)1 << (rank * RANKS + file);
 			file++;
 		}
 	}

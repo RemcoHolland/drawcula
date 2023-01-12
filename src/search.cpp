@@ -10,7 +10,7 @@
 Search::Search() {
 }
 
-uint64_t Search::getNodes() {
+U64 Search::getNodes() {
 	return nodes;
 }
 

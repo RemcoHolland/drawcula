@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+typedef uint64_t U64;
+
 constexpr int index64[64] = {
 	0, 47,  1, 56, 48, 27,  2, 60,
 	57, 49, 41, 37, 28, 16,  3, 61,
@@ -14,9 +16,9 @@ constexpr int index64[64] = {
 
 class Utils {
 public:	
-	static uint64_t flipBitVertical(uint64_t);
-	static uint64_t flip1BBVertical(uint64_t);
-	static int getLS1B(uint64_t);
+	static U64 flipBitVertical(U64);
+	static U64 flip1BBVertical(U64);
+	static int getLS1B(U64);
 private:
 	
 };

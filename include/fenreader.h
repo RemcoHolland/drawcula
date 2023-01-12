@@ -21,7 +21,7 @@ public:
 	~FenReader();
 
 private:
-	static void fillPieceList(string, uint64_t(&)[COLORS][PIECES]);
+	static void fillPieceList(string, U64(&)[COLORS][PIECES]);
 	static int getColor(char);
 	static int getPieceColor(char);
 	static int getPiece(char);

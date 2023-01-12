@@ -6,6 +6,6 @@
 #include "piece.h"
 
 namespace square {
-	bool isAttacked(int, const Board&, uint64_t);
+	bool isAttacked(int, const Board&, U64);
 };
 
