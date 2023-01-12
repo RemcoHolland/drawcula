@@ -63,7 +63,7 @@ void Movegen::generateMoves(int color, const Board& board) {
 	}
 }
 
-void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t from_squares, uint64_t to_squares, int flag) {
+void Movegen::addPawnMoves(const Board& board, int color, uint64_t from_squares, uint64_t to_squares, int flag) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
 		int to = Utils::getLS1B(to_squares);
@@ -76,12 +76,13 @@ void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t fr
 
 		// check for promotion
 		if (to <= 7 || to >= 56) {
-			for (int promotion = QUEEN; promotion >= KNIGHT; promotion--) {
-				int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | (flag == CAPTURE ? PROMOCAPT : PROMOTION) | (captured_piece << 24) | (promotion << 27);
+			for (int promotion_piece = QUEEN; promotion_piece >= KNIGHT; promotion_piece--) {
+				// create 4 promotion moves
+				int move = sort_key | (from << 6) | (to << 12) | (PAWN << 18) | (flag == CAPTURE ? PROMOCAPT : PROMOTION) | (captured_piece << 24) | (promotion_piece << 27);
 				moves.push_back(move);
 			}
 		} else { // no promotion
-			int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | flag | (captured_piece << 24);
+			int move = sort_key | (from << 6) | (to << 12) | (PAWN << 18) | flag | (captured_piece << 24);
 			moves.push_back(move);
 		}
 		from_squares &= (from_squares - 1); // clear LSB
@@ -89,12 +90,11 @@ void Movegen::addPawnMoves(const Board& board, int color, int piece, uint64_t fr
 	}
 }
 
-void Movegen::addEnPassantMoves(int color, int piece, uint64_t from_squares, int to) {
+void Movegen::addEnPassantMoves(int color, uint64_t from_squares, int to) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
-		int captured_piece = PAWN;
 		int sort_key = MVV_LVA[PAWN][PAWN];
-		int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | EN_PASSANT | (captured_piece << 24);
+		int move = sort_key | (from << 6) | (to << 12) | (PAWN << 18) | EN_PASSANT | (PAWN << 24);
 		moves.push_back(move);
 		from_squares &= (from_squares - 1); // clear LSB
 	}
@@ -132,35 +132,35 @@ void Movegen::whitePawnsPush(const Board& board) {
 	uint64_t to_squares = (board.piece_list[WHITE][PAWN] << 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares >> 8;
 
-	addPawnMoves(board, WHITE, PAWN, from_squares, to_squares, NO_FLAG);
+	addPawnMoves(board, WHITE, from_squares, to_squares, NO_FLAG);
 }
 
 void Movegen::whitePawnsDoublePush(const Board& board) {
 	uint64_t to_squares = ((((board.piece_list[WHITE][PAWN] & RANK_2) << 8) & ~board.occupiedBB) << 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares >> 16;
 
-	addPawnMoves(board, WHITE, PAWN, from_squares, to_squares, DOUBLE_PUSH);
+	addPawnMoves(board, WHITE, from_squares, to_squares, DOUBLE_PUSH);
 }
 
 void Movegen::whitePawnsCaptureLeft(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[WHITE][PAWN] & ~FILE_A) << 7) & board.colorBB[BLACK];
 	uint64_t from_squares = to_squares >> 7;
 
-	addPawnMoves(board, WHITE, PAWN, from_squares, to_squares, CAPTURE);
+	addPawnMoves(board, WHITE, from_squares, to_squares, CAPTURE);
 }
 
 void Movegen::whitePawnsCaptureRight(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[WHITE][PAWN] & ~FILE_H) << 9) & board.colorBB[BLACK];
 	uint64_t from_squares = to_squares >> 9;
 
-	addPawnMoves(board, WHITE, PAWN, from_squares, to_squares, CAPTURE);
+	addPawnMoves(board, WHITE, from_squares, to_squares, CAPTURE);
 }
 
 void Movegen::whitePawnsEnpassant(const Board& board) {
 	if (board.enpassant_square) {
 		uint64_t from_squares = (((uint64_t)1 << (board.enpassant_square) >> 9) | ((uint64_t)1 << (board.enpassant_square) >> 7)) & board.piece_list[WHITE][PAWN] & RANK_5;
 
-		addEnPassantMoves(WHITE, PAWN, from_squares, board.enpassant_square);
+		addEnPassantMoves(WHITE, from_squares, board.enpassant_square);
 	}
 }
 
@@ -168,35 +168,35 @@ void Movegen::blackPawnsPush(const Board& board) {
 	uint64_t to_squares = (board.piece_list[BLACK][PAWN] >> 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares << 8;
 
-	addPawnMoves(board, BLACK, PAWN, from_squares, to_squares, NO_FLAG);
+	addPawnMoves(board, BLACK, from_squares, to_squares, NO_FLAG);
 }
 
 void Movegen::blackPawnsDoublePush(const Board& board) {
 	uint64_t to_squares = ((((board.piece_list[BLACK][PAWN] & RANK_7) >> 8) & ~board.occupiedBB) >> 8) & ~board.occupiedBB;
 	uint64_t from_squares = to_squares << 16;
 
-	addPawnMoves(board, BLACK, PAWN, from_squares, to_squares, DOUBLE_PUSH);
+	addPawnMoves(board, BLACK, from_squares, to_squares, DOUBLE_PUSH);
 }
 
 void Movegen::blackPawnsCaptureLeft(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[BLACK][PAWN] & ~FILE_A) >> 9) & board.colorBB[WHITE];
 	uint64_t from_squares = to_squares << 9;
 
-	addPawnMoves(board, BLACK, PAWN, from_squares, to_squares, CAPTURE);
+	addPawnMoves(board, BLACK, from_squares, to_squares, CAPTURE);
 }
 
 void Movegen::blackPawnsCaptureRight(const Board& board) {
 	uint64_t to_squares = ((board.piece_list[BLACK][PAWN] & ~FILE_H) >> 7) & board.colorBB[WHITE];
 	uint64_t from_squares = to_squares << 7;
 
-	addPawnMoves(board, BLACK, PAWN, from_squares, to_squares, CAPTURE);
+	addPawnMoves(board, BLACK, from_squares, to_squares, CAPTURE);
 }
 
 void Movegen::blackPawnsEnpassant(const Board& board) {
 	if (board.enpassant_square) {
 		uint64_t from_squares = (((uint64_t)1 << (board.enpassant_square) << 9) | ((uint64_t)1 << (board.enpassant_square) << 7)) & board.piece_list[BLACK][PAWN] & RANK_4;
 
-		addEnPassantMoves(BLACK, PAWN, from_squares, board.enpassant_square);
+		addEnPassantMoves(BLACK, from_squares, board.enpassant_square);
 	}
 }
 
@@ -278,7 +278,7 @@ void Movegen::whiteQueenMoves(const Board& board) {
 
 	while (queens) {
 		int from = Utils::getLS1B(queens);
-		uint64_t to_squares = (Bmagic(from, board.occupiedBB) | Rmagic(from, board.occupiedBB)) & ~board.colorBB[WHITE];
+		uint64_t to_squares = Qmagic(from, board.occupiedBB) & ~board.colorBB[WHITE];
 
 		addPieceMoves(board, WHITE, QUEEN, from, to_squares, board.colorBB[BLACK]);
 		queens &= (queens - 1); // clear LSB
@@ -290,7 +290,7 @@ void Movegen::blackQueenMoves(const Board& board) {
 
 	while (queens) {
 		int from = Utils::getLS1B(queens);
-		uint64_t to_squares = (Bmagic(from, board.occupiedBB) | Rmagic(from, board.occupiedBB)) & ~board.colorBB[BLACK];
+		uint64_t to_squares = Qmagic(from, board.occupiedBB) & ~board.colorBB[BLACK];
 
 		addPieceMoves(board, BLACK, QUEEN, from, to_squares, board.colorBB[WHITE]);
 		queens &= (queens - 1); // clear LSB

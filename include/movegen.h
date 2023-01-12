@@ -40,8 +40,8 @@ public:
 	~Movegen();
 
 private:
-	void addPawnMoves(const Board&, int, int, uint64_t, uint64_t, int);
-	void addEnPassantMoves(int, int, uint64_t, int);
+	void addPawnMoves(const Board&, int, uint64_t, uint64_t, int);
+	void addEnPassantMoves(int, uint64_t, int);
 	void addPieceMoves(const Board&, int, int, int, uint64_t, uint64_t);
 	int determineCapture(const Board&, int, uint64_t);
 	void whitePawnsPush(const Board&);

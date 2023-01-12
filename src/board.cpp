@@ -17,7 +17,7 @@ const int Board::makeMove(int color, int move) {
 	int piece = (move & PIECE_MASK) >> 18;
 	int flag = move & FLAG_MASK;
 	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 24;
-	int promotion_piece = (move & PROMOTION_MASK) >> 27;
+	
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
 	piece_list[color][piece] ^= fromTo;
@@ -50,13 +50,13 @@ const int Board::makeMove(int color, int move) {
 	} else if (flag == PROMOTION) {
 		occupiedBB ^= fromTo;
 		piece_list[color][piece] ^= to;
-		piece_list[color][promotion_piece] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	} else if (flag == PROMOCAPT) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;
 		piece_list[color][piece] ^= to;
 		piece_list[color ^ 1][captured_piece] ^= to;
-		piece_list[color][promotion_piece] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	}
 
 	int current_castling_rights = castling_rights;
@@ -70,8 +70,7 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 	uint64_t to = (uint64_t)1 << ((move & TO_MASK) >> 12);
 
 	int piece = (move & PIECE_MASK) >> 18;
-	int flag = move & FLAG_MASK;
-	int promotion_piece = (move & PROMOTION_MASK) >> 27;
+	int flag = move & FLAG_MASK;	
 	uint64_t fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
 	piece_list[color][(move & PIECE_MASK) >> 18] ^= fromTo;
@@ -100,13 +99,13 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 	} else if (flag == PROMOTION) {
 		occupiedBB ^= fromTo;
 		piece_list[color][piece] ^= to;
-		piece_list[color][promotion_piece] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	} else if (flag == PROMOCAPT) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;
 		piece_list[color][piece] ^= to;
 		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= to;
-		piece_list[color][promotion_piece] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	}
 
 	enpassant_square = (unmake_info & ENPASSANT_MASK) >> 6;
