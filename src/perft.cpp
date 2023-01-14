@@ -20,7 +20,7 @@ Perft::~Perft() {
 }
 
 //Improvement: make a root negaMax, see chess programming network.
-void Perft::negaMax(int color, Board board, int depth) {
+void Perft::negaMax(int color, Board& board, int depth) {
 	if (depth == 0) {
 		root_nodes++;
 		nodes++;

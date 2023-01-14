@@ -15,7 +15,7 @@ U64 Search::getNodes() {
 }
 
 void Search::start(int color, int max_depth, Board board, const Time time) {
-	int depth{ 1 };
+	int depth = 1;
 	this->time = time;
 	std::vector<int> currentPV;
 	std::vector<int> PV;
@@ -24,7 +24,7 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 		nodes = 0;
 		std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 		int score = alphaBeta(color, -MAX_INT, MAX_INT, depth, board, currentPV);
-		if (g_stop == false) {
+		if (!g_stop) {
 			string scoreStr;
 			if (std::abs(score) >= MATE) {
 				int multiplier = (score > 0) - (score < 0);
@@ -39,7 +39,7 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 			long long nps = nodes / searchtime * 1000;
 			std::cout << "info depth " << depth << " score " << scoreStr << " time " << searchtime << " nodes " << nodes << " nps " << nps << " pv " << printPV(currentPV) << std::endl;
 		}
-	} while (g_stop == false && depth++ != max_depth);
+	} while (!g_stop && depth++ != max_depth);
 	std::cout << "bestmove " << StringUtils::moveToString(PV.front()) << std::endl;
 }
 
@@ -102,7 +102,7 @@ bool Search::timeToMove(int color) {
 	return searchtime > movetime;
 }
 
-void Search::updatePV(std::vector<int>& PV, const  std::vector<int>& childPV, int move) {
+void Search::updatePV(std::vector<int>& PV, const std::vector<int>& childPV, int move) {
 	PV.clear();
 	PV.push_back(move);
 	std::copy(childPV.begin(), childPV.end(), back_inserter(PV));

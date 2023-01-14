@@ -36,9 +36,9 @@ const int Board::makeMove(int color, int move) {
 		U64 capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB ^= fromTo | capture_square;
 		colorBB[color ^ 1] ^= capture_square;
-		piece_list[color ^ 1][captured_piece] ^= capture_square;
+		piece_list[color ^ 1][PAWN] ^= capture_square;
 	} else if (flag == CASTLING) {
-		U64 rook_shift = 0;
+		U64 rook_shift;
 		if (from < to) { // castling short			
 			rook_shift = (to << 1) ^ (from << 1);
 		} else { // castling long
@@ -49,12 +49,12 @@ const int Board::makeMove(int color, int move) {
 		piece_list[color][ROOK] ^= rook_shift;
 	} else if (flag == PROMOTION) {
 		occupiedBB ^= fromTo;
-		piece_list[color][piece] ^= to;
+		piece_list[color][PAWN] ^= to;
 		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	} else if (flag == PROMOCAPT) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;
-		piece_list[color][piece] ^= to;
+		piece_list[color][PAWN] ^= to;
 		piece_list[color ^ 1][captured_piece] ^= to;
 		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	}
@@ -69,7 +69,6 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 	U64 from = (U64)1 << ((move & FROM_MASK) >> 6);
 	U64 to = (U64)1 << ((move & TO_MASK) >> 12);
 
-	int piece = (move & PIECE_MASK) >> 18;
 	int flag = move & FLAG_MASK;	
 	U64 fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
@@ -85,9 +84,9 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		U64 capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB ^= capture_square | fromTo;
 		colorBB[color ^ 1] ^= capture_square;
-		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= capture_square;
+		piece_list[color ^ 1][PAWN] ^= capture_square;
 	} else if (flag == CASTLING) {
-		U64 rook_shift{ 0 };
+		U64 rook_shift;
 		if (from < to) { // castling short			
 			rook_shift = (to << 1) ^ (from << 1);
 		} else { // castling long
@@ -98,12 +97,12 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		piece_list[color][ROOK] ^= rook_shift;
 	} else if (flag == PROMOTION) {
 		occupiedBB ^= fromTo;
-		piece_list[color][piece] ^= to;
+		piece_list[color][PAWN] ^= to;
 		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	} else if (flag == PROMOCAPT) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;
-		piece_list[color][piece] ^= to;
+		piece_list[color][PAWN] ^= to;
 		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= to;
 		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	}
