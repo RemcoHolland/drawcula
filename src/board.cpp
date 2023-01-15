@@ -17,7 +17,7 @@ const int Board::makeMove(int color, int move) {
 	int piece = (move & PIECE_MASK) >> 18;
 	int flag = move & FLAG_MASK;
 	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 24;
-	
+
 	U64 fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
 	piece_list[color][piece] ^= fromTo;
@@ -69,7 +69,7 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 	U64 from = (U64)1 << ((move & FROM_MASK) >> 6);
 	U64 to = (U64)1 << ((move & TO_MASK) >> 12);
 
-	int flag = move & FLAG_MASK;	
+	int flag = move & FLAG_MASK;
 	U64 fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
 	piece_list[color][(move & PIECE_MASK) >> 18] ^= fromTo;
@@ -131,27 +131,27 @@ void Board::setCastlingRights(int color, int piece, int flag, U64 from, U64 to) 
 			int color_shift = color * 56;
 
 			// check own kingside castling rights when move is a king or rook move
-			if (castling_rights & (Castling::KING_SIDE << color)) {
+			if (castling_rights & WHITE_KING_SIDE << color) {
 				if (from & (E1 << color_shift) || from & (H1 << color_shift)) {
-					castling_rights ^= Castling::KING_SIDE << color;
+					castling_rights ^= WHITE_KING_SIDE << color;
 				}
 			}
 			// check enemies kingside castling rights when move is a rook capture
-			if (castling_rights & (Castling::KING_SIDE << (color ^ 1))) {
+			if (castling_rights & WHITE_KING_SIDE << (color ^ 1)) {
 				if (to & (H8 >> color_shift)) {
-					castling_rights ^= Castling::KING_SIDE << (color ^ 1);
+					castling_rights ^= WHITE_KING_SIDE << (color ^ 1);
 				}
 			}
 			// check own queenside castling rights when move is a king or rook move
-			if (castling_rights & (Castling::QUEEN_SIDE << color)) {
+			if (castling_rights & WHITE_QUEEN_SIDE << color) {
 				if (from & (E1 << color_shift) || from & (A1 << color_shift)) {
-					castling_rights ^= Castling::QUEEN_SIDE << color;
+					castling_rights ^= WHITE_QUEEN_SIDE << color;
 				}
 			}
 			// check enemies queenside castling rights when move is a rook capture
-			if (castling_rights & (Castling::QUEEN_SIDE << (color ^ 1))) {
+			if (castling_rights & WHITE_QUEEN_SIDE << (color ^ 1)) {
 				if (to & (A8 >> color_shift)) {
-					castling_rights ^= Castling::QUEEN_SIDE << (color ^ 1);
+					castling_rights ^= WHITE_QUEEN_SIDE << (color ^ 1);
 				}
 			}
 		}

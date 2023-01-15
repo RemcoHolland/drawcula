@@ -48,7 +48,7 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 	if (g_stop) {
 		return 0;
 	}
-	if (nodes % 10000 == 0 && timeToMove(color)) {
+	if (nodes % 20000 == 0 && timeToMove(color)) {
 		g_stop = true;
 		return 0;
 	}

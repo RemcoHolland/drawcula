@@ -19,10 +19,10 @@ Position FenReader::read(string fen) {
 	int color = getColor(splitted_fen.at(1)[0]);
 
 	// castling
-	int castling_rights{ 0 };
+	int castling_rights = 0;
 	string castlingStr = splitted_fen.at(2);
 	if (castlingStr != "-") {
-		for (int i{ 0 }; i < castlingStr.length(); i++) {
+		for (int i = 0; i < castlingStr.length(); i++) {
 			castling_rights |= getCastlingRight(castlingStr[i]);
 		}
 	}
@@ -97,10 +97,10 @@ int FenReader::getPiece(char piece_char) {
 
 int FenReader::getCastlingRight(char castling_char) {
 	switch (castling_char) {
-	case 'K': return KING_SIDE;
-	case 'Q': return QUEEN_SIDE;
-	case 'k': return KING_SIDE << BLACK;
-	case 'q': return QUEEN_SIDE << BLACK;
+	case 'K': return WHITE_KING_SIDE;
+	case 'Q': return WHITE_QUEEN_SIDE;
+	case 'k': return BLACK_KING_SIDE;
+	case 'q': return BLACK_QUEEN_SIDE;
 	default: throw std::invalid_argument("castling char is invalid");
 	}
 }

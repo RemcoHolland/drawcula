@@ -65,5 +65,6 @@ private:
 	void blackQueenMoves(const Board&);
 	void whiteKingMoves(const Board&);
 	void blackKingMoves(const Board&);
-	void castling(int, const Board&);
+	void castleWhite(const Board&);
+	void castleBlack(const Board&);
 };

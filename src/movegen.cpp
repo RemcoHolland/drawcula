@@ -37,7 +37,6 @@ void Movegen::sortMoves() {
 
 void Movegen::generateMoves(int color, const Board& board) {
 	moves.reserve(AVAILABLE_MOVES);
-	castling(color, board);
 	if (color == WHITE) {
 		whitePawnsCaptureLeft(board);
 		whitePawnsCaptureRight(board);
@@ -49,6 +48,7 @@ void Movegen::generateMoves(int color, const Board& board) {
 		whiteRookMoves(board);
 		whiteQueenMoves(board);
 		whiteKingMoves(board);
+		castleWhite(board);
 	} else {
 		blackPawnsCaptureLeft(board);
 		blackPawnsCaptureRight(board);
@@ -60,6 +60,7 @@ void Movegen::generateMoves(int color, const Board& board) {
 		blackRookMoves(board);
 		blackQueenMoves(board);
 		blackKingMoves(board);
+		castleBlack(board);
 	}
 }
 
@@ -331,30 +332,40 @@ void Movegen::blackKingMoves(const Board& board) {
 	addPieceMoves(board, BLACK, KING, from_nr, to_squares, board.colorBB[WHITE]);
 }
 
-void Movegen::castling(int color, const Board& board) {
-	if (board.castling_rights & (Castling::KING_SIDE << color)) {
-		U64 short_castle = KING_SIDE_SQUARES << color * 56;
-		if ((~board.occupiedBB & short_castle) == short_castle) {
-			U64 king_square = board.piece_list[color][KING];
-			int king_square_nr = Utils::getLS1B(king_square);
-
+void Movegen::castleWhite(const Board& board) {
+	if (board.castling_rights & WHITE_KING_SIDE) {
+		if ((~board.occupiedBB & WHITE_KING_SIDE_SQUARES) == WHITE_KING_SIDE_SQUARES) {
 			// TODO: delay isAttacked to the search algorithm
-			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square << 1)))) {
-				int to = Utils::getLS1B(king_square << 2);
-				int move = (king_square_nr << 6) | (to << 12) | (KING << 18) | CASTLING;
+			if (!(square::isAttacked(WHITE, board, E1) || (square::isAttacked(WHITE, board, F1)))) {
+				int move = (E1_nr << 6) | (G1_nr << 12) | (KING << 18) | CASTLING;
 				moves.push_back(move);
 			}
 		}
 	}
-	if (board.castling_rights & (Castling::QUEEN_SIDE << color)) {
-		U64 long_castle = QUEEN_SIDE_SQUARES << color * 56;
-		if ((~board.occupiedBB & long_castle) == long_castle) {
-			U64 king_square = board.piece_list[color][KING];
-			int king_square_nr = Utils::getLS1B(king_square);
+	if (board.castling_rights & WHITE_QUEEN_SIDE) {
+		if ((~board.occupiedBB & WHITE_QUEEN_SIDE_SQUARES) == WHITE_QUEEN_SIDE_SQUARES) {
+			if (!(square::isAttacked(WHITE, board, E1) || (square::isAttacked(WHITE, board, D1)))) {
+				int move = (E1_nr << 6) | (C1_nr << 12) | (KING << 18) | CASTLING;
+				moves.push_back(move);
+			}
+		}
+	}
+}
 
-			if (!(square::isAttacked(color, board, king_square) || (square::isAttacked(color, board, king_square >> 1)))) {
-				int to = Utils::getLS1B(king_square >> 2);
-				int move = (king_square_nr << 6) | (to << 12) | (KING << 18) | CASTLING;
+void Movegen::castleBlack(const Board& board) {
+	if (board.castling_rights & BLACK_KING_SIDE) {
+		if ((~board.occupiedBB & BLACK_KING_SIDE_SQUARES) == BLACK_KING_SIDE_SQUARES) {
+			// TODO: delay isAttacked to the search algorithm
+			if (!(square::isAttacked(BLACK, board, E8) || (square::isAttacked(BLACK, board, F8)))) {
+				int move = (E8_nr << 6) | (G8_nr << 12) | (KING << 18) | CASTLING;
+				moves.push_back(move);
+			}
+		}
+	}
+	if (board.castling_rights & BLACK_QUEEN_SIDE) {
+		if ((~board.occupiedBB & BLACK_QUEEN_SIDE_SQUARES) == BLACK_QUEEN_SIDE_SQUARES) {
+			if (!(square::isAttacked(BLACK, board, E8) || (square::isAttacked(BLACK, board, D8)))) {
+				int move = (E8_nr << 6) | (C8_nr << 12) | (KING << 18) | CASTLING;
 				moves.push_back(move);
 			}
 		}

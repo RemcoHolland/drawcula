@@ -9,6 +9,18 @@
 using std::string;
 typedef uint64_t U64;
 
+constexpr int C1_nr = 2;
+constexpr int D1_nr = 3;
+constexpr int E1_nr = 4;
+constexpr int F1_nr = 5;
+constexpr int G1_nr = 6;
+
+constexpr int C8_nr = 58;
+constexpr int D8_nr = 59;
+constexpr int E8_nr = 60;
+constexpr int F8_nr = 61;
+constexpr int G8_nr = 62;
+
 constexpr int RANKS = 8;
 constexpr int FILES = 8;
 constexpr int SQUARES = RANKS * FILES;
@@ -18,7 +30,6 @@ constexpr U64 RANK_4 = 4278190080;
 constexpr U64 RANK_5 = 1095216660480;
 constexpr U64 RANK_7 = 71776119061217280;
 constexpr U64 RANK_8 = 18374686479671623680;
-constexpr U64 PROMOTION_RANK = RANK_1 | RANK_8;
 constexpr U64 FILE_A = 72340172838076673;
 constexpr U64 FILE_H = 9259542123273814144;
 
@@ -31,10 +42,18 @@ constexpr U64 F1 = 32;
 constexpr U64 G1 = 64;
 constexpr U64 H1 = 128;
 constexpr U64 A8 = 72057594037927936;
+constexpr U64 B8 = 144115188075855872;
+constexpr U64 C8 = 288230376151711744;
+constexpr U64 D8 = 576460752303423488;
+constexpr U64 E8 = 1152921504606846976;
+constexpr U64 F8 = 2305843009213693952;
+constexpr U64 G8 = 4611686018427387904;
 constexpr U64 H8 = 9223372036854775808;
 
-constexpr U64 KING_SIDE_SQUARES = F1 | G1;
-constexpr U64 QUEEN_SIDE_SQUARES = B1 | C1 | D1;
+constexpr U64 WHITE_KING_SIDE_SQUARES = F1 | G1;
+constexpr U64 WHITE_QUEEN_SIDE_SQUARES = B1 | C1 | D1;
+constexpr U64 BLACK_KING_SIDE_SQUARES = F8 | G8;
+constexpr U64 BLACK_QUEEN_SIDE_SQUARES = B8 | C8 | D8;
 
 constexpr U64 PAWN_ATTACKS[COLORS][SQUARES] = { {
 	512,				1280,				2560,				5120,			     10240,			      20480,			   40960,			     16384,
