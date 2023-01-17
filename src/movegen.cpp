@@ -15,7 +15,7 @@ Movegen::Movegen() {
 }
 
 int Movegen::getLegalMove(int move) {
-	int	m_from = (move & FROM_MASK) >> 6;
+	int m_from = (move & FROM_MASK) >> 6;
 	int m_to = (move & TO_MASK) >> 12;
 	int m_promotion = (move & PROMOTION_MASK) >> 27;
 
@@ -64,7 +64,7 @@ void Movegen::generateMoves(int color, const Board& board) {
 	}
 }
 
-void Movegen::addPawnMoves(const Board& board, U64 from_squares, U64 to_squares, int flag) {
+void Movegen::addPawnMoves(U64 from_squares, U64 to_squares, int flag) {
 	while (from_squares) {
 		int from = Utils::getLS1B(from_squares);
 		int to = Utils::getLS1B(to_squares);
@@ -151,14 +151,14 @@ void Movegen::whitePawnsPush(const Board& board) {
 	U64 to_squares = (board.piece_list[WHITE][PAWN] << 8) & ~board.occupiedBB;
 	U64 from_squares = to_squares >> 8;
 
-	addPawnMoves(board, from_squares, to_squares, NO_FLAG);
+	addPawnMoves(from_squares, to_squares, NO_FLAG);
 }
 
 void Movegen::whitePawnsDoublePush(const Board& board) {
 	U64 to_squares = ((((board.piece_list[WHITE][PAWN] & RANK_2) << 8) & ~board.occupiedBB) << 8) & ~board.occupiedBB;
 	U64 from_squares = to_squares >> 16;
 
-	addPawnMoves(board, from_squares, to_squares, DOUBLE_PUSH);
+	addPawnMoves(from_squares, to_squares, DOUBLE_PUSH);
 }
 
 void Movegen::whitePawnsCaptureLeft(const Board& board) {
@@ -187,14 +187,14 @@ void Movegen::blackPawnsPush(const Board& board) {
 	U64 to_squares = (board.piece_list[BLACK][PAWN] >> 8) & ~board.occupiedBB;
 	U64 from_squares = to_squares << 8;
 
-	addPawnMoves(board, from_squares, to_squares, NO_FLAG);
+	addPawnMoves(from_squares, to_squares, NO_FLAG);
 }
 
 void Movegen::blackPawnsDoublePush(const Board& board) {
 	U64 to_squares = ((((board.piece_list[BLACK][PAWN] & RANK_7) >> 8) & ~board.occupiedBB) >> 8) & ~board.occupiedBB;
 	U64 from_squares = to_squares << 16;
 
-	addPawnMoves(board, from_squares, to_squares, DOUBLE_PUSH);
+	addPawnMoves(from_squares, to_squares, DOUBLE_PUSH);
 }
 
 void Movegen::blackPawnsCaptureLeft(const Board& board) {
