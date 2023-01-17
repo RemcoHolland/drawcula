@@ -115,3 +115,12 @@ TEST(complexposition, complex_middlegame) {
 	U64 nodes = perft(5, position);
 	EXPECT_EQ(nodes, 15833292);
 }
+
+TEST(complexposition, multiple_queens) {
+	Position position = FenReader::read("8/6kR/8/8/8/bq6/1rqqqqqq/K1nqnbrq b - - 0 1");
+	U64 nodes = perft(5, position);
+	EXPECT_EQ(nodes, 4634384);
+}
+
+
+
