@@ -61,7 +61,7 @@ const int Board::makeMove(int color, int move) {
 
 	int current_castling_rights = castling_rights;
 	setCastlingRights(color, piece, flag, from, to);
-	int unmake_info = captured_piece | (enpassant_square << 6) | (current_castling_rights << 12);
+	int unmake_info = captured_piece | (current_castling_rights << 6);
 	return unmake_info;
 }
 
@@ -105,10 +105,8 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		piece_list[color][PAWN] ^= to;
 		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= to;
 		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
-	}
-
-	enpassant_square = (unmake_info & ENPASSANT_MASK) >> 6;
-	castling_rights = (unmake_info & CASTLING_MASK) >> 12;
+	}	
+	castling_rights = (unmake_info & CASTLING_MASK) >> 6;
 }
 
 void Board::init(const Position& fenInfo) {

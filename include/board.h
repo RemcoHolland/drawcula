@@ -109,8 +109,8 @@ constexpr int PROMOTION_MASK = 0b111 << 27;
 
 // unmake move masks
 constexpr int CAPTURE_MASK = 0b111111;   // USE SHORT OR SOMETHING INSTEAD OF INT???
-constexpr int ENPASSANT_MASK = 0b111111 << 6;
-constexpr int CASTLING_MASK = 0b111111 << 12;
+constexpr int CASTLING_MASK = 0b111111 << 6;
+// NO ENPASSANT MASK NECESSARY ENYMORE???
 
 class Board {
 
