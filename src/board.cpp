@@ -27,7 +27,7 @@ const int Board::makeMove(int color, int move) {
 		occupiedBB ^= fromTo;
 	} else if (flag == DOUBLE_PUSH) {
 		occupiedBB ^= fromTo;
-		enpassant_square = ((move & TO_MASK) >> 12) - (-color | 1) * 8; // (-color | 1) changes to 1 or -1 when color is either 0 or 1
+		enpassant_square = color == WHITE ? to >> 8 : to << 8;
 	} else if (flag == CAPTURE) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;

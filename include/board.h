@@ -120,7 +120,7 @@ public:
 	U64 piece_list[COLORS][PIECES];
 	U64 occupiedBB = 0;
 	U64 colorBB[2] = { 0 };
-	int enpassant_square = 0;
+	U64 enpassant_square = 0;
 	int castling_rights = 0;
 
 	void setPosition(const Position&);
