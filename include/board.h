@@ -50,6 +50,15 @@ constexpr U64 F8 = 2305843009213693952;
 constexpr U64 G8 = 4611686018427387904;
 constexpr U64 H8 = 9223372036854775808;
 
+constexpr U64 A_SQUARE[COLORS] = { A1, A8 };
+constexpr U64 B_SQUARE[COLORS] = { B1, B8 };
+constexpr U64 C_SQUARE[COLORS] = { C1, C8 };
+constexpr U64 D_SQUARE[COLORS] = { D1, D8 };
+constexpr U64 E_SQUARE[COLORS] = { E1, E8 };
+constexpr U64 F_SQUARE[COLORS] = { F1, F8 };
+constexpr U64 G_SQUARE[COLORS] = { G1, G8 };
+constexpr U64 H_SQUARE[COLORS] = { H1, H8 };
+
 constexpr U64 WHITE_KING_SIDE_SQUARES = F1 | G1;
 constexpr U64 WHITE_QUEEN_SIDE_SQUARES = B1 | C1 | D1;
 constexpr U64 BLACK_KING_SIDE_SQUARES = F8 | G8;

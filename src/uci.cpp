@@ -47,7 +47,7 @@ void Uci::isready() {
 
 void Uci::position(const std::vector<std::string>& commands) {
 	string fenStr;
-	int i = 1;
+	U64 i = 1;
 	if (commands[i] == "startpos") {
 		fenStr = startpos;
 		i++;

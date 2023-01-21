@@ -104,7 +104,7 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		piece_list[color][PAWN] ^= to;
 		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= to;
 		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
-	}	
+	}
 }
 
 void Board::init(const Position& fenInfo) {
@@ -124,30 +124,28 @@ void Board::setCastlingRights(int color, int piece, int flag, U64 from, U64 to) 
 		// only update castling rights after a friendly rook or king move or a capture
 		if (piece == ROOK || piece == KING || flag == CAPTURE) {
 
-			int color_shift = color * 56;
-
 			// check own kingside castling rights when move is a king or rook move
-			if (castling_rights & WHITE_KING_SIDE << color) {
-				if (from & (E1 << color_shift) || from & (H1 << color_shift)) {
-					castling_rights ^= WHITE_KING_SIDE << color;
+			if (castling_rights & KING_SIDE[color]) {
+				if (from & (E_SQUARE[color]) || (from & H_SQUARE[color])) {
+					castling_rights ^= KING_SIDE[color];
 				}
 			}
 			// check enemies kingside castling rights when move is a rook capture
-			if (castling_rights & WHITE_KING_SIDE << (color ^ 1)) {
-				if (to & (H8 >> color_shift)) {
-					castling_rights ^= WHITE_KING_SIDE << (color ^ 1);
+			if (castling_rights & KING_SIDE[color ^ 1]) {
+				if (to & H_SQUARE[color ^ 1]) {
+					castling_rights ^= KING_SIDE[color ^ 1];
 				}
 			}
 			// check own queenside castling rights when move is a king or rook move
-			if (castling_rights & WHITE_QUEEN_SIDE << color) {
-				if (from & (E1 << color_shift) || from & (A1 << color_shift)) {
-					castling_rights ^= WHITE_QUEEN_SIDE << color;
+			if (castling_rights & QUEEN_SIDE[color]) {
+				if (from & E_SQUARE[color] || from & A_SQUARE[color]) {
+					castling_rights ^= QUEEN_SIDE[color];
 				}
 			}
 			// check enemies queenside castling rights when move is a rook capture
-			if (castling_rights & WHITE_QUEEN_SIDE << (color ^ 1)) {
-				if (to & (A8 >> color_shift)) {
-					castling_rights ^= WHITE_QUEEN_SIDE << (color ^ 1);
+			if (castling_rights & QUEEN_SIDE[color ^ 1]) {
+				if (to & A_SQUARE[color ^ 1]) {
+					castling_rights ^= QUEEN_SIDE[color ^ 1];
 				}
 			}
 		}
