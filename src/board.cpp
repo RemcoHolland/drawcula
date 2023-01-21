@@ -122,24 +122,25 @@ void Board::init(const Position& fenInfo) {
 void Board::setCastlingRights(int color, int piece, int flag, U64 from, U64 to) {
 	if (castling_rights) {
 		// only update castling rights after a friendly rook or king move or a capture
-		if (piece == ROOK || piece == KING || flag == CAPTURE) {
-
+		if (piece == ROOK || piece == KING) {
 			// check own kingside castling rights when move is a king or rook move
 			if (castling_rights & KING_SIDE[color]) {
 				if (from & (E_SQUARE[color]) || (from & H_SQUARE[color])) {
 					castling_rights ^= KING_SIDE[color];
 				}
 			}
-			// check enemies kingside castling rights when move is a rook capture
-			if (castling_rights & KING_SIDE[color ^ 1]) {
-				if (to & H_SQUARE[color ^ 1]) {
-					castling_rights ^= KING_SIDE[color ^ 1];
-				}
-			}
 			// check own queenside castling rights when move is a king or rook move
 			if (castling_rights & QUEEN_SIDE[color]) {
 				if (from & E_SQUARE[color] || from & A_SQUARE[color]) {
 					castling_rights ^= QUEEN_SIDE[color];
+				}
+			}
+		} 
+		if (flag == CAPTURE) {
+			// check enemies kingside castling rights when move is a rook capture
+			if (castling_rights & KING_SIDE[color ^ 1]) {
+				if (to & H_SQUARE[color ^ 1]) {
+					castling_rights ^= KING_SIDE[color ^ 1];
 				}
 			}
 			// check enemies queenside castling rights when move is a rook capture
