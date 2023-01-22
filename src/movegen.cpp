@@ -32,7 +32,8 @@ int Movegen::getLegalMove(int move) {
 }
 
 void Movegen::sortMoves() {
-	std::sort(moves.begin(), moves.end(), std::greater<int>());
+	// sort moves based on the sort_key value by using a lambda expression
+	std::sort(moves.begin(), moves.end(), [](int& a, int& b) { return (a & SORT_KEY_MASK) > (b & SORT_KEY_MASK); });  
 }
 
 void Movegen::generateMoves(int color, const Board& board) {
