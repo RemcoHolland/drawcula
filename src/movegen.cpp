@@ -120,16 +120,15 @@ void Movegen::addPieceMoves(const Board& board, int color, int piece, int from, 
 		int to = Utils::getLS1B(to_squares);
 		U64 to_square = to_squares & (0 - to_squares); // get LSB
 
-		int flag = NO_FLAG;
-		int captured_piece = NO_PIECE;
-		int sort_key = 0b00000;
 		if (to_square & enemies) {
-			flag = CAPTURE;
-			captured_piece = determineCapture(board, color ^ 1, to_square);
-			sort_key = MVV_LVA[captured_piece][piece];
+			int captured_piece = determineCapture(board, color ^ 1, to_square);
+			int sort_key = MVV_LVA[captured_piece][piece];
+			int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | CAPTURE | (captured_piece << 24);
+			moves.push_back(move);
+		} else {
+			int move = (from << 6) | (to << 12) | (piece << 18);
+			moves.push_back(move);
 		}
-		int move = sort_key | (from << 6) | (to << 12) | (piece << 18) | flag | (captured_piece << 24);
-		moves.push_back(move);
 		to_squares &= (to_squares - 1); // clear LSB
 	}
 }
