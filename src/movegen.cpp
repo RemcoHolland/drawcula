@@ -68,8 +68,8 @@ void Movegen::addPawnMoves(U64 from_squares, U64 to_squares, int flag) {
 		if (to <= 7 || to >= 56) {
 			for (int promotion_piece = QUEEN; promotion_piece >= KNIGHT; promotion_piece--) {
 				// create 4 promotion moves
-				int	sort_key = MVV_LVA[promotion_piece][PAWN];
-				int move = sort_key | from << 6 | (to << 12) | (PAWN << 18) | PROMOTION | (promotion_piece << 27);
+				int	promo_sort_key = MVV_LVA[promotion_piece][PAWN];
+				int move = promo_sort_key | from << 6 | (to << 12) | (PAWN << 18) | PROMOTION | (promotion_piece << 27);
 				moves.push_back(move);
 			}
 		} else { // no promotion
