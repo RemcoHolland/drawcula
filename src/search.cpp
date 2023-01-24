@@ -17,10 +17,10 @@ U64 Search::getNodes() {
 void Search::start(int color, int max_depth, Board board, const Time time) {
 	int depth = 1;
 	this->time = time;
-	std::vector<int> currentPV;
 	std::vector<int> PV;
 
 	do {
+		std::vector<int> currentPV;
 		nodes = 0;
 		std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 		int score = alphaBeta(color, -MAX_INT, MAX_INT, depth, board, currentPV);
