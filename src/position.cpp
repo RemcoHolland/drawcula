@@ -1,8 +1,10 @@
 #include "position.h"
 
-Position::Position(uint64_t* piece_list, int color, int castling_rights, int enpassant_square, int half_moves, int full_moves) {
-	for (int i = 0; i < 12; i++) {
-		Position::piece_list[i] = piece_list[i];
+Position::Position(U64(&piece_list)[COLORS][PIECES], int color, int castling_rights, U64 enpassant_square, int half_moves, int full_moves) {
+	for (int i = 0; i < COLORS; i++) {
+		for (int j = 0; j < PIECES; j++) {
+			Position::piece_list[i][j] = piece_list[i][j];
+		}
 	}
 	Position::color = color;
 	Position::castling_rights = castling_rights;

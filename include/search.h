@@ -1,15 +1,9 @@
-#include <iostream>
-#include <chrono>
-#include <vector>
-#include <limits>
-#include "evaluation.h"
-#include "color.h"
-#include "movegen.h"
-#include "square.h"
-#include "stringutils.h"
-#include "atomic"
-
 #pragma once
+
+#include <chrono>
+#include <limits>
+#include "atomic"
+#include "evaluation.h"
 
 extern std::atomic<bool> g_stop;
 
@@ -22,19 +16,21 @@ struct Time {
 	std::chrono::milliseconds binc{ 0 };
 };
 
+constexpr int MAX_INT = std::numeric_limits<int>::max();
+constexpr int MATE{ 100000 };
+constexpr int STALE_MATE{ 0 };
+constexpr int EXPECTED_NR_MOVES = 40;
+
 class Search {
 public:
 	Search();
-	uint64_t getNodes();
+	U64 getNodes();
 	void start(int, int, Board, Time);
 	~Search();
 
-private:
-	const int MATE{ 100000 };
-	const int STALE_MATE{ 0 };
-	const int EXPECTED_NR_MOVES = 40;
+private:	
 	Time time;
-	uint64_t nodes{ 0 };
+	U64 nodes{ 0 };
 
 	int alphaBeta(int, int, int, int, Board&, std::vector<int>&);
 	bool timeToMove(int);

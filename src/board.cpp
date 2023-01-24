@@ -2,45 +2,43 @@
 #pragma warning( disable : 6386)
 #include "board.h"
 
-Board::Board(const Position& fenInfo) {
-	init(fenInfo);
+Board::Board(const Position& postion) {
+	init(postion);
 }
 
-void Board::setPosition(const Position& fenInfo) {
-	init(fenInfo);
+void Board::setPosition(const Position& postion) {
+	init(postion);
 }
 
 const int Board::makeMove(int color, int move) {
-	uint64_t from = Utils::getPower((move & FROM_MASK) >> 6);
-	uint64_t to = Utils::getPower((move & TO_MASK) >> 12);
+	U64 from = (U64)1 << ((move & FROM_MASK) >> 6);
+	U64 to = (U64)1 << ((move & TO_MASK) >> 12);
 
+	int piece = (move & PIECE_MASK) >> 18;
 	int flag = move & FLAG_MASK;
-	int captured_piece = NO_PIECE;
-	uint64_t fromTo = from ^ to;
-	colorBB[color] ^= fromTo;
-	piece_list[move & PIECE_MASK] ^= fromTo;
+	int captured_piece = (move & CAPTURED_PIECE_MASK) >> 24;
 
-	if (flag == NO_FLAG || flag == DOUBLE_PUSH) {
+	U64 fromTo = from ^ to;
+	colorBB[color] ^= fromTo;
+	piece_list[color][piece] ^= fromTo;
+	enpassant_square = 0;    // clear previous enpassant square
+
+	if (flag == NO_FLAG) {
 		occupiedBB ^= fromTo;
+	} else if (flag == DOUBLE_PUSH) {
+		occupiedBB ^= fromTo;
+		enpassant_square = color == WHITE ? to >> 8 : to << 8;
 	} else if (flag == CAPTURE) {
 		occupiedBB ^= from;
-		int piece_color = color * NR_PIECES;
-		for (int piece = BLACK_PAWN - piece_color; piece <= BLACK_QUEEN - piece_color; piece++) {
-			if ((piece_list[piece] & to)) {
-				colorBB[color ^ 1] ^= to;
-				piece_list[piece] ^= to;
-				captured_piece = piece;
-				break;
-			}
-		}
+		colorBB[color ^ 1] ^= to;
+		piece_list[color ^ 1][captured_piece] ^= to;
 	} else if (flag == EN_PASSANT) {
-		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
-		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
+		U64 capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB ^= fromTo | capture_square;
 		colorBB[color ^ 1] ^= capture_square;
-		piece_list[captured_pawn] ^= capture_square;
+		piece_list[color ^ 1][PAWN] ^= capture_square;
 	} else if (flag == CASTLING) {
-		uint64_t rook_shift{ 0 };
+		U64 rook_shift;
 		if (from < to) { // castling short			
 			rook_shift = (to << 1) ^ (from << 1);
 		} else { // castling long
@@ -48,42 +46,46 @@ const int Board::makeMove(int color, int move) {
 		}
 		occupiedBB ^= fromTo | rook_shift;
 		colorBB[color] ^= rook_shift;
-		piece_list[WHITE_ROOK + color * NR_PIECES] ^= rook_shift;
+		piece_list[color][ROOK] ^= rook_shift;
+	} else if (flag == PROMOTION) {
+		occupiedBB ^= fromTo;
+		piece_list[color][PAWN] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
+	} else if (flag == PROMOCAPT) {
+		occupiedBB ^= from;
+		colorBB[color ^ 1] ^= to;
+		piece_list[color][PAWN] ^= to;
+		piece_list[color ^ 1][captured_piece] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	}
-	if ((move & PROMOTION_MASK) >> 24 != NO_PROMOTION) {
-		piece_list[move & PIECE_MASK] ^= to;
-		piece_list[(move & PROMOTION_MASK) >> 24] ^= to;
-	}
-	setEnPassantSquare(color, move);
-	int current_castling_rights = castling_rights;
-	setCastlingRights(color, move & PIECE_MASK, move & FLAG_MASK, from, to);
-	int unmake_info = captured_piece | (enpassant_square << 6) | (current_castling_rights << 12);
+	int unmake_info = captured_piece | (castling_rights << 6);
+	setCastlingRights(color, piece, flag, from, to);
 	return unmake_info;
 }
 
 void Board::unmakeMove(int color, int move, int unmake_info) {
-	uint64_t from = Utils::getPower((move & FROM_MASK) >> 6);
-	uint64_t to = Utils::getPower((move & TO_MASK) >> 12);
+	U64 from = (U64)1 << ((move & FROM_MASK) >> 6);
+	U64 to = (U64)1 << ((move & TO_MASK) >> 12);
 
 	int flag = move & FLAG_MASK;
-	uint64_t fromTo = from ^ to;
+	U64 fromTo = from ^ to;
 	colorBB[color] ^= fromTo;
-	piece_list[move & PIECE_MASK] ^= fromTo;
+	piece_list[color][(move & PIECE_MASK) >> 18] ^= fromTo;
+	castling_rights = (unmake_info & CASTLING_MASK) >> 6;
 
 	if (flag == NO_FLAG || flag == DOUBLE_PUSH) {
 		occupiedBB ^= fromTo;
 	} else if (flag == CAPTURE) {
 		occupiedBB ^= from;
 		colorBB[color ^ 1] ^= to;
-		piece_list[unmake_info & CAPTURE_MASK] ^= to;
+		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= to;
 	} else if (flag == EN_PASSANT) {
-		int captured_pawn = BLACK_PAWN - (color * NR_PIECES);
-		uint64_t capture_square = color == WHITE ? to >> 8 : to << 8;
+		U64 capture_square = color == WHITE ? to >> 8 : to << 8;
 		occupiedBB ^= capture_square | fromTo;
 		colorBB[color ^ 1] ^= capture_square;
-		piece_list[captured_pawn] ^= capture_square;
+		piece_list[color ^ 1][PAWN] ^= capture_square;
 	} else if (flag == CASTLING) {
-		uint64_t rook_shift{ 0 };
+		U64 rook_shift;
 		if (from < to) { // castling short			
 			rook_shift = (to << 1) ^ (from << 1);
 		} else { // castling long
@@ -91,70 +93,60 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		}
 		occupiedBB ^= fromTo | rook_shift;
 		colorBB[color] ^= rook_shift;
-		piece_list[WHITE_ROOK + color * NR_PIECES] ^= rook_shift;
+		piece_list[color][ROOK] ^= rook_shift;
+	} else if (flag == PROMOTION) {
+		occupiedBB ^= fromTo;
+		piece_list[color][PAWN] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
+	} else if (flag == PROMOCAPT) {
+		occupiedBB ^= from;
+		colorBB[color ^ 1] ^= to;
+		piece_list[color][PAWN] ^= to;
+		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= to;
+		piece_list[color][(move & PROMOTION_MASK) >> 27] ^= to;
 	}
-	if ((move & PROMOTION_MASK) >> 24 != NO_PROMOTION) {
-		piece_list[move & PIECE_MASK] ^= to;
-		piece_list[(move & PROMOTION_MASK) >> 24] ^= to;
-	}
-
-	enpassant_square = (unmake_info & ENPASSANT_MASK) >> 6;
-	castling_rights = (unmake_info & CASTLING_MASK) >> 12;
 }
 
 void Board::init(const Position& fenInfo) {
-	for (int i = 0; i < TOTAL_PIECES; i++) {
-		piece_list[i] = fenInfo.piece_list[i];
+	for (int i = 0; i < COLORS; i++) {
+		for (int j = 0; j < PIECES; j++) {
+			piece_list[i][j] = fenInfo.piece_list[i][j];
+			colorBB[i] += piece_list[i][j];
+		}
 	}
-	for (int i = WHITE_PAWN; i <= WHITE_KING; i++) {
-		colorBB[0] += piece_list[i];
-	}
-	for (int i = BLACK_PAWN; i <= BLACK_KING; i++) {
-		colorBB[1] += piece_list[i];
-	}
-
 	occupiedBB = colorBB[0] | colorBB[1];
 	enpassant_square = fenInfo.enpassant_square;
 	castling_rights = fenInfo.castling_rights;
 }
 
-void Board::setEnPassantSquare(int color, int move) {
-	if ((move & FLAG_MASK) == DOUBLE_PUSH) {
-		enpassant_square = color == WHITE ? ((move & TO_MASK) >> 12) - 8 : ((move & TO_MASK) >> 12) + 8;
-	} else {
-		enpassant_square = 0;
-	}
-}
-
-void Board::setCastlingRights(int color, int piece, int flag, uint64_t from, uint64_t to) {
+void Board::setCastlingRights(int color, int piece, int flag, U64 from, U64 to) {
 	if (castling_rights) {
 		// only update castling rights after a friendly rook or king move or a capture
-		if (piece == (WHITE_ROOK + (color * NR_PIECES)) || (piece == WHITE_KING + (color * NR_PIECES)) || (flag == CAPTURE)) {
-
-			int color_shift = color * 56;
-
+		if (piece == ROOK || piece == KING) {
 			// check own kingside castling rights when move is a king or rook move
-			if (castling_rights & (Castling::KING_SIDE << color)) {
-				if (from & (E1 << color_shift) || from & (H1 << color_shift)) {
-					castling_rights ^= Castling::KING_SIDE << color;
-				}
-			}
-			// check enemies kingside castling rights when move is a rook capture
-			if (castling_rights & (Castling::KING_SIDE << (color ^ 1))) {
-				if (to & (H8 >> color_shift)) {
-					castling_rights ^= Castling::KING_SIDE << (color ^ 1);
+			if (castling_rights & KING_SIDE[color]) {
+				if (from & (E_SQUARE[color]) || (from & H_SQUARE[color])) {
+					castling_rights ^= KING_SIDE[color];
 				}
 			}
 			// check own queenside castling rights when move is a king or rook move
-			if (castling_rights & (Castling::QUEEN_SIDE << color)) {
-				if (from & (E1 << color_shift) || from & (A1 << color_shift)) {
-					castling_rights ^= Castling::QUEEN_SIDE << color;
+			if (castling_rights & QUEEN_SIDE[color]) {
+				if (from & E_SQUARE[color] || from & A_SQUARE[color]) {
+					castling_rights ^= QUEEN_SIDE[color];
+				}
+			}
+		} 
+		if (flag == CAPTURE) {
+			// check enemies kingside castling rights when move is a rook capture
+			if (castling_rights & KING_SIDE[color ^ 1]) {
+				if (to & H_SQUARE[color ^ 1]) {
+					castling_rights ^= KING_SIDE[color ^ 1];
 				}
 			}
 			// check enemies queenside castling rights when move is a rook capture
-			if (castling_rights & (Castling::QUEEN_SIDE << (color ^ 1))) {
-				if (to & (A8 >> color_shift)) {
-					castling_rights ^= Castling::QUEEN_SIDE << (color ^ 1);
+			if (castling_rights & QUEEN_SIDE[color ^ 1]) {
+				if (to & A_SQUARE[color ^ 1]) {
+					castling_rights ^= QUEEN_SIDE[color ^ 1];
 				}
 			}
 		}

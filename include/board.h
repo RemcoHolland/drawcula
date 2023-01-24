@@ -4,39 +4,67 @@
 #include "color.h"
 #include "castling.h"
 #include "position.h"
-#include "utils.h"
 #include "flag.h"
 
 using std::string;
+typedef uint64_t U64;
+
+constexpr int C1_nr = 2;
+constexpr int D1_nr = 3;
+constexpr int E1_nr = 4;
+constexpr int F1_nr = 5;
+constexpr int G1_nr = 6;
+
+constexpr int C8_nr = 58;
+constexpr int D8_nr = 59;
+constexpr int E8_nr = 60;
+constexpr int F8_nr = 61;
+constexpr int G8_nr = 62;
 
 constexpr int RANKS = 8;
 constexpr int FILES = 8;
 constexpr int SQUARES = RANKS * FILES;
-constexpr uint64_t RANK_1 = 255;
-constexpr uint64_t RANK_2 = 65280;
-constexpr uint64_t RANK_4 = 4278190080;
-constexpr uint64_t RANK_5 = 1095216660480;
-constexpr uint64_t RANK_7 = 71776119061217280;
-constexpr uint64_t RANK_8 = 18374686479671623680;
-constexpr uint64_t PROMOTION_RANK = RANK_1 | RANK_8;
-constexpr uint64_t FILE_A = 72340172838076673;
-constexpr uint64_t FILE_H = 9259542123273814144;
+constexpr U64 RANK_1 = 255;
+constexpr U64 RANK_2 = 65280;
+constexpr U64 RANK_4 = 4278190080;
+constexpr U64 RANK_5 = 1095216660480;
+constexpr U64 RANK_7 = 71776119061217280;
+constexpr U64 RANK_8 = 18374686479671623680;
+constexpr U64 FILE_A = 72340172838076673;
+constexpr U64 FILE_H = 9259542123273814144;
 
-constexpr uint64_t A1 = 1;
-constexpr uint64_t B1 = 2;
-constexpr uint64_t C1 = 4;
-constexpr uint64_t D1 = 8;
-constexpr uint64_t E1 = 16;
-constexpr uint64_t F1 = 32;
-constexpr uint64_t G1 = 64;
-constexpr uint64_t H1 = 128;
-constexpr uint64_t A8 = 72057594037927936;
-constexpr uint64_t H8 = 9223372036854775808;
+constexpr U64 A1 = 1;
+constexpr U64 B1 = 2;
+constexpr U64 C1 = 4;
+constexpr U64 D1 = 8;
+constexpr U64 E1 = 16;
+constexpr U64 F1 = 32;
+constexpr U64 G1 = 64;
+constexpr U64 H1 = 128;
+constexpr U64 A8 = 72057594037927936;
+constexpr U64 B8 = 144115188075855872;
+constexpr U64 C8 = 288230376151711744;
+constexpr U64 D8 = 576460752303423488;
+constexpr U64 E8 = 1152921504606846976;
+constexpr U64 F8 = 2305843009213693952;
+constexpr U64 G8 = 4611686018427387904;
+constexpr U64 H8 = 9223372036854775808;
 
-constexpr uint64_t KING_SIDE_SQUARES = F1 | G1;
-constexpr uint64_t QUEEN_SIDE_SQUARES = B1 | C1 | D1;
+constexpr U64 A_SQUARE[COLORS] = { A1, A8 };
+constexpr U64 B_SQUARE[COLORS] = { B1, B8 };
+constexpr U64 C_SQUARE[COLORS] = { C1, C8 };
+constexpr U64 D_SQUARE[COLORS] = { D1, D8 };
+constexpr U64 E_SQUARE[COLORS] = { E1, E8 };
+constexpr U64 F_SQUARE[COLORS] = { F1, F8 };
+constexpr U64 G_SQUARE[COLORS] = { G1, G8 };
+constexpr U64 H_SQUARE[COLORS] = { H1, H8 };
 
-constexpr uint64_t PAWN_ATTACKS[2][64] = { {
+constexpr U64 WHITE_KING_SIDE_SQUARES = F1 | G1;
+constexpr U64 WHITE_QUEEN_SIDE_SQUARES = B1 | C1 | D1;
+constexpr U64 BLACK_KING_SIDE_SQUARES = F8 | G8;
+constexpr U64 BLACK_QUEEN_SIDE_SQUARES = B8 | C8 | D8;
+
+constexpr U64 PAWN_ATTACKS[COLORS][SQUARES] = { {
 	512,				1280,				2560,				5120,			     10240,			      20480,			   40960,			     16384,
 	131072,			    327680,			    655360,			    1310720,			 2621440,		      5242880,			   10485760,			 4194304,
 	33554432,           83886080,           167772160,          335544320,           671088640,           1342177280,          2684354560,           1073741824,
@@ -57,7 +85,7 @@ constexpr uint64_t PAWN_ATTACKS[2][64] = { {
 	562949953421312,    1407374883553280,   2814749767106560,   5629499534213120,    11258999068426240,   22517998136852480,   45035996273704960,    18014398509481984
 } };
 
-constexpr uint64_t KNIGHT_MOVES[64] = {
+constexpr U64 KNIGHT_MOVES[SQUARES] = {
 	132096,				329728,				659712,				 1319424,			  2638848,			   5277696,				10489856,			  4202496,
 	33816580,			84410376,			168886289,			 337772578,			  675545156,		   1351090312,			2685403152,			  1075839008,
 	8657044482,		    21609056261,		43234889994,		 86469779988,		  172939559976,		   345879119952,		687463207072,		  275414786112,
@@ -68,7 +96,7 @@ constexpr uint64_t KNIGHT_MOVES[64] = {
 	1128098930098176,   2257297371824128,	4796069720358912,	 9592139440717824,	  19184278881435648,   38368557762871296,	4679521487814656,	  9077567998918656
 };
 
-constexpr uint64_t KING_MOVES[64] = {
+constexpr U64 KING_MOVES[SQUARES] = {
 	770,				1797,				3594,				 7188,				  14376,			   28752,				57504,				  49216,
 	197123,				460039,				920078,				 1840156,			  3680312,			   7360624,				14721248,			  12599488,
 	50463488,			117769984,			235539968,			 471079936,			  942159872,		   1884319744,			3768639488,			  3225468928,
@@ -79,26 +107,30 @@ constexpr uint64_t KING_MOVES[64] = {
 	144959613005987840, 362258295026614272, 724516590053228544,	 1449033180106457088, 2898066360212914176, 5796132720425828352, 11592265440851656704, 4665729213955833856
 };
 
-constexpr int PIECE_MASK = 0x3F;
-constexpr int FROM_MASK = 0x3F << 6;
-constexpr int TO_MASK = 0x3F << 12;
-constexpr int FLAG_MASK = 0x3F << 18;
-constexpr int PROMOTION_MASK = 0x3F << 24;
+// move masks
+constexpr int SORT_KEY_MASK = 0b111111;
+constexpr int FROM_MASK = 0b111111 << 6;
+constexpr int TO_MASK = 0b111111 << 12;
+constexpr int PIECE_MASK = 0b111 << 18;
+constexpr int FLAG_MASK = 0b111 << 21;
+constexpr int CAPTURED_PIECE_MASK = 0b111 << 24;
+constexpr int PROMOTION_MASK = 0b111 << 27;
 
-constexpr int CAPTURE_MASK = 0x3F;
-constexpr int ENPASSANT_MASK = 0x3F << 6;
-constexpr int CASTLING_MASK = 0x3F << 12;
+// unmake move masks
+constexpr int CAPTURE_MASK = 0b111111;   // USE SHORT OR SOMETHING INSTEAD OF INT???
+constexpr int CASTLING_MASK = 0b111111 << 6;
+// NO ENPASSANT MASK NECESSARY ENYMORE???
 
 class Board {
 
 public:
 	Board(const Position&);
 
-	uint64_t piece_list[TOTAL_PIECES];
-	uint64_t occupiedBB = 0;
-	uint64_t colorBB[2] = { 0 };
-	int enpassant_square = 0;
-	int castling_rights;
+	U64 piece_list[COLORS][PIECES];
+	U64 occupiedBB = 0;
+	U64 colorBB[2] = { 0 };
+	U64 enpassant_square = 0;
+	int castling_rights = 0;
 
 	void setPosition(const Position&);
 	const int makeMove(int, int);
@@ -108,6 +140,5 @@ public:
 
 private:
 	void init(const Position&);
-	void setEnPassantSquare(int, int);
-	void setCastlingRights(int, int, int, uint64_t, uint64_t);
+	void setCastlingRights(int, int, int, U64, U64);
 };

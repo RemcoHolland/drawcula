@@ -4,7 +4,6 @@
 #include <vector>
 #include "board.h"
 #include "piece.h"
-#include "utils.h"
 #include "position.h"
 #include "color.h"
 #include "castling.h"
@@ -22,11 +21,12 @@ public:
 	~FenReader();
 
 private:
-	static void fillPieceList(string, uint64_t(&)[TOTAL_PIECES]);
+	static void fillPieceList(string, U64(&)[COLORS][PIECES]);
 	static int getColor(char);
+	static int getPieceColor(char);
 	static int getPiece(char);
 	static int getCastlingRight(char);
-	static int getEnpassantSquare(char, char);
+	static U64 getEnpassantSquare(char, char);
 	static int getNumber(char);
 };
 
