@@ -3,7 +3,7 @@
 # Set project info
 project (
 drawcula
-VERSION 0.2
+VERSION 0.3.1
 DESCRIPTION "Drawcula chess engine"
 LANGUAGES CXX
 )
