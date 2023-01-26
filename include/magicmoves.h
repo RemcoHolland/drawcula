@@ -70,7 +70,11 @@
  *misrepresented as being the original code.
  *
  *3. This notice may not be removed or altered from any source distribution.
+ * 
+ *Changes by R.Holland: added typedef uint64_t and changed C64 to U64.
  */
+
+#include <cstdint>
 
 #ifndef _magicmovesh
 #define _magicmovesh
@@ -88,14 +92,7 @@
 
 #define USE_INLINING /*the MMINLINE keyword is assumed to be available*/
 
-#ifndef __64_BIT_INTEGER_DEFINED__
-	#define __64_BIT_INTEGER_DEFINED__
-	#if defined(_MSC_VER) && _MSC_VER<1300
-		typedef unsigned __int64 U64; //For the old microsoft compilers
-	#else
-		typedef unsigned long long  U64; //Supported by MSC 13.00+ and C99
-	#endif //defined(_MSC_VER) && _MSC_VER<1300
-#endif //__64_BIT_INTEGER_DEFINED__
+typedef uint64_t U64;
 /***********MODIFY THE ABOVE IF NECESSARY**********/
 
 /*Defining the inlining keyword*/
@@ -106,14 +103,6 @@
 		#define MMINLINE __inline__ __attribute__((always_inline))
 	#else
 		#define MMINLINE inline
-	#endif
-#endif
-
-#ifndef C64
-	#if (!defined(_MSC_VER) || _MSC_VER>1300)
-		#define C64(constantU64) constantU64##ULL
-	#else
-		#define C64(constantU64) constantU64
 	#endif
 #endif
 
