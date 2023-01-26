@@ -1,8 +1,15 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.19)
 
-project ("drawcula")
+# Set project info
+project (
+drawcula
+VERSION 0.2
+DESCRIPTION "Drawcula chess engine"
+LANGUAGES CXX
+)
 
-set(CMAKE_CXX_STANDARD 14)
+# Set C++ version 20
+set(CMAKE_CXX_STANDARD 20)
 
 # Allow multithreading on Linux
 if (UNIX)
@@ -34,7 +41,7 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 
 	enable_testing()
 
-	add_executable(drawculatest test/main.cpp test/branching_factor.cpp test/matepositions.cpp test/perft_startposition.cpp test/perft_complexpositions test/play_game.cpp test/stalematepositions.cpp src/perft.cpp src/magicmoves.cpp src/square.cpp src/stringutils.cpp src/piece.cpp src/utils.cpp src/board.cpp src/movegen.cpp src/fenreader.cpp src/position.cpp src/search.cpp src/evaluation.cpp src/uci.cpp)
+	add_executable(drawculatest test/main.cpp test/branching_factor.cpp test/matepositions.cpp test/perft_startposition.cpp test/perft_complexpositions.cpp test/play_game.cpp test/stalematepositions.cpp src/perft.cpp src/magicmoves.cpp src/square.cpp src/stringutils.cpp src/piece.cpp src/utils.cpp src/board.cpp src/movegen.cpp src/fenreader.cpp src/position.cpp src/search.cpp src/evaluation.cpp src/uci.cpp)
 
 	target_link_libraries(
 	  drawculatest
