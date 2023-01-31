@@ -14,7 +14,7 @@ TEST(play_game, startpos) {
 	uci.go({ "go", "movetime" ,"200" });
 	std::this_thread::sleep_for(300ms);
 	std::string output = testing::internal::GetCapturedStdout();
-	ASSERT_TRUE(output.find("bestmove a1b1") != std::string::npos);
+	ASSERT_TRUE(output.find("bestmove a1b1"));
 }
 
 TEST(play_game, fen) {
@@ -25,5 +25,16 @@ TEST(play_game, fen) {
 	uci.go({ "go", "movetime" ,"1000" });
 	std::this_thread::sleep_for(1100ms);
 	std::string output = testing::internal::GetCapturedStdout();
-	ASSERT_TRUE(output.find("bestmove f3f7") != std::string::npos);
+	ASSERT_TRUE(output.find("bestmove f3f7"));
+}
+
+TEST(play_game, stop_thinking) {
+	Uci uci = Uci();
+	testing::internal::CaptureStdout();
+	uci.go({ "go", "infinite" });
+	std::this_thread::sleep_for(100ms);
+	uci.stop();
+	std::this_thread::sleep_for(100ms);
+	std::string output = testing::internal::GetCapturedStdout();
+	ASSERT_TRUE(output.find("bestmove"));
 }

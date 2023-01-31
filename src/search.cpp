@@ -8,6 +8,7 @@
 #include <vector>
 
 Search::Search() {
+	g_stop = false;  // reset global stop variable
 }
 
 U64 Search::getNodes() {

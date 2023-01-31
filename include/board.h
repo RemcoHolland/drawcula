@@ -131,6 +131,7 @@ public:
 	U64 colorBB[2] = { 0 };
 	U64 enpassant_square = 0;
 	int castling_rights = 0;
+	int material = 0;
 
 	void setPosition(const Position&);
 	const int makeMove(int, int);

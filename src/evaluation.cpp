@@ -9,15 +9,6 @@ int popCount(U64 x) {
 	return (int)x;
 }
 
-int materialScore(const Board& board) {
-	return
-		(popCount(board.piece_list[WHITE][PAWN]) - popCount(board.piece_list[BLACK][PAWN])) * PAWN_VALUE +
-		(popCount(board.piece_list[WHITE][KNIGHT]) - popCount(board.piece_list[BLACK][KNIGHT])) * KNIGHT_VALUE +
-		(popCount(board.piece_list[WHITE][BISHOP]) - popCount(board.piece_list[BLACK][BISHOP])) * BISHOP_VALUE +
-		(popCount(board.piece_list[WHITE][ROOK]) - popCount(board.piece_list[BLACK][ROOK])) * ROOK_VALUE +
-		(popCount(board.piece_list[WHITE][QUEEN]) - popCount(board.piece_list[BLACK][QUEEN])) * QUEEN_VALUE;
-}
-
 int pawnPositionalScore(const Board& board) {
 	int score = 0;
 	U64 white_pawns = board.piece_list[WHITE][PAWN];
@@ -124,6 +115,16 @@ int positionalScore(const Board& board) {
 	return pawnPositionalScore(board) + knightPositionalScore(board) + bishopPositionalScore(board) + rookPositionalScore(board) + queenPositionalScore(board) + kingPositionalScore(board);
 }
 
+int evaluation::popCountValue(const U64(&piece_list)[COLORS][PIECES]) {
+	return
+		(popCount(piece_list[WHITE][PAWN]) - popCount(piece_list[BLACK][PAWN])) * PAWN_VALUE +
+		(popCount(piece_list[WHITE][KNIGHT]) - popCount(piece_list[BLACK][KNIGHT])) * KNIGHT_VALUE +
+		(popCount(piece_list[WHITE][BISHOP]) - popCount(piece_list[BLACK][BISHOP])) * BISHOP_VALUE +
+		(popCount(piece_list[WHITE][ROOK]) - popCount(piece_list[BLACK][ROOK])) * ROOK_VALUE +
+		(popCount(piece_list[WHITE][QUEEN]) - popCount(piece_list[BLACK][QUEEN])) * QUEEN_VALUE;
+}
+
 int evaluation::getScore(const Board& board) {
-	return materialScore(board) + positionalScore(board);
+	//return materialScore(board) + positionalScore(board);
+	return board.material;
 }

@@ -11,6 +11,11 @@ constexpr int BISHOP_VALUE = 310;
 constexpr int ROOK_VALUE = 500;
 constexpr int QUEEN_VALUE = 900;
 
+// material value list (without the king), updated when a capture occurs
+constexpr int MATERIAL_VALUE[PIECES] = { PAWN_VALUE, KNIGHT_VALUE,BISHOP_VALUE, ROOK_VALUE, QUEEN_VALUE };
+
+/****************************/
+
 constexpr U64 k1 = U64(0x5555555555555555); /*  -1/3   */
 constexpr U64 k2 = U64(0x3333333333333333); /*  -1/5   */
 constexpr U64 k4 = U64(0x0f0f0f0f0f0f0f0f); /*  -1/17  */
@@ -149,5 +154,6 @@ constexpr int BLACK_KING_PSQT[SQUARES] = {
 };
 
 namespace evaluation {
+	int popCountValue(const U64(&)[COLORS][PIECES]);
 	int getScore(const Board&);
 }
