@@ -9,110 +9,19 @@ int popCount(U64 x) {
 	return (int)x;
 }
 
-int pawnPositionalScore(const U64(&piece_list)[COLORS][PIECES]) {
-	int score = 0;
-	U64 white_pawns = piece_list[WHITE][PAWN];
-	U64 black_pawns = piece_list[BLACK][PAWN];
-
-	while (white_pawns) {
-		int square = Utils::getLS1B(white_pawns);
-		score += PIECE_SQUARE[WHITE][PAWN][square];
-		white_pawns &= (white_pawns - 1); // clear LSB
-	}
-	while (black_pawns) {
-		int square = Utils::getLS1B(black_pawns);
-		score -= PIECE_SQUARE[BLACK][PAWN][square];
-		black_pawns &= (black_pawns - 1); // clear LSB
-	}
-	return score;
-}
-
-int knightPositionalScore(const U64(&piece_list)[COLORS][PIECES]) {
-	int score = 0;
-	U64 white_knights = piece_list[WHITE][KNIGHT];
-	U64 black_knights = piece_list[BLACK][KNIGHT];
-
-	while (white_knights) {
-		int square = Utils::getLS1B(white_knights);
-		score += PIECE_SQUARE[WHITE][KNIGHT][square];
-		white_knights &= (white_knights - 1); // clear LSB
-	}
-	while (black_knights) {
-		int square = Utils::getLS1B(black_knights);
-		score -= PIECE_SQUARE[BLACK][KNIGHT][square];
-		black_knights &= (black_knights - 1); // clear LSB
-	}
-	return score;
-}
-
-int bishopPositionalScore(const U64(&piece_list)[COLORS][PIECES]) {
-	int score = 0;
-	U64 white_bishops = piece_list[WHITE][BISHOP];
-	U64 black_bishops = piece_list[BLACK][BISHOP];
-
-	while (white_bishops) {
-		int square = Utils::getLS1B(white_bishops);
-		score += PIECE_SQUARE[WHITE][BISHOP][square];
-		white_bishops &= (white_bishops - 1); // clear LSB
-	}
-	while (black_bishops) {
-		int square = Utils::getLS1B(black_bishops);
-		score -= PIECE_SQUARE[BLACK][BISHOP][square];
-		black_bishops &= (black_bishops - 1); // clear LSB
-	}
-	return score;
-}
-
-int rookPositionalScore(const U64(&piece_list)[COLORS][PIECES]) {
-	int score = 0;
-	U64 white_rooks = piece_list[WHITE][ROOK];
-	U64 black_rooks = piece_list[BLACK][ROOK];
-
-	while (white_rooks) {
-		int square = Utils::getLS1B(white_rooks);
-		score += PIECE_SQUARE[WHITE][ROOK][square];
-		white_rooks &= (white_rooks - 1); // clear LSB
-	}
-	while (black_rooks) {
-		int square = Utils::getLS1B(black_rooks);
-		score -= PIECE_SQUARE[BLACK][ROOK][square];
-		black_rooks &= (black_rooks - 1); // clear LSB
-	}
-	return score;
-}
-
-int queenPositionalScore(const U64(&piece_list)[COLORS][PIECES]) {
-	int score = 0;
-	U64 white_queens = piece_list[WHITE][QUEEN];
-	U64 black_queens = piece_list[BLACK][QUEEN];
-
-	while (white_queens) {
-		int square = Utils::getLS1B(white_queens);
-		score += PIECE_SQUARE[WHITE][QUEEN][square];
-		white_queens &= (white_queens - 1); // clear LSB
-	}
-	while (black_queens) {
-		int square = Utils::getLS1B(black_queens);
-		score -= PIECE_SQUARE[BLACK][QUEEN][square];
-		black_queens &= (black_queens - 1); // clear LSB
-	}
-	return score;
-}
-
-int kingPositionalScore(const U64(&piece_list)[COLORS][PIECES]) {
-	int score = 0;
-	int white_king_square = Utils::getLS1B(piece_list[WHITE][KING]);
-	int black_king_square = Utils::getLS1B(piece_list[BLACK][KING]);
-
-	score += PIECE_SQUARE[WHITE][KING][white_king_square];
-
-	score -= PIECE_SQUARE[BLACK][KING][black_king_square];
-
-	return score;
-}
-
 int evaluation::positionalScore(const U64(&piece_list)[COLORS][PIECES]) {
-	return pawnPositionalScore(piece_list) + knightPositionalScore(piece_list) + bishopPositionalScore(piece_list) + rookPositionalScore(piece_list) + queenPositionalScore(piece_list) + kingPositionalScore(piece_list);
+	int score = 0;
+	for (int color = WHITE; color < COLORS; color++) {
+		for (int piece = PAWN; piece <= KING; piece++) {
+			U64 pieces = piece_list[color][piece];
+			while (pieces) {
+				int square = Utils::getLS1B(pieces);
+				score += (-color | 1) * PIECE_SQUARE[color][piece][square];
+				pieces &= (pieces - 1); // clear LSB
+			}
+		}
+	}
+	return score;
 }
 
 int evaluation::materialScore(const U64(&piece_list)[COLORS][PIECES]) {
