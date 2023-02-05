@@ -47,9 +47,9 @@ TEST(branching_factor, start_position) {
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 	std::cout << "MEAN BRANCHING FACTOR STARTPOSITION: " << mbf << std::endl;
 
-	//mbf should be between 7 and 8
-	ASSERT_TRUE(mbf > 7);
-	ASSERT_TRUE(mbf < 8);
+	//mbf should be between 8 and 9
+	ASSERT_TRUE(mbf > 8);
+	ASSERT_TRUE(mbf < 9);
 }
 
 TEST(branching_factor, middlegame_position) {
@@ -59,9 +59,9 @@ TEST(branching_factor, middlegame_position) {
 
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 	std::cout << "MEAN BRANCHING FACTOR MIDDLEGAME: " << mbf << std::endl;
-	//mbf should be between 5 and 6
-	ASSERT_TRUE(mbf > 5);
-	ASSERT_TRUE(mbf < 6);
+	//mbf should be between 6 and 7
+	ASSERT_TRUE(mbf > 6);
+	ASSERT_TRUE(mbf < 7);
 }
 
 TEST(branching_factor, endgame_position) {
@@ -72,7 +72,7 @@ TEST(branching_factor, endgame_position) {
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 	std::cout << "MEAN BRANCHING FACTOR ENDGAME: " << mbf << std::endl;
 
-	//mbf should be between 3 and 4
-	ASSERT_TRUE(mbf > 3);
-	ASSERT_TRUE(mbf < 4);
+	//mbf should be between 5 and 6
+	ASSERT_TRUE(mbf > 5);
+	ASSERT_TRUE(mbf < 6);
 }
