@@ -117,8 +117,9 @@ constexpr int CAPTURED_PIECE_MASK = 0b111 << 24;
 constexpr int PROMOTION_MASK = 0b111 << 27;
 
 // unmake move masks
-constexpr int CAPTURE_MASK = 0b111111;   // USE SHORT OR SOMETHING INSTEAD OF INT???
-constexpr int CASTLING_MASK = 0b111111 << 6;
+constexpr int CAPTURE_MASK = 0b111;   // USE SHORT OR SOMETHING INSTEAD OF INT???
+constexpr int CASTLING_MASK = 0b1111 << 3;
+
 // NO ENPASSANT MASK NECESSARY ENYMORE???
 
 class Board {
@@ -131,6 +132,9 @@ public:
 	U64 colorBB[2] = { 0 };
 	U64 enpassant_square = 0;
 	int castling_rights = 0;
+
+	int material_score = 0;
+	int positional_score = 0;
 
 	void setPosition(const Position&);
 	const int makeMove(int, int);

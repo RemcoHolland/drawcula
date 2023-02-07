@@ -20,6 +20,7 @@ public:
 	void loop();
 	void position(const std::vector<std::string>&);
 	void go(const std::vector<std::string>&);
+	void stop();
 	~Uci();
 
 private:
@@ -31,8 +32,7 @@ private:
 	void uci();
 	void ucinewgame();
 	void isready();
-	void perft(bool, const std::vector<std::string>&);
-	void stop();
+	void perft(bool, const std::vector<std::string>&);	
 	void changeColor();
 	void resetBoard(const Position&);
 	int stringToMove(int, const string&);
