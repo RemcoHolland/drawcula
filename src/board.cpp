@@ -57,7 +57,7 @@ const int Board::makeMove(int color, int move) {
 			rook_end_square_nr = from_nr + 1;
 		} else { // castling long
 			rook_shift = (from >> 1) ^ (to >> 2);
-			rook_start_square_nr = to_nr - 1;
+			rook_start_square_nr = to_nr - 2;
 			rook_end_square_nr = from_nr - 1;
 		}
 		occupiedBB ^= fromTo | rook_shift;
@@ -128,7 +128,7 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 			rook_end_square_nr = from_nr + 1;
 		} else { // castling long
 			rook_shift = (from >> 1) ^ (to >> 2);
-			rook_start_square_nr = to_nr - 1;
+			rook_start_square_nr = to_nr - 2;
 			rook_end_square_nr = from_nr - 1;
 		}
 		occupiedBB ^= fromTo | rook_shift;
