@@ -38,7 +38,7 @@ const int Board::makeMove(int color, int move) {
 		colorBB[color ^ 1] ^= to;
 		piece_list[color ^ 1][captured_piece] ^= to;
 		material_score += (-color | 1) * MATERIAL_VALUE[captured_piece];
-		positional_score += (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr] - PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
+		positional_score += (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 	} else if (flag == EN_PASSANT) {
 		int capture_square_nr = color == WHITE ? to_nr - 8 : to_nr + 8;
 		U64 capture_square = (U64)1 << capture_square_nr;
@@ -46,7 +46,7 @@ const int Board::makeMove(int color, int move) {
 		colorBB[color ^ 1] ^= capture_square;
 		piece_list[color ^ 1][PAWN] ^= capture_square;
 		material_score += (-color | 1) * MATERIAL_VALUE[PAWN];
-		positional_score += (-color | 1) * (PIECE_SQUARE[color][PAWN][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] - PIECE_SQUARE[color ^ 1][PAWN][capture_square_nr]);
+		positional_score += (-color | 1) * (PIECE_SQUARE[color][PAWN][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][PAWN][capture_square_nr]);
 	} else if (flag == CASTLING) {
 		U64 rook_shift;
 		int rook_start_square_nr;
@@ -80,7 +80,7 @@ const int Board::makeMove(int color, int move) {
 		piece_list[color ^ 1][captured_piece] ^= to;
 		piece_list[color][promoted_piece] ^= to;
 		material_score += (-color | 1) * (MATERIAL_VALUE[promoted_piece] + MATERIAL_VALUE[captured_piece] - MATERIAL_VALUE[PAWN]);
-		positional_score += (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] - PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
+		positional_score += (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 	}
 	int unmake_info = captured_piece | (castling_rights << 3);
 	setCastlingRights(color, piece, flag, from, to);
@@ -109,7 +109,7 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		colorBB[color ^ 1] ^= to;
 		piece_list[color ^ 1][captured_piece] ^= to;
 		material_score -= (-color | 1) * MATERIAL_VALUE[captured_piece];
-		positional_score -= (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr] - PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
+		positional_score -= (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 	} else if (flag == EN_PASSANT) {
 		int capture_square_nr = color == WHITE ? to_nr - 8 : to_nr + 8;
 		U64 capture_square = (U64)1 << capture_square_nr;
@@ -117,7 +117,7 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		colorBB[color ^ 1] ^= capture_square;
 		piece_list[color ^ 1][PAWN] ^= capture_square;
 		material_score -= (-color | 1) * MATERIAL_VALUE[PAWN];
-		positional_score -= (-color | 1) * (PIECE_SQUARE[color][PAWN][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] - PIECE_SQUARE[color ^ 1][PAWN][capture_square_nr]);
+		positional_score -= (-color | 1) * (PIECE_SQUARE[color][PAWN][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][PAWN][capture_square_nr]);
 	} else if (flag == CASTLING) {
 		U64 rook_shift;
 		int rook_start_square_nr;
@@ -152,7 +152,7 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 		piece_list[color ^ 1][unmake_info & CAPTURE_MASK] ^= to;
 		piece_list[color][promoted_piece] ^= to;
 		material_score -= (-color | 1) * (MATERIAL_VALUE[promoted_piece] + MATERIAL_VALUE[captured_piece] - MATERIAL_VALUE[PAWN]);
-		positional_score -= (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] - PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
+		positional_score -= (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 	}
 }
 

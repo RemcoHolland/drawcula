@@ -12,7 +12,7 @@ int popCount(U64 x) {
 int evaluation::positionalScore(const U64(&piece_list)[COLORS][PIECES]) {
 	int score = 0;
 	for (int color = WHITE; color < COLORS; color++) {
-		for (int piece = PAWN; piece <= KING; piece++) {
+		for (int piece = PAWN; piece < PIECES; piece++) {
 			U64 pieces = piece_list[color][piece];
 			while (pieces) {
 				int square = Utils::getLS1B(pieces);
