@@ -16,6 +16,7 @@ U64 Search::getNodes() {
 }
 
 void Search::start(int color, int max_depth, Board board, const Time time) {
+	std::srand((unsigned)std::time(NULL));  // initialize random seed
 	int depth = 1;
 	this->time = time;
 	std::vector<int> PV;
@@ -54,8 +55,8 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 		return 0;
 	}
 	if (depth == 0) {
-		// -color | 1 changes to 1 or -1 when color is either 0 or 1
-		return  (-color | 1) * evaluation::getScore(board);
+		int random = (std::rand() % 21) - 10; // add some randomness (-10..10) to the evaluation
+		return  (-color | 1) * (evaluation::getScore(board) + random); // -color | 1 changes to 1 or -1 when color is either 0 or 1
 	}
 	int bestscore = -MAX_INT;
 	Movegen movegen = Movegen();

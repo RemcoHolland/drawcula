@@ -47,9 +47,9 @@ TEST(branching_factor, start_position) {
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 	std::cout << "MEAN BRANCHING FACTOR STARTPOSITION: " << mbf << std::endl;
 
-	//mbf should be between 8 and 9
-	ASSERT_TRUE(mbf > 8);
-	ASSERT_TRUE(mbf < 9);
+	//mbf should be between 9 and 10
+	ASSERT_TRUE(mbf > 9);
+	ASSERT_TRUE(mbf < 10);
 }
 
 TEST(branching_factor, middlegame_position) {

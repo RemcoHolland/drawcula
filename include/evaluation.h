@@ -21,8 +21,9 @@ constexpr U64 k2 = U64(0x3333333333333333); /*  -1/5   */
 constexpr U64 k4 = U64(0x0f0f0f0f0f0f0f0f); /*  -1/17  */
 constexpr U64 kf = U64(0x0101010101010101); /*  -1/255 */
 
+// Piece Square tables, used to give pieces a certain square value
 constexpr int PIECE_SQUARE[COLORS][PIECES][SQUARES] = { { {
-	// WHITE PAWN
+    // WHITE PAWN
 	 0,  0,  0,  0,  0,  0,  0,  0,
 	 5, 10, 10,-20,-20, 10, 10,  5,
 	 5, -5,-10,  0,  0,-10, -5,  5,
@@ -30,9 +31,9 @@ constexpr int PIECE_SQUARE[COLORS][PIECES][SQUARES] = { { {
 	 5,  5, 10, 25, 25, 10,  5,  5,
 	10, 10, 20, 30, 30, 20, 10, 10,
 	50, 50, 50, 50, 50, 50, 50, 50,
-	 0,  0,  0,  0,  0,  0,  0,  0	},
+	 0,  0,  0,  0,  0,  0,  0,  0},
 
-		 // WHITE KNIGHT
+   // WHITE KNIGHT
    {-50,-40,-30,-30,-30,-30,-40,-50
 	-40,-20, 0,  5,  5,  0, -20,-40,
 	-30,  5, 10, 15, 15, 10,  5,-30,
