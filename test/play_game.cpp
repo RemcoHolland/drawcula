@@ -1,9 +1,8 @@
 #include <gtest/gtest.h>
-#include "uci.h"
-#include "fenreader.h"
-
 #include <chrono>
 #include <thread>
+#include "uci.h"
+#include "reader/fenreader.h"
 
 using namespace std::chrono_literals;
 

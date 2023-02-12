@@ -1,12 +1,7 @@
 #pragma once
-#include <string>
-#include "piece.h"
-#include "color.h"
-#include "castling.h"
-#include "position.h"
-#include "flag.h"
+#include "position/fen.h"
+#include <color.h>
 
-using std::string;
 typedef uint64_t U64;
 
 constexpr int C1_nr = 2;
@@ -139,6 +134,8 @@ public:
 	void setPosition(const Position&);
 	const int makeMove(int, int);
 	void unmakeMove(int, int, int);
+
+	int getScore();
 
 	~Board();
 

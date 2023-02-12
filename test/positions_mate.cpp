@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 #include "search.h"
 #include "board.h"
-#include "fenreader.h"
+#include "reader/fenreader.h"
 
-inline void startSearch(Position position, int depth) {
-	Board board = Board(position);
-	struct Time time;
-	time.movetime = std::chrono::milliseconds(LLONG_MAX);
+inline void startSearch(Fen fen, int depth) {
+	Board board = Board(fen);
+	struct Params params;
+	params.max_depth = depth;
+	params.movetime = std::chrono::milliseconds(LLONG_MAX);
 	Search search = Search();
 	testing::internal::CaptureStdout();
-	search.start(position.color, depth, board, time);
+	search.start(fen.color, board, params);
 }
 
 TEST(mateposition, mate_in_1_with_king_and_rook) {

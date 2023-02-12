@@ -1,14 +1,20 @@
 #pragma warning( disable : 6385)
 #pragma warning( disable : 6386)
+#include <string>
 #include "board.h"
 #include "evaluation.h"
+#include "flag.h"
+#include "piece.h"
+#include "castling.h"
 
-Board::Board(const Position& postion) {
-	init(postion);
+using std::string;
+
+Board::Board(const Position& position) {
+	init(position);
 }
 
-void Board::setPosition(const Position& postion) {
-	init(postion);
+void Board::setPosition(const Position& position) {
+	init(position);
 }
 
 const int Board::makeMove(int color, int move) {
@@ -156,18 +162,18 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 	}
 }
 
-void Board::init(const Position& fenInfo) {
+void Board::init(const Position& position) {
 	for (int i = 0; i < COLORS; i++) {
 		for (int j = 0; j < PIECES; j++) {
-			piece_list[i][j] = fenInfo.piece_list[i][j];
+			piece_list[i][j] = position.piece_list[i][j];
 			colorBB[i] += piece_list[i][j];
 		}
 	}
 	material_score = evaluation::materialScore(piece_list);
 	positional_score = evaluation::positionalScore(piece_list);
 	occupiedBB = colorBB[0] | colorBB[1];
-	enpassant_square = fenInfo.enpassant_square;
-	castling_rights = fenInfo.castling_rights;
+	enpassant_square = position.enpassant_square;
+	castling_rights = position.castling_rights;
 }
 
 void Board::setCastlingRights(int color, int piece, int flag, U64 from, U64 to) {
@@ -202,6 +208,10 @@ void Board::setCastlingRights(int color, int piece, int flag, U64 from, U64 to) 
 			}
 		}
 	}
+}
+
+int Board::getScore() {
+	return material_score + positional_score;
 }
 
 Board::~Board() {

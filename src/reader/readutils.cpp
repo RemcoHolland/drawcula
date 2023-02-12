@@ -1,29 +1,23 @@
-#include "fenreader.h"
+#include <sstream>
+#include "reader/readutils.h"
+#include "stringutils.h"
+#include "castling.h"
 
-FenReader::FenReader() {
-}
-
-Position FenReader::read(string fen) {
-	// split FEN
-	std::vector<string> splitted_fen = split(fen, ' ');
-	if (splitted_fen.size() != 6) {
-		throw std::invalid_argument("fen is invalid");
-	}
-
+Position ReadUtils::read(std::vector<string> splitted_fen) {	
 	// position
 	U64 piece_list[COLORS][PIECES] = { { 0 } };
 	string positionStr = splitted_fen.at(0);
-	fillPieceList(positionStr, piece_list);
+	ReadUtils::fillPieceList(positionStr, piece_list);
 
 	// color
-	int color = getColor(splitted_fen.at(1)[0]);
+	int color = ReadUtils::getColor(splitted_fen.at(1)[0]);
 
 	// castling
 	int castling_rights = 0;
 	string castlingStr = splitted_fen.at(2);
 	if (castlingStr != "-") {
 		for (int i = 0; i < castlingStr.length(); i++) {
-			castling_rights |= getCastlingRight(castlingStr[i]);
+			castling_rights |= ReadUtils::getCastlingRight(castlingStr[i]);
 		}
 	}
 
@@ -31,22 +25,13 @@ Position FenReader::read(string fen) {
 	U64 enpassant_square = 0;
 	string enpassantStr = splitted_fen.at(3);
 	if (enpassantStr != "-") {
-		enpassant_square = getEnpassantSquare(enpassantStr[0], enpassantStr[1]);
+		enpassant_square = ReadUtils::getEnpassantSquare(enpassantStr[0], enpassantStr[1]);
 	}
 
-	//half moves
-	int half_moves = std::stoi(splitted_fen.at(4));
-
-	// full moves
-	int full_moves = std::stoi(splitted_fen.at(5));
-
-	return Position(piece_list, color, castling_rights, enpassant_square, half_moves, full_moves);
+	return Position(piece_list, color, castling_rights, enpassant_square);
 }
 
-FenReader::~FenReader() {
-}
-
-void FenReader::fillPieceList(string position, U64(&piece_list)[COLORS][PIECES]) {
+void ReadUtils::fillPieceList(string position, U64(&piece_list)[COLORS][PIECES]) {
 	int rank = 7;
 	int file = 0;
 
@@ -56,28 +41,28 @@ void FenReader::fillPieceList(string position, U64(&piece_list)[COLORS][PIECES])
 			rank--;
 			file = 0;
 		} else if (position[i] >= '1' && position[i] <= '8') {
-			file += getNumber((position[i])); // convert to int
+			file += ReadUtils::getNumber((position[i])); // convert to int
 		} else {
-			int color = getPieceColor(position[i]);
-			int piece = getPiece(position[i]);
+			int color = ReadUtils::getPieceColor(position[i]);
+			int piece = ReadUtils::getPiece(position[i]);
 			piece_list[color][piece] += (U64)1 << (rank * RANKS + file);
 			file++;
 		}
 	}
 }
 
-int FenReader::getColor(char color) {
+int ReadUtils::getColor(char color) {
 	return color == 'w' ? WHITE : BLACK;
 }
 
-int FenReader::getPieceColor(char piece) {
+int ReadUtils::getPieceColor(char piece) {
 	if (std::isupper(piece)) {
 		return WHITE;
 	}
 	return BLACK;
 }
 
-int FenReader::getPiece(char piece_char) {
+int ReadUtils::getPiece(char piece_char) {
 	switch (piece_char) {
 	case 'P':
 	case 'p': return PAWN;
@@ -95,7 +80,7 @@ int FenReader::getPiece(char piece_char) {
 	}
 }
 
-int FenReader::getCastlingRight(char castling_char) {
+int ReadUtils::getCastlingRight(char castling_char) {
 	switch (castling_char) {
 	case 'K': return WHITE_KING_SIDE;
 	case 'Q': return WHITE_QUEEN_SIDE;
@@ -105,10 +90,10 @@ int FenReader::getCastlingRight(char castling_char) {
 	}
 }
 
-U64 FenReader::getEnpassantSquare(char file, char rank) {
+U64 ReadUtils::getEnpassantSquare(char file, char rank) {
 	return (U64)1 << StringUtils::getSquare(file, rank);
 }
 
-int FenReader::getNumber(char number) {
+int ReadUtils::getNumber(char number) {
 	return number - 48;
 }

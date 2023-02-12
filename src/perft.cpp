@@ -1,5 +1,9 @@
+#include <chrono>
+#include <iostream>
 #include "perft.h"
 #include "square.h"
+#include "stringutils.h"
+#include "movegen.h"
 
 Perft::Perft(bool divide, int search_depth) {
 	Perft::divide = divide;
@@ -47,5 +51,5 @@ void Perft::negaMax(int color, Board& board, int depth) {
 }
 
 void Perft::printRootNodes(int move) {
-	std::cout << StringUtils::moveToString(move) << ' ' << root_nodes << std::endl;
+	std::cout << StringUtils::moveToStringAN(move) << ' ' << root_nodes << std::endl;
 }

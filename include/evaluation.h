@@ -148,5 +148,5 @@ constexpr int PIECE_SQUARE[COLORS][PIECES][SQUARES] = { { {
 namespace evaluation {
 	int positionalScore(const U64(&)[COLORS][PIECES]);
 	int materialScore(const U64(&)[COLORS][PIECES]);
-	int getScore(const Board&);
+
 }

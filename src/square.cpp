@@ -1,4 +1,6 @@
 #include "square.h"
+#include "magicmoves.h"
+#include "utils.h"
 
 bool square::isAttacked(int color, const Board& board, U64 square) {
 

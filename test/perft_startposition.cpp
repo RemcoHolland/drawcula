@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include "perft.h"
-#include "fenreader.h"
+#include "reader/fenreader.h"
 
-const Position start_position = FenReader::read("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+const Fen start_position = FenReader::read("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 U64 perft(int depth) {
 	Perft perft = Perft(false, depth);

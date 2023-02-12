@@ -20,8 +20,7 @@ endif (UNIX)
 include_directories(include)
 
 # Add sources, the file(GLOB...) allows for wildcard additions:
-file(GLOB SOURCES "src/*.cpp")
-
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 # Add source to this project's executable.
 add_executable (drawcula ${SOURCES} )
 
@@ -30,18 +29,23 @@ add_executable (drawcula ${SOURCES} )
 ##################################################
 
 IF(CMAKE_BUILD_TYPE MATCHES Debug)  
+	set(GOOGLE_TEST_VERSION 1.13.0)
+	
 	include(FetchContent)
 	FetchContent_Declare(	  
 	  googletest
-	  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+	  URL https://github.com/google/googletest/archive/refs/tags/v${GOOGLE_TEST_VERSION}.zip
 	  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 	)
 	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 	FetchContent_MakeAvailable(googletest)
 
 	enable_testing()
-
-	add_executable(drawculatest test/main.cpp test/branching_factor.cpp test/perft_startposition.cpp test/perft_complexpositions.cpp test/play_game.cpp test/positions_mate.cpp test/positions_stalemate.cpp src/perft.cpp src/magicmoves.cpp src/square.cpp src/stringutils.cpp src/piece.cpp src/utils.cpp src/board.cpp src/movegen.cpp src/fenreader.cpp src/position.cpp src/search.cpp src/evaluation.cpp src/uci.cpp)
+    
+	# Create a text executable but exclude src/main.cpp
+	file(GLOB_RECURSE TEST_SOURCES "test/*.cpp" "src/*.cpp")	
+	list(FILTER TEST_SOURCES EXCLUDE REGEX src/main.cpp)
+	add_executable(drawculatest ${TEST_SOURCES})
 
 	target_link_libraries(
 	  drawculatest

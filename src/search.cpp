@@ -1,11 +1,11 @@
+#include <iostream>
+#include <vector>
 #include "color.h"
 #include "movegen.h"
 #include "search.h"
 #include "square.h"
 #include "stringutils.h"
-
-#include <iostream>
-#include <vector>
+#include "evaluation.h"
 
 Search::Search() {
 	g_stop = false;  // reset global stop variable
@@ -15,10 +15,10 @@ U64 Search::getNodes() {
 	return nodes;
 }
 
-void Search::start(int color, int max_depth, Board board, const Time time) {
+int Search::start(int color, Board board, const Params params) {
 	std::srand((unsigned)std::time(NULL));  // initialize random seed
 	int depth = 1;
-	this->time = time;
+	this->params = params;
 	std::vector<int> PV;
 
 	do {
@@ -41,8 +41,10 @@ void Search::start(int color, int max_depth, Board board, const Time time) {
 			long long nps = nodes / searchtime * 1000;
 			std::cout << "info depth " << depth << " score " << scoreStr << " time " << searchtime << " nodes " << nodes << " nps " << nps << " pv " << printPV(currentPV) << std::endl;
 		}
-	} while (!g_stop && depth++ != max_depth);
-	std::cout << "bestmove " << StringUtils::moveToString(PV.front()) << std::endl;
+	} while (!g_stop && depth++ != params.max_depth);
+	const int bestmove = PV.front();
+	std::cout << "bestmove " << StringUtils::moveToStringLAN(bestmove) << std::endl;
+	return bestmove;
 }
 
 // Fail soft AlphaBeta search
@@ -56,7 +58,7 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 	}
 	if (depth == 0) {
 		int random = (std::rand() % 21) - 10; // add some randomness (-10..10) to the evaluation
-		return  (-color | 1) * (evaluation::getScore(board) + random); // -color | 1 changes to 1 or -1 when color is either 0 or 1
+		return  (-color | 1) * (board.getScore() + random); // -color | 1 changes to 1 or -1 when color is either 0 or 1
 	}
 	int bestscore = -MAX_INT;
 	Movegen movegen = Movegen();
@@ -98,8 +100,8 @@ bool Search::timeToMove(int color) {
 	if (g_stop) {
 		return true;
 	}
-	std::chrono::milliseconds searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - time.startTime);
-	std::chrono::milliseconds movetime = time.movetime > std::chrono::milliseconds(0) ? time.movetime : color == WHITE ? (time.wtime + (time.winc * EXPECTED_NR_MOVES)) / EXPECTED_NR_MOVES : (time.btime + (time.binc * EXPECTED_NR_MOVES)) / EXPECTED_NR_MOVES;
+	std::chrono::milliseconds searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - params.startTime);
+	std::chrono::milliseconds movetime = params.movetime > std::chrono::milliseconds(0) ? params.movetime : color == WHITE ? (params.wtime + (params.winc * EXPECTED_NR_MOVES)) / EXPECTED_NR_MOVES : (params.btime + (params.binc * EXPECTED_NR_MOVES)) / EXPECTED_NR_MOVES;
 
 	return searchtime > movetime;
 }
@@ -113,7 +115,7 @@ void Search::updatePV(std::vector<int>& PV, const std::vector<int>& childPV, int
 string Search::printPV(const std::vector<int>& PV) {
 	string pvStr = "";
 	for (int move : PV) {
-		pvStr += StringUtils::moveToString(move);
+		pvStr += StringUtils::moveToStringAN(move);
 		pvStr += " ";
 	}
 	return (pvStr.substr(0, pvStr.size() - 1));

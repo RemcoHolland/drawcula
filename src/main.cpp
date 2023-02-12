@@ -1,4 +1,5 @@
-#include "main.h"
+#include "magicmoves.h"
+#include "uci.h"
 
 int main() {
 	initmagicmoves();
