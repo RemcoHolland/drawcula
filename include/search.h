@@ -1,14 +1,18 @@
 #pragma once
-
+#include <string>
 #include <chrono>
 #include <limits>
-#include "atomic"
-#include "evaluation.h"
+#include <vector>
+#include <atomic>
+#include "board.h"
 
 extern std::atomic<bool> g_stop;
+using std::string;
+typedef uint64_t U64;
 
-struct Time {
-	std::chrono::steady_clock::time_point startTime;
+struct Params {
+	int max_depth = std::numeric_limits<int>::max();
+	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 	std::chrono::milliseconds movetime{ 0 };
 	std::chrono::milliseconds wtime{ 0 };
 	std::chrono::milliseconds btime{ 0 };
@@ -25,11 +29,11 @@ class Search {
 public:
 	Search();
 	U64 getNodes();
-	void start(int, int, Board, Time);
+	int start(int, Board, Params);
 	~Search();
 
 private:	
-	Time time;
+	Params params;
 	U64 nodes{ 0 };
 
 	int alphaBeta(int, int, int, int, Board&, std::vector<int>&);

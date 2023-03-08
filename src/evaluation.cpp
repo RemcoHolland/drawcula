@@ -32,7 +32,3 @@ int evaluation::materialScore(const U64(&piece_list)[COLORS][PIECES]) {
 		(popCount(piece_list[WHITE][ROOK]) - popCount(piece_list[BLACK][ROOK])) * ROOK_VALUE +
 		(popCount(piece_list[WHITE][QUEEN]) - popCount(piece_list[BLACK][QUEEN])) * QUEEN_VALUE;
 }
-
-int evaluation::getScore(const Board& board) {
-	return board.material_score + board.positional_score;
-}

@@ -1,5 +1,4 @@
 #pragma once
-#include "color.h"
 
 constexpr int NO_PIECE = 0;
 constexpr int NO_PROMOTION = 0;
@@ -15,6 +14,7 @@ constexpr int PIECES = 6;
 class Piece {
 public:
 	Piece();
+	static char getPiece(int);
 	static char getPromotion(int);
 	static int getPromotion(char, int);
 	~Piece();

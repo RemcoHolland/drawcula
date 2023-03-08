@@ -1,25 +1,17 @@
 #pragma once
-#include "stringutils.h"
-#include "perft.h"
-#include "movegen.h"
-#include "fenreader.h"
-#include "search.h"
-#include <iostream>
 #include <string>
-#include <chrono>
-#include <thread>
-#include <future>
-#include <limits>
+#include <vector>
+#include "board.h"
+#include "reader/fenreader.h"
 
 using std::string;
-using StringUtils::split;
 
 class Uci {
 public:
 	Uci();	
 	void loop();
-	void position(const std::vector<std::string>&);
-	void go(const std::vector<std::string>&);
+	void position(const std::vector<string>&);
+	void go(const std::vector<string>&);
 	void stop();
 	~Uci();
 
@@ -34,6 +26,6 @@ private:
 	void isready();
 	void perft(bool, const std::vector<std::string>&);	
 	void changeColor();
-	void resetBoard(const Position&);
+	void resetBoard(const Fen&);
 	int stringToMove(int, const string&);
 };

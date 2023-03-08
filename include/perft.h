@@ -1,14 +1,5 @@
 #pragma once
-
 #include "board.h"
-#include "movegen.h"
-#include "stringutils.h"
-
-#include <iostream>
-#include <chrono>
-
-using StringUtils::getFile;
-using StringUtils::getRank;
 
 class Perft {
 public:

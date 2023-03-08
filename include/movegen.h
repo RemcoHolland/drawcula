@@ -1,8 +1,6 @@
 #pragma once
-
-#include "board.h"
-
 #include <vector>
+#include "board.h"
 
 /****************************
 * Move is built up like:    *

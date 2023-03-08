@@ -1,4 +1,5 @@
 #pragma once
+#include "color.h"
 
 constexpr int WHITE_KING_SIDE = 0b1;
 constexpr int BLACK_KING_SIDE = 0b10;

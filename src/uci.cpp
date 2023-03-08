@@ -1,6 +1,17 @@
+#include <chrono>
+#include <thread>
+#include <future>
+#include <limits>
+#include <iostream>
 #include "uci.h"
+#include "perft.h"
+#include "search.h"
+#include "movegen.h"
+#include "stringutils.h"
 
 std::atomic<bool> g_stop;
+
+using StringUtils::split;
 
 Uci::Uci() {
 }
@@ -71,33 +82,31 @@ void Uci::position(const std::vector<std::string>& commands) {
 
 void Uci::go(const std::vector<std::string>& commands) {
 	g_stop = false;
-	struct Time time;
-	int max_depth = std::numeric_limits<int>::max();
+	struct Params params;
 
 	for (std::vector<string>::size_type i = 1; i != commands.size(); i++) {
 		if (commands[i] == "movetime") {
-			time.movetime = std::chrono::milliseconds(std::stoi(commands[++i]));
+			params.movetime = std::chrono::milliseconds(std::stoi(commands[++i]));
 		} else if (commands[i] == "wtime") {
-			time.wtime = std::chrono::milliseconds(std::stoi(commands[++i]));
+			params.wtime = std::chrono::milliseconds(std::stoi(commands[++i]));
 		} else if (commands[i] == "btime") {
-			time.btime = std::chrono::milliseconds(std::stoi(commands[++i]));
+			params.btime = std::chrono::milliseconds(std::stoi(commands[++i]));
 		} else if (commands[i] == "winc") {
-			time.winc = std::chrono::milliseconds(std::stoi(commands[++i]));
+			params.winc = std::chrono::milliseconds(std::stoi(commands[++i]));
 		} else if (commands[i] == "binc") {
-			time.binc = std::chrono::milliseconds(std::stoi(commands[++i]));
+			params.binc = std::chrono::milliseconds(std::stoi(commands[++i]));
 		} else if (commands[i] == "movestogo") {
 			// TODO: implement this
 			++i;
 		} else if (commands[i] == "depth") {
-			max_depth = std::stoi(commands[++i]);
-			time.movetime = std::chrono::milliseconds(std::numeric_limits<long long>::max());
+			params.max_depth = std::stoi(commands[++i]);
+			params.movetime = std::chrono::milliseconds(std::numeric_limits<long long>::max());
 		} else if (commands[i] == "infinite") {
-			time.movetime = std::chrono::milliseconds(std::numeric_limits<long long>::max());
+			params.movetime = std::chrono::milliseconds(std::numeric_limits<long long>::max());
 		}
 	}
 	Search search = Search();
-	time.startTime = std::chrono::steady_clock::now();
-	std::thread t1(&Search::start, search, color, max_depth, board, time);
+	std::thread t1(&Search::start, search, color, board, params);
 	t1.detach();
 }
 
@@ -116,14 +125,14 @@ void Uci::changeColor() {
 	color ^= 1;
 }
 
-void Uci::resetBoard(const Position& position) {
+void Uci::resetBoard(const Fen& fen) {
 	// reset board and set new position
 	board.~Board();
-	new (&board) Board(position);
+	new (&board) Board(fen);
 
-	color = position.color;
-	half_moves = position.half_moves; // not used at the moment
-	full_moves = position.full_moves; // not used at the moment
+	color = fen.color;
+	half_moves = fen.half_moves; // not used at the moment
+	full_moves = fen.full_moves; // not used at the moment
 }
 
 int Uci::stringToMove(int color, const string& moveStr) {

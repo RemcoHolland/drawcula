@@ -1,13 +1,11 @@
 #include "board.h"
 #include "castling.h"
-#include "color.h"
 #include "flag.h"
 #include "magicmoves.h"
 #include "movegen.h"
 #include "piece.h"
 #include "square.h"
 #include "utils.h"
-
 #include <stdexcept>
 #include <algorithm>
 

@@ -3,6 +3,23 @@
 Piece::Piece() {
 }
 
+char Piece::getPiece(int piece) {
+	char promotion = '\0';
+	switch (piece) {
+	case KNIGHT:
+		return 'N';
+	case BISHOP:
+		return 'B';
+	case ROOK:
+		return 'R';
+	case QUEEN:
+		return 'Q';
+	case KING:
+		return 'K';
+	default: return '\0';
+	}
+}
+
 char Piece::getPromotion(int piece) {
 	char promotion = '\0';
 	switch (piece) {
