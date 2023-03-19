@@ -1,6 +1,6 @@
 #pragma once
 #include "position/fen.h"
-#include <color.h>
+#include "color.h"
 
 typedef uint64_t U64;
 
@@ -130,6 +130,8 @@ public:
 
 	int material_score = 0;
 	int positional_score = 0;
+
+	U64 zobrist_key = 0;
 
 	void setPosition(const Position&);
 	const int makeMove(int, int);
