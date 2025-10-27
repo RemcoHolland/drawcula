@@ -9,7 +9,7 @@ using std::string;
 
 class Epd : public Position {
 public:
-	Epd(U64(&)[COLORS][PIECES], int, int, U64, std::map<string, string>);
+	Epd(U64(&)[COLORS][PIECES], int, int, U64, const std::map<string, string>&);
 	std::map<string, string> operation;
 	~Epd();
 };

@@ -11,5 +11,4 @@ Position::Position(U64(&piece_list)[COLORS][PIECES], int color, int castling_rig
 	Position::enpassant_square = enpassant_square;
 }
 
-Position::~Position() {
-}
+Position::~Position() = default;

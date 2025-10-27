@@ -8,8 +8,8 @@ DESCRIPTION "Drawcula chess engine"
 LANGUAGES CXX
 )
 
-# Set C++ version 20
-set(CMAKE_CXX_STANDARD 20)
+# Set C++ version 23
+set(CMAKE_CXX_STANDARD 23)
 
 # Allow multithreading on Linux
 if (UNIX)
