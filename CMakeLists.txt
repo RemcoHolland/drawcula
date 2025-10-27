@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.19)
+﻿cmake_minimum_required (VERSION 4.0)
 
 # Set project info
 project (
@@ -29,7 +29,7 @@ add_executable (drawcula ${SOURCES} )
 ##################################################
 
 IF(CMAKE_BUILD_TYPE MATCHES Debug)  
-	set(GOOGLE_TEST_VERSION 1.13.0)
+	set(GOOGLE_TEST_VERSION 1.17.0)
 	
 	include(FetchContent)
 	FetchContent_Declare(	  
@@ -46,6 +46,14 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 	file(GLOB_RECURSE TEST_SOURCES "test/*.cpp" "src/*.cpp")	
 	list(FILTER TEST_SOURCES EXCLUDE REGEX src/main.cpp)
 	add_executable(drawculatest ${TEST_SOURCES})
+
+    # Copy resource files to binary directory
+    add_custom_command(
+            TARGET drawculatest POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/test/resource
+            ${CMAKE_BINARY_DIR}/resource
+    )
 
 	target_link_libraries(
 	  drawculatest

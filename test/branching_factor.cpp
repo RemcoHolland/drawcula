@@ -8,14 +8,14 @@ const Fen start_position = FenReader::read("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/R
 const Fen middlegame_position = FenReader::read("r1bq1rk1/pp1n1ppp/2p1pn2/b2p2B1/2PP4/P1NBPN2/1PQ2PPP/R3K2R w KQ - 0 2");
 const Fen endgame_position = FenReader::read("5n2/R7/4pk2/8/5PK1/8/8/8 b - - 0 0");
 
-inline void startSearch(Fen position, int depth) {
-	Board board = Board(position);
-	struct Params params;
+inline void startSearch(const Fen& fen, int depth) {
+	Board board = Board(fen);
+	Params params;
 	params.max_depth = depth;
 	params.movetime = std::chrono::milliseconds(LLONG_MAX);
 	Search search = Search();
 	testing::internal::CaptureStdout();
-	search.start(position.color, board, params);
+	search.start(fen.color, board, params);
 }
 
 double calculateMeanBranchingFactor(std::vector<int> nodes, int depth) {

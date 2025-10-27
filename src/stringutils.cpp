@@ -45,7 +45,7 @@ string StringUtils::moveToStringLAN(int move) {
 	int from = (move & FROM_MASK) >> 6;
 	int to = (move & TO_MASK) >> 12;
 	int piece = (move & PIECE_MASK) >> 18;
-	int flag = (move & FLAG_MASK >> 21);
+	int flag = move & FLAG_MASK;
 	int promotion = (move & PROMOTION_MASK) >> 27;
 	char promotion_char = Piece::getPromotion(promotion);
 

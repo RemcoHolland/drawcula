@@ -43,7 +43,7 @@ int Search::start(int color, Board board, const Params params) {
 		}
 	} while (!g_stop && depth++ != params.max_depth);
 	const int bestmove = PV.front();
-	std::cout << "bestmove " << StringUtils::moveToStringLAN(bestmove) << std::endl;
+	std::cout << "bestmove " << StringUtils::moveToStringAN(bestmove) << std::endl;
 	return bestmove;
 }
 
