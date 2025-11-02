@@ -15,7 +15,7 @@ WORKDIR /home/lichess-bot
 COPY config.yml /home/lichess-bot/config.yml
 
 # Copy engine
-COPY . /home/lichess-bot/engines/drawcula
+#COPY /home/runner/work/ /home/lichess-bot/engines/drawcula
 
 RUN python3 -m venv venv
 RUN virtualenv venv -p python3
