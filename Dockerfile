@@ -11,10 +11,10 @@ RUN git clone https://github.com/ShailChoksi/lichess-bot.git /home/lichess-bot
 
 WORKDIR /home/lichess-bot
 
-## Copy config
-#COPY config.yml /home/lichess-bot/config.yml
-#
-## Copy engine
+# Copy config
+COPY config.yml /home/lichess-bot/config.yml
+
+# Copy engine
 #COPY engines/drawcula /home/lichess-bot/engines/drawcula
 #
 #RUN python3 -m pip install -r requirements.txt
