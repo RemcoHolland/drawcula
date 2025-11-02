@@ -7,7 +7,7 @@ RUN apk update && apk upgrade
 RUN apk add libstdc++ gcompat git python3 py3-pip py3-virtualenv
 
 # install lychess-bot
-RUN git clone https://github.com/lichess-bot-devs/lichess-bot.git
+RUN git clone https://github.com/ShailChoksi/lichess-bot.git /home/lichess-bot
 
 WORKDIR /home/lichess-bot
 
@@ -15,7 +15,7 @@ WORKDIR /home/lichess-bot
 COPY config.yml /home/lichess-bot/config.yml
 
 # Copy engine
-#COPY /home/runner/work/ /home/lichess-bot/engines/drawcula
+#COPY engines/drawcula /home/lichess-bot/engines/drawcula
 
 RUN python3 -m venv venv
 RUN virtualenv venv -p python3
