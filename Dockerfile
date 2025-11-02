@@ -20,6 +20,6 @@ COPY config.yml /home/lichess-bot/config.yml
 RUN python3 -m venv venv
 RUN virtualenv venv -p python3
 RUN source ./venv/bin/activate
-RUN python3 -m pip install -r requirements.txt
+RUN python3 -m pip install -r requirements.txt --break-system-packages
 
 #CMD python3 lichess-bot.py -v
