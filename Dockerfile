@@ -4,7 +4,7 @@ FROM alpine:latest
 RUN apk update && apk upgrade
 
 # install dependencies
-RUN apk add libstdc++ gcompat git py3-pip py3-virtualenv
+RUN apk add libstdc++ gcompat git python3 py3-pip py3-virtualenv
 
 # install lychess-bot
 RUN git clone https://github.com/ShailChoksi/lichess-bot.git /home/lichess-bot
