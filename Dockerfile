@@ -15,7 +15,7 @@ WORKDIR /home/lichess-bot
 COPY config.yml /home/lichess-bot/config.yml
 
 # Copy engine
-COPY cmake-build-release/drawcula /home/lichess-bot/engines/drawcula
+COPY drawcula /home/lichess-bot/engines/drawcula
 #
 #RUN python3 -m pip install -r requirements.txt
 #

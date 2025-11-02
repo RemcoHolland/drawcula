@@ -18,6 +18,11 @@ jobs:
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: drawcula
+          path: cmake-build-release/drawcula
 
       #- name: Test
      #   working-directory: ${{github.workspace}}/build
@@ -30,6 +35,10 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: drawcula
       #- uses: actions/checkout@v5
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
