@@ -22,7 +22,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: drawcula
-          path: cmake-build-release/drawcula
+          path: /home/runner/work/drawcula/drawcula/build/drawcula
 
       #- name: Test
      #   working-directory: ${{github.workspace}}/build
