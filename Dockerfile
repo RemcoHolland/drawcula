@@ -1,8 +1,7 @@
 FROM ubuntu:latest
 
 # update image
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git
+RUN apt-get update
 
 # install dependencies
 #RUN apk add libstdc++ gcompat git python3 py3-pip py3-virtualenv
