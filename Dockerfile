@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #RUN apt install -y git python3 python3-pip python3-venv
 
 # install lychess-bot
-RUN git clone https://github.com/lichess-bot-devs/lichess-bot.git /home/lichess-bot
+RUN git config --global http.sslverify false && \
+    git clone https://github.com/lichess-bot-devs/lichess-bot.git /home/lichess-bot
 
 #WORKDIR /home/lichess-bot
 
