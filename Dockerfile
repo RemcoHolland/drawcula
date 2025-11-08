@@ -22,7 +22,7 @@ COPY engines/drawcula /home/lichess-bot/engines/drawcula
 
 RUN python3 -m venv venv
 RUN virtualenv venv -p python3
-RUN source ./venv/bin/activate
-RUN python3 -m pip install -r requirements.txt
+#RUN source ./venv/bin/activate
+#RUN python3 -m pip install -r requirements.txt
 
 #CMD python3 lichess-bot.py -v
