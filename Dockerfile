@@ -6,7 +6,7 @@ ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
 ARG GITHUB_DIR
 
-RUN dir -s
+RUN ls
 
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
@@ -18,6 +18,8 @@ RUN git config --global http.sslverify false && \
 
 # set working directory
 WORKDIR /home/lichess-bot
+
+RUN ls
 
 # Copy config
 COPY config.yml /home/lichess-bot/config.yml
