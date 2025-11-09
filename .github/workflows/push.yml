@@ -51,7 +51,9 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
+          no-cache: 'true' # TODO fix this
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/drawcula:latest
           build-args: |
-            GITHUB_DIR = ${{ github.workspace }}
+            LICHESS_BOT_TOKEN=${{ secrets.LICHESS_BOT_TOKEN }}
+            GITHUB_DIR = "blablabla"

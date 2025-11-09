@@ -1,19 +1,10 @@
 FROM ubuntu:latest
 
 # Set lichess bot token environment variable
-#ARG LICHESS_BOT_TOKEN
-#ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
+ARG LICHESS_BOT_TOKEN
+ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
 ARG GITHUB_DIR
-ENV GITHUB_DIR=$GITHUB_DIR
-
-# Copy engine
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-RUN echo "$PWD"
-
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-RUN echo "$GITHUB_DIR"
-COPY $GITHUB_DIR/bla/engines/drawcula /home/lichess-bot/engines/drawcula
 
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
@@ -29,7 +20,10 @@ WORKDIR /home/lichess-bot
 # Copy config
 COPY config.yml /home/lichess-bot/config.yml
 
-
+# Copy engine
+RUN echo "$PWD"
+RUN echo "$GITHUB_DIR"
+COPY $GITHUB_DIR/engines/drawcula /home/lichess-bot/engines/drawcula
 
 # install virtual environment and start the bot
 CMD python3 -m venv venv && \
