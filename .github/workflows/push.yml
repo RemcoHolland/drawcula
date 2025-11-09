@@ -22,7 +22,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: drawcula
-          path: /home/runner/work/drawcula/drawcula/build/drawcula
+          path: ${{ github.workspace }}/build/drawcula
 
       #- name: Test
      #   working-directory: ${{github.workspace}}/build
@@ -47,6 +47,7 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
+          no-cache: 'true' # TODO fix this
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:latest
           build-args: |
