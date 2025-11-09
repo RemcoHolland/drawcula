@@ -42,7 +42,7 @@ jobs:
           name: drawcula
           path: ${{github.workspace}}/engines
       - name: Unzip artifact
-        run: unzip ${{ github.workspace }}/engines/drawcula
+        run: unzip ${{ github.workspace }}/engines/drawcula.zip
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
