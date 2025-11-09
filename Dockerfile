@@ -19,7 +19,7 @@ WORKDIR /home/lichess-bot
 COPY config.yml /home/lichess-bot/config.yml
 
 # Copy engine
-COPY engines/drawcula2 /home/lichess-bot/engines/drawcula
+COPY engines/drawcula /home/lichess-bot/engines/drawcula
 
 # install virtual environment and start the bot
 CMD python3 -m venv venv && \
