@@ -5,6 +5,7 @@ ARG LICHESS_BOT_TOKEN
 ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
 ARG GITHUB_DIR
+ENV GITHUB_DIR=$GITHUB_DIR
 
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
