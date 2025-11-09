@@ -41,6 +41,10 @@ jobs:
         with:
           name: drawcula
           path: ${{github.workspace}}/engines
+      - name: Show path
+        run: ls ${{ github.workspace }}
+      - name: Show path2
+        run: ls ${{ github.workspace }}/engines
       - name: Unzip artifact
         run: unzip ${{ github.workspace }}/engines/drawcula.zip
       - name: Log in to Docker Hub
