@@ -8,9 +8,12 @@ ARG GITHUB_DIR
 ENV GITHUB_DIR=$GITHUB_DIR
 
 # Copy engine
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN echo "$PWD"
+
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN echo "$GITHUB_DIR"
-COPY $GITHUB_DIR/engines/drawcula /home/lichess-bot/engines/drawcula
+COPY $GITHUB_DIR/bla/engines/drawcula /home/lichess-bot/engines/drawcula
 
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
