@@ -6,6 +6,8 @@ ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
 ARG GITHUB_DIR
 
+RUN dir -s
+
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     git python3 python3-venv python3-virtualenv python3-pip
