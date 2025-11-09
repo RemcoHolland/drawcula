@@ -34,11 +34,15 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - name: Create directory
+        run: mkdir -p ${{ github.workspace }}/engines
       - name: Download artifact
         uses: actions/download-artifact@v5
         with:
           name: drawcula
-          path: ${{github.workspace}}/engines/drawcula
+          path: ${{github.workspace}}/engines
+      - name: Unzip artifact
+        run: unzip ${{ github.workspace }}/engines/drawcula
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
