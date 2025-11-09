@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:25.04
 
 # Set lichess bot token environment variable
 ARG LICHESS_BOT_TOKEN
