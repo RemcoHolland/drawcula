@@ -51,3 +51,4 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKERHUB_PROJECT_NAME }}:latest
           build-args: |
             LICHESS_BOT_TOKEN=${{ secrets.LICHESS_BOT_TOKEN }}
+            GITHUB_DIR = ${{ github.workspace }}

@@ -4,6 +4,8 @@ FROM ubuntu:latest
 ARG LICHESS_BOT_TOKEN
 ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
+ARG GITHUB_DIR
+
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     git python3 python3-venv python3-virtualenv python3-pip
@@ -19,7 +21,9 @@ WORKDIR /home/lichess-bot
 COPY config.yml /home/lichess-bot/config.yml
 
 # Copy engine
-COPY engines/drawcula /home/lichess-bot/engines/drawcula
+RUN echo "$PWD"
+RUN echo "$GITHUB_DIR"
+COPY $GITHUB_DIR/engines/drawcula /home/lichess-bot/engines/drawcula
 
 # install virtual environment and start the bot
 CMD python3 -m venv venv && \
