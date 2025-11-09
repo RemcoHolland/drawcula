@@ -51,7 +51,8 @@ jobs:
       - name: Build Docker Image
         uses: docker/build-push-action@v6
         with:
-          no-cache: 'true' # TODO fix this
+          no-cache: true # TODO fix this
+          pull: true # TODO fix this
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/drawcula:latest
           build-args: |
