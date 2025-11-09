@@ -54,5 +54,4 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/drawcula:latest
           build-args: |
-            LICHESS_BOT_TOKEN=${{ secrets.LICHESS_BOT_TOKEN }}
             GITHUB_DIR = ${{ github.workspace }}
