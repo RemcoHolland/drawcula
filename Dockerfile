@@ -20,14 +20,14 @@ RUN cmake -B /home/drawcula/build/debug -S /home/drawcula -DCMAKE_BUILD_TYPE=Deb
 
 # configure CMake and release drawcula \
 RUN cmake -B /home/drawcula/build/release -S /home/drawcula -DCMAKE_BUILD_TYPE=Release && \
-    cmake --build /home/drawcula/build --target drawcula --config Release
+    cmake --build /home/drawcula/build/release --target drawcula --config Release
 
 # Copy drawcula engine and config to lichess-bot directory \
-RUN cp /home/drawcula/build/drawcula /home/lichess-bot/engines/drawcula && \
+RUN cp /home/drawcula/build/release/drawcula /home/lichess-bot/engines/drawcula && \
     cp /home/drawcula/config.yml /home/lichess-bot/config.yml
 
 # remove drawcula directory
-RUN rm -rf /home/drawcula
+#RUN rm -rf /home/drawcula
 
 # set working directory
 WORKDIR /home/lichess-bot
