@@ -14,12 +14,12 @@ RUN git config --global http.sslverify false && \
     git clone https://github.com/lichess-bot-devs/lichess-bot.git /home/lichess-bot
 
 # configure CMake and debug and test drawcula \
-RUN cmake -B /home/drawcula/build/debug -S /home/drawcula -DCMAKE_BUILD_TYPE=Debug -G Ninja && \
+RUN cmake -B /home/drawcula/build/debug -S /home/drawcula -DCMAKE_BUILD_TYPE=Debug && \
     cmake --build /home/drawcula/build/debug --target drawcula --config Debug && \
     ctest --test-dir /home/drawcula/build/debug
 
 # configure CMake and release drawcula \
-RUN cmake -B /home/drawcula/build/release -S /home/drawcula -DCMAKE_BUILD_TYPE=Release -G Ninja && \
+RUN cmake -B /home/drawcula/build/release -S /home/drawcula -DCMAKE_BUILD_TYPE=Release && \
     cmake --build /home/drawcula/build --target drawcula --config Release
 
 # Copy drawcula engine and config to lichess-bot directory \
