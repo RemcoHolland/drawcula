@@ -6,7 +6,7 @@ ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    cmake build-essential git python3 python3-venv python3-virtualenv python3-pip \
+    cmake build-essential git python3 python3-venv python3-virtualenv python3-pip && \
 # clone drawcula and lichess-bot project \
     git config --global http.sslverify false && \
     git clone https://github.com/RemcoHolland/drawcula.git /home/drawcula && \
