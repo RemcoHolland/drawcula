@@ -4,17 +4,14 @@ FROM ubuntu:latest
 ARG LICHESS_BOT_TOKEN
 ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
-# update image
+# update image and create drawcula engine
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     cmake build-essential git python3 python3-venv python3-virtualenv python3-pip && \
-# clone drawcula and lichess-bot project \
     git config --global http.sslverify false && \
     git clone https://github.com/RemcoHolland/drawcula.git /home/drawcula && \
     git clone https://github.com/lichess-bot-devs/lichess-bot.git /home/lichess-bot && \
-# Configure CMake and build drawcula \
     cmake -B /home/drawcula/build -S /home/drawcula -DCMAKE_BUILD_TYPE=Release && \
     cmake --build /home/drawcula/build --target drawcula --config Release && \
-# Copy drawcula engine and config to lichess-bot directory \
     cp /home/drawcula/build/drawcula /home/lichess-bot/engines/drawcula && \
     cp /home/drawcula/config.yml /home/lichess-bot/config.yml
 
