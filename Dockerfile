@@ -13,25 +13,19 @@ RUN git config --global http.sslverify false && \
     git clone https://github.com/RemcoHolland/drawcula.git /home/drawcula && \
     git clone https://github.com/lichess-bot-devs/lichess-bot.git /home/lichess-bot
 
-RUN mkdir /home/drawcula/build
-
 # Configure CMake
-RUN cmake -B /home/drawcula/build -S /home/drawcula -DCMAKE_BUILD_TYPE=Release
+RUN cmake -B /home/drawcula/build -S /home/drawcula -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build /home/drawcula/build --target drawcula --config Release
 
-RUN cmake --build /home/drawcula/build --target drawcula --config Release
+RUN cp /home/drawcula/build/drawcula /home/lichess-bot/engines/drawcula && \
+    cp /home/drawcula/config.yml /home/lichess-bot/config.yml
 
 # set working directory
 WORKDIR /home/lichess-bot
 
-# Copy config
-COPY config.yml /home/lichess-bot/config.yml
-
-## Copy engine
-#COPY build/drawcula /home/lichess-bot/engines/drawcula
-#
-## install virtual environment and start the bot
-#CMD python3 -m venv venv && \
-#    virtualenv venv -p python3 && \
-#    . ./venv/bin/activate && \
-#    python3 -m pip install -r requirements.txt && \
-#    python3 lichess-bot.py -v
+# install virtual environment and start the bot
+CMD python3 -m venv venv && \
+    virtualenv venv -p python3 && \
+    . ./venv/bin/activate && \
+    python3 -m pip install -r requirements.txt && \
+    python3 lichess-bot.py -v
