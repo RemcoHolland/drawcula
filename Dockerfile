@@ -8,16 +8,17 @@ ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     cmake git python3 python3-venv python3-virtualenv python3-pip
 
-RUN mkdir build
-
-# Configure CMake
-RUN cmake -B ./build -S . -DCMAKE_BUILD_TYPE=Release
-
-RUN cmake --build . --target drawcula --config Release
-
 # install lychess-bot
 RUN git config --global http.sslverify false && \
+    git clone https://github.com/RemcoHolland/drawcula.git /home/drawcula && \
     git clone https://github.com/lichess-bot-devs/lichess-bot.git /home/lichess-bot
+
+RUN mkdir /home/drawcula/build
+
+# Configure CMake
+RUN cmake -B /home/drawcula/build -S /home/drawcula -DCMAKE_BUILD_TYPE=Release
+
+RUN cmake --build /home/drawcula --target drawcula --config Release
 
 # set working directory
 WORKDIR /home/lichess-bot
