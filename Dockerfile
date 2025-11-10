@@ -4,13 +4,16 @@ FROM ubuntu:25.04
 ARG LICHESS_BOT_TOKEN
 ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
-ARG GITHUB_DIR
-
-RUN ls
-
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     git python3 python3-venv python3-virtualenv python3-pip
+
+RUN mkdir build
+
+# Configure CMake
+RUN cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+RUN cmake --build build --config Release
 
 # install lychess-bot
 RUN git config --global http.sslverify false && \
@@ -19,15 +22,11 @@ RUN git config --global http.sslverify false && \
 # set working directory
 WORKDIR /home/lichess-bot
 
-RUN ls
-
 # Copy config
 COPY config.yml /home/lichess-bot/config.yml
 
 # Copy engine
-RUN echo "$PWD"
-RUN echo "$GITHUB_DIR"
-COPY $GITHUB_DIR/engines/drawcula /home/lichess-bot/engines/drawcula
+COPY build/drawcula /home/lichess-bot/engines/drawcula
 
 # install virtual environment and start the bot
 CMD python3 -m venv venv && \
