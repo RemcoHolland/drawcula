@@ -13,7 +13,7 @@ RUN mkdir build
 # Configure CMake
 RUN cmake -B build -DCMAKE_BUILD_TYPE=Release
 
-RUN cmake --build build --config Release
+RUN cmake --build . --target drawcula --config Release
 
 # install lychess-bot
 RUN git config --global http.sslverify false && \
