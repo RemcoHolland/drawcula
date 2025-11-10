@@ -11,7 +11,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
 RUN mkdir build
 
 # Configure CMake
-RUN cmake -B build -DCMAKE_BUILD_TYPE=Release
+RUN cmake -B ./build -S . -DCMAKE_BUILD_TYPE=Release
 
 RUN cmake --build . --target drawcula --config Release
 
