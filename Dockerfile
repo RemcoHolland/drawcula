@@ -6,7 +6,7 @@ ENV LICHESS_BOT_TOKEN=$LICHESS_BOT_TOKEN
 
 # update image
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
-    git python3 python3-venv python3-virtualenv python3-pip
+    cmake git python3 python3-venv python3-virtualenv python3-pip
 
 RUN mkdir build
 
