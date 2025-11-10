@@ -18,7 +18,7 @@ RUN mkdir /home/drawcula/build
 # Configure CMake
 RUN cmake -B /home/drawcula/build -S /home/drawcula -DCMAKE_BUILD_TYPE=Release
 
-RUN cmake --build /home/drawcula --target drawcula --config Release
+RUN cmake --build /home/drawcula/build --target drawcula --config Release
 
 # set working directory
 WORKDIR /home/lichess-bot
