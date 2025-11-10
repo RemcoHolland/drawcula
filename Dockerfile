@@ -25,12 +25,12 @@ WORKDIR /home/lichess-bot
 # Copy config
 COPY config.yml /home/lichess-bot/config.yml
 
-# Copy engine
-COPY build/drawcula /home/lichess-bot/engines/drawcula
-
-# install virtual environment and start the bot
-CMD python3 -m venv venv && \
-    virtualenv venv -p python3 && \
-    . ./venv/bin/activate && \
-    python3 -m pip install -r requirements.txt && \
-    python3 lichess-bot.py -v
+## Copy engine
+#COPY build/drawcula /home/lichess-bot/engines/drawcula
+#
+## install virtual environment and start the bot
+#CMD python3 -m venv venv && \
+#    virtualenv venv -p python3 && \
+#    . ./venv/bin/activate && \
+#    python3 -m pip install -r requirements.txt && \
+#    python3 lichess-bot.py -v
