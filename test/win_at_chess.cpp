@@ -14,7 +14,11 @@ inline int startSearch(const Epd& epd, int movetime) {
 }
 
 TEST(wac, all_tests) {
-	std::ifstream file("resource/WAC.epd");
+	std::ifstream file("resource/wac.epd");
+	if (!file.is_open()) {
+		FAIL() << "Could not open file wac.epd";
+	}
+
 	std::string str;
 	int succes = 0;
 	int failed = 0;

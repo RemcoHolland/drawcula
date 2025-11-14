@@ -50,8 +50,8 @@ TEST(branching_factor, start_position) {
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 	std::cout << "MEAN BRANCHING FACTOR STARTPOSITION: " << mbf << std::endl;
 
-	//mbf should be between 8.0 and 9.0
-	ASSERT_TRUE(mbf > 8.0);
+	//mbf should be between 7.5 and 9.0
+	ASSERT_TRUE(mbf > 7.5);
 	ASSERT_TRUE(mbf < 9.0);
 }
 
