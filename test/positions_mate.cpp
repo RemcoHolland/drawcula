@@ -24,12 +24,20 @@ TEST(mateposition, mate_in_1_with_king_and_rook) {
 	ASSERT_NE(output.find("bestmove d2d8"), std::string::npos);
 }
 
-TEST(mateposition, mate_in_2_with_king_and_queen) {
-	startSearch(FenReader::read("8/8/8/8/8/2kq4/8/K7 w - - 0 1"), 5);
+TEST(mateposition, mate_in_2_with_long_castle) {
+	startSearch(FenReader::read("8/8/8/2P3R1/5B2/2rP1p2/p1P1PP2/RnQ1K2k w Q - 0 1"), 5);
+	std::string output = testing::internal::GetCapturedStdout();
+	ASSERT_NE(output.find("info depth 5 score mate 2"), std::string::npos);
+	ASSERT_NE(output.find("pv c1b2 f3e2 b2b7"), std::string::npos);
+	ASSERT_NE(output.find("bestmove c1b2"), std::string::npos);
+}
+
+TEST(mateposition, mate_in_2_own_king_negative_score) {
+	startSearch(FenReader::read("8/8/8/5b2/3b4/8/5k2/7K w - - 0 1"), 5);
 	std::string output = testing::internal::GetCapturedStdout();
 	ASSERT_NE(output.find("info depth 5 score mate -2"), std::string::npos);
-	ASSERT_NE(output.find("pv a1a2 d3d1 a2a3 d1a1"), std::string::npos);
-	ASSERT_NE(output.find("bestmove a1a2"), std::string::npos);
+	ASSERT_NE(output.find("pv h1h2 d4e5 h2h1 f5e4"), std::string::npos);
+	ASSERT_NE(output.find("bestmove h1h2"), std::string::npos);
 }
 
 TEST(mateposition, mate_in_2_sacrifice_rook) {

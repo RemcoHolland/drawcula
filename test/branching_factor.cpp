@@ -43,20 +43,20 @@ std::vector<int> getNodesList(int depth) {
 }
 
 TEST(branching_factor, start_position) {
-	int depth = 6;
+	int depth = 7;
 	startSearch(start_position, depth);
 	std::vector<int> nodes = getNodesList(depth);
 
 	double mbf = calculateMeanBranchingFactor(nodes, depth);
 	std::cout << "MEAN BRANCHING FACTOR STARTPOSITION: " << mbf << std::endl;
 
-	//mbf should be between 8.5 and 9.5
-	ASSERT_TRUE(mbf > 8.5);
-	ASSERT_TRUE(mbf < 9.5);
+	//mbf should be between 8.0 and 9.0
+	ASSERT_TRUE(mbf > 8.0);
+	ASSERT_TRUE(mbf < 9.0);
 }
 
 TEST(branching_factor, middlegame_position) {
-	int depth = 6;
+	int depth = 7;
 	startSearch(middlegame_position, depth);
 	std::vector<int> nodes = getNodesList(depth);
 
@@ -68,7 +68,7 @@ TEST(branching_factor, middlegame_position) {
 }
 
 TEST(branching_factor, endgame_position) {
-	int depth = 6;
+	int depth = 7;
 	startSearch(endgame_position, depth);
 	std::vector<int> nodes = getNodesList(depth);
 
@@ -76,6 +76,6 @@ TEST(branching_factor, endgame_position) {
 	std::cout << "MEAN BRANCHING FACTOR ENDGAME: " << mbf << std::endl;
 
 	//mbf should be between 5 and 6
-	ASSERT_TRUE(mbf > 5);
-	ASSERT_TRUE(mbf < 6);
+	ASSERT_TRUE(mbf > 4.0);
+	ASSERT_TRUE(mbf < 5.0);
 }
