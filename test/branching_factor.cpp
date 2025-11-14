@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <cmath>
 #include "search.h"
 #include "board.h"
 #include "reader/fenreader.h"
