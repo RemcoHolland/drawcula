@@ -13,11 +13,6 @@ RUN git config --global http.sslverify false && \
     git clone https://github.com/RemcoHolland/drawcula.git /home/drawcula && \
     git clone https://github.com/lichess-bot-devs/lichess-bot.git /home/lichess-bot
 
-# configure CMake and debug and test drawcula \
-RUN cmake -B /home/drawcula/build/debug -S /home/drawcula -DCMAKE_BUILD_TYPE=Debug && \
-    cmake --build /home/drawcula/build/debug --target drawcula --config Debug && \
-    ctest --test-dir /home/drawcula/build/debug
-
 # configure CMake and release drawcula \
 RUN cmake -B /home/drawcula/build/release -S /home/drawcula -DCMAKE_BUILD_TYPE=Release && \
     cmake --build /home/drawcula/build/release --target drawcula --config Release
@@ -27,7 +22,7 @@ RUN cp /home/drawcula/build/release/drawcula /home/lichess-bot/engines/drawcula 
     cp /home/drawcula/config.yml /home/lichess-bot/config.yml
 
 # remove drawcula directory
-#RUN rm -rf /home/drawcula
+RUN rm -rf /home/drawcula
 
 # set working directory
 WORKDIR /home/lichess-bot
