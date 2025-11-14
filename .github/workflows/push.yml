@@ -14,9 +14,9 @@ jobs:
         - name: Configure CMake
           run: cmake -B ${{github.workspace}}/build/debug -DCMAKE_BUILD_TYPE=Debug
         - name: Build
-          run: cmake --build ${{github.workspace}}/build/debug --target drawcula --config Debug
+          run: cmake --build ${{github.workspace}}/build/debug --config Debug
         - name: Test
-          run: ctest --test-dir ${{github.workspace}}/build/debug
+          run: ${{github.workspace}}/build/debug/drawculatest
 
   build-docker-image:
     needs: [ build-and-test ]
