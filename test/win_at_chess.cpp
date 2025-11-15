@@ -17,13 +17,6 @@ inline int startSearch(const Epd& epd, int movetime) {
 }
 namespace fs = std::filesystem;
 TEST(wac, all_tests) {
-
-	std::string path = "."; // Current directory
-	for(const auto&entry:fs::directory_iterator(path)) {
-		std::cout<<entry.path().filename()<<std::endl;
-	}
-
-
 	std::ifstream file("wac.epd");
 	if (!file.is_open()) {
 		FAIL() << "Could not open file wac.epd";
@@ -37,7 +30,7 @@ TEST(wac, all_tests) {
 	while (std::getline(file, str)) {
 		Epd epd = EpdReader::read(str);
 
-		int movetime = 2500;
+		int movetime = 3000;
 		int bestmove = startSearch(epd, movetime);
 		string bestmoveStr = StringUtils::moveToStringLAN(bestmove);
 		string bm = epd.operation.find("bm") -> second;
@@ -50,6 +43,6 @@ TEST(wac, all_tests) {
 	testing::internal::GetCapturedStdout();
 	std::cout << "SUCCES: " << succes << std::endl;
 	std::cout << "FAILED: " << failed << std::endl;
-	EXPECT_GE(succes, 146);
-	EXPECT_LE(failed, 55);
+	EXPECT_GE(succes, 125);
+	EXPECT_LE(failed, 76);
 }

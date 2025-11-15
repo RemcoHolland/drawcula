@@ -2,9 +2,9 @@ name: push.yml
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "*" ]
 
 jobs:
   build-and-test:
@@ -22,6 +22,7 @@ jobs:
   build-docker-image:
     needs: [ build-and-test ]
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
