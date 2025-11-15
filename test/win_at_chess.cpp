@@ -5,6 +5,9 @@
 #include "search.h"
 #include "stringutils.h"
 
+#include<iostream>
+#include<filesystem>
+
 inline int startSearch(const Epd& epd, int movetime) {
 	Board board = Board(epd);
 	Params params;
@@ -12,8 +15,15 @@ inline int startSearch(const Epd& epd, int movetime) {
 	Search search = Search();
 	return search.start(epd.color, board, params);
 }
-
+namespace fs = std::filesystem;
 TEST(wac, all_tests) {
+
+	std::string path = "."; // Current directory
+	for(const auto&entry:fs::directory_iterator(path)) {
+		std::cout<<entry.path().filename()<<std::endl;
+	}
+
+
 	std::ifstream file("wac.epd");
 	if (!file.is_open()) {
 		FAIL() << "Could not open file wac.epd";
