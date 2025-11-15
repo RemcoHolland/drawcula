@@ -49,6 +49,9 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 
     # Copy resource file to binary directory
     configure_file(test/resource/wac.epd ${CMAKE_CURRENT_BINARY_DIR}/wac.epd COPYONLY)
+    add_custom_target(resources ALL DEPENDS
+            ${CMAKE_CURRENT_BINARY_DIR}/wac.epd)
+    add_dependencies(drawculatest resources)
 
 	target_link_libraries(
 	  drawculatest
