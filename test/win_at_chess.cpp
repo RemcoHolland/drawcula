@@ -14,7 +14,7 @@ inline int startSearch(const Epd& epd, int movetime) {
 }
 
 TEST(wac, all_tests) {
-	std::ifstream file("resource/wac.epd");
+	std::ifstream file("wac.epd");
 	if (!file.is_open()) {
 		FAIL() << "Could not open file wac.epd";
 	}
@@ -30,7 +30,6 @@ TEST(wac, all_tests) {
 		int movetime = 2500;
 		int bestmove = startSearch(epd, movetime);
 		string bestmoveStr = StringUtils::moveToStringLAN(bestmove);
-		std::cout << bestmoveStr << std::endl;
 		string bm = epd.operation.find("bm") -> second;
 		if (bm == bestmoveStr || bm == (bestmoveStr + '+')) {  // add '+' for check
 			succes++;

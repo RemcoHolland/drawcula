@@ -47,13 +47,8 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 	list(FILTER TEST_SOURCES EXCLUDE REGEX src/main.cpp)
 	add_executable(drawculatest ${TEST_SOURCES})
 
-    # Copy resource files to binary directory
-    add_custom_command(
-            TARGET drawculatest POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/test/resource
-            ${CMAKE_BINARY_DIR}/resource
-    )
+    # Copy resource file to binary directory
+    configure_file(test/resource/wac.epd ${CMAKE_CURRENT_BINARY_DIR}/wac.epd COPYONLY)
 
 	target_link_libraries(
 	  drawculatest
