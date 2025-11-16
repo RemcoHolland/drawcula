@@ -13,3 +13,6 @@ DEBUG    <UciProtocol (pid=425)>: >> info depth 7 score cp 1357 time 68 nodes 17
 ERROR    Exception parsing pv from info: 'depth 7 score cp 1357 time 68 nodes 1765288 nps 25960000 pv g5h6 h5h4 a7h7 g6g5 h7g7 d3c4 g7g5', position at root: 8/R6p/4R1p1/6P1/8/3kP3/1K6/8 w - - 5 47             engine.py:1879
 DEBUG    <UciProtocol (pid=425)>: >> info depth 8 score cp 1278 time 199 nodes 4350826 nps 21863000 pv a7h7 d3e2 e3e4 e2f3 h7e7 f3g2 e6g6 g2h3                                                                    engine.py:976
 DEBUG    <UciProtocol (pid=425)>: >> info depth 9 score cp 1299 time 2558 nodes 84892329 nps 33186000 pv a7h7 d3e2 h7f7 e2d3 e3e4 d3c4 b2b1 c4c5 e6g6
+
+
+ ERROR    illegal uci: 'b4c3' in 1k6/5pp1/8/4n3/1p6/8/PPP5/3K4 b - - 7 38
