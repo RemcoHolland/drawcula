@@ -2,7 +2,7 @@
 #include "perft.h"
 #include "reader/fenreader.h"
 
-U64 perft(int depth, Fen fen) {
+U64 perft(int depth, const Fen& fen) {
 	Perft perft = Perft(false, depth);
 	Board board = Board(fen);
 	int color = fen.color;
@@ -121,6 +121,3 @@ TEST(complexfen, multiple_queens) {
 	U64 nodes = perft(5, fen);
 	EXPECT_EQ(nodes, 4634384);
 }
-
-
-

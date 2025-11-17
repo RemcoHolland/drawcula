@@ -113,7 +113,7 @@ void Search::updatePV(std::vector<int>& PV, const std::vector<int>& childPV, int
 }
 
 string Search::printPV(const std::vector<int>& PV) {
-	string pvStr = "";
+	string pvStr;
 	for (int move : PV) {
 		pvStr += StringUtils::moveToStringAN(move);
 		pvStr += " ";

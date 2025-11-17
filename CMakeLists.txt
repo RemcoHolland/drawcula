@@ -43,7 +43,7 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 	enable_testing()
     
 	# Create a test executable but exclude src/main.cpp
-	file(GLOB_RECURSE TEST_SOURCES "test/*.cpp" "src/*.cpp")	
+	file(GLOB_RECURSE TEST_SOURCES "test/*.cpp" "src/*.cpp")
 	list(FILTER TEST_SOURCES EXCLUDE REGEX src/main.cpp)
 	add_executable(drawculatest ${TEST_SOURCES})
 

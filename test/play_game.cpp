@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock-matchers.h>
 #include <chrono>
 #include <thread>
 #include "uci.h"
-#include "reader/fenreader.h"
 
 using namespace std::chrono_literals;
 
@@ -13,7 +13,7 @@ TEST(play_game, startpos) {
 	uci.go({ "go", "movetime" ,"200" });
 	std::this_thread::sleep_for(300ms);
 	std::string output = testing::internal::GetCapturedStdout();
-	ASSERT_NE(output.find("bestmove a1b1"), std::string::npos);
+	EXPECT_THAT(output, testing::HasSubstr("bestmove a1b1"));
 }
 
 TEST(play_game, fen) {
@@ -24,7 +24,7 @@ TEST(play_game, fen) {
 	uci.go({ "go", "movetime" ,"1000" });
 	std::this_thread::sleep_for(1100ms);
 	std::string output = testing::internal::GetCapturedStdout();
-	ASSERT_NE(output.find("bestmove f3f7"), std::string::npos);
+	EXPECT_THAT(output, testing::HasSubstr("bestmove f3f7"));
 }
 
 TEST(play_game, stop_thinking) {
@@ -35,5 +35,5 @@ TEST(play_game, stop_thinking) {
 	uci.stop();
 	std::this_thread::sleep_for(100ms);
 	std::string output = testing::internal::GetCapturedStdout();
-	ASSERT_NE(output.find("bestmove"), std::string::npos);
+	EXPECT_THAT(output, testing::HasSubstr("bestmove"));
 }
