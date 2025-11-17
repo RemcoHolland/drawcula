@@ -50,10 +50,7 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
     # Copy resource file to binary directory
     configure_file(test/resource/wac.epd ${CMAKE_CURRENT_BINARY_DIR}/wac.epd COPYONLY)
 
-	target_link_libraries(
-	  drawculatest
-	  gtest_main
-	)
+	target_link_libraries(drawculatest gtest_main gmock_main)
 
 	include(GoogleTest)
 	gtest_discover_tests(drawculatest)
