@@ -20,7 +20,7 @@ TEST(wac, all_tests) {
 	}
 
 	std::string str;
-	int succes = 0;
+	int success = 0;
 	int failed = 0;
 	testing::internal::CaptureStdout();
 	
@@ -32,14 +32,14 @@ TEST(wac, all_tests) {
 		string bestmoveStr = StringUtils::moveToStringLAN(bestmove);
 		string bm = epd.operation.find("bm") -> second;
 		if (bm == bestmoveStr || bm == (bestmoveStr + '+')) {  // add '+' for check
-			succes++;
+			success++;
 		} else {
 			failed++;
 		}
 	}
 	testing::internal::GetCapturedStdout();
-	std::cout << "SUCCESS: " << succes << std::endl;
+	std::cout << "SUCCESS: " << success << std::endl;
 	std::cout << "FAILED: " << failed << std::endl;
-	EXPECT_GE(succes, 124);
+	EXPECT_GE(success, 124);
 	EXPECT_LE(failed, 77);
 }
