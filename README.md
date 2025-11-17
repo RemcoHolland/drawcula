@@ -1,4 +1,4 @@
-🧛‍♂️ Drawcula
+# 🧛‍♂️ Drawcula
 
 “I vant… to drawww your games!”
 
@@ -6,7 +6,7 @@ Drawcula is a quirky, solid, and slightly spooky chess engine that lurks deep in
 
 It also roams Lichess at night. Beware.
 
-🧛 What is Drawcula?
+### 🧛 What is Drawcula?
 
 Drawcula is an open-source chess engine designed for strong, stubborn play.
 It evaluates positions, searches variations, and occasionally turns into a bat.
@@ -14,7 +14,7 @@ It evaluates positions, searches variations, and occasionally turns into a bat.
 
 Whether you're testing openings, playing casual matches, or want a sparring partner that doesn't throw games away, Drawcula has your back.
 
-🦇 Features
+### 🦇 Features
 
 🧠 Sharp evaluation of material, mobility, king safety, and more.
 
@@ -28,8 +28,7 @@ Whether you're testing openings, playing casual matches, or want a sparring part
 
 🌙 Lichess integration — fight it online after midnight (local time optional).
 
-🛠️ Installation
-Prerequisites
+### 🛠️ Installation Prerequisites
 
 A C++ compiler (GCC, Clang, MSVC — no silver stakes required)
 
@@ -37,38 +36,38 @@ Any required libraries listed in the repo
 
 A chess GUI (Arena, Cute Chess, whatever you summon)
 
-Build from source
-git clone https://github.com/RemcoHolland/drawcula.git
-cd drawcula
-mkdir build && cd build
-cmake ..
-make
+#### Build from source
+
+    git clone https://github.com/RemcoHolland/drawcula.git
+    cd drawcula
+    mkdir build && cd build
+    cmake ..
+    make
 
 
 The resulting executable is your new undead chess companion.
 
-🏃 Usage
+### 🏃 Usage
 
 Launch via UCI:
 
-./drawcula --uci
+    ./drawcula --uci
 
 
 Then talk to it the standard UCI way:
 
-uci
-isready
-position startpos moves e2e4 e7e5
-go depth 10
+    uci
+    isready
+    position startpos moves e2e4 e7e5
+    go depth 10
 
 
-🎃 Or start from a scary FEN:
+#### 🎃 Or start from a scary FEN:
 
-position fen r1bqkb1r/pppp1ppp/2n2n2/4N3/4P3/2N5/PPPP1PPP/R1BQKB1R b KQkq - 0 1
+    position fen r1bqkb1r/pppp1ppp/2n2n2/4N3/4P3/2N5/PPPP1PPP/R1BQKB1R b KQkq - 0 1
+    go movetime 5000
 
-go movetime 5000
-
-🧰 Engine Options
+### 🧰 Engine Options
 
 Tune Drawcula’s personality:
 
@@ -82,7 +81,7 @@ Ponder — think during your time [TODO]
 
 UCI_Elo — dial its power level like a vampire who hasn’t fed yet [TODO]
 
-🌑 Drawcula on Lichess
+### 🌑 Drawcula on Lichess
 
 You can challenge Drawcula online — but don’t be surprised if it stares into your soul first.
 
@@ -98,7 +97,7 @@ May or may not appear in engine tournaments depending on moon phase
 
 Search for the engine’s Lichess account [Drawcula_BOT](https://lichess.org/@/Drawcula_BOT) and send a challenge!
 
-🧛‍♀️ Contributing
+### 🧛‍♀️ Contributing
 
 Want to help Drawcula grow stronger? Contributions are welcome!
 
@@ -112,11 +111,11 @@ Submit a PR
 
 Celebrate with a glass of… uh… grape juice 🍷
 
-📜 License
+### 📜 License
 
 MIT License — permissive, friendly, and definitely not cursed.
 
-🕯️ Acknowledgements
+### 🕯️ Acknowledgements
 
 Thanks to everyone who tests, contributes, or battles Drawcula on moonlit nights.
 Special thanks to other open-source engines for inspiration, and to Lichess for being an excellent haunt.
