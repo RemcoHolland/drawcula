@@ -22,6 +22,6 @@ inline void startSearch(const Fen& fen, int depth) {
 TEST(bugposition, enpassant_bug) {
     startSearch(FenReader::read("8/7p/8/6P1/8/8/1K2k3/8 w - - 0 1"), 3);
     std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_THAT(output, Not(testing::HasSubstr("pv g5h6")));
-    EXPECT_THAT(output, Not(testing::HasSubstr("bestmove g5h6")));
+    EXPECT_THAT(output, testing::Not(testing::HasSubstr("pv g5h6")));
+    EXPECT_THAT(output, testing::Not(testing::HasSubstr("bestmove g5h6")));
 }
