@@ -115,8 +115,13 @@ void Board::unmakeMove(int color, int move, int unmake_info) {
 	piece_list[color][piece] ^= fromTo;
 	castling_rights = (unmake_info & CASTLING_MASK) >> 3;
 
-	if (flag == NO_FLAG || flag == DOUBLE_PUSH) {
+	if (flag == NO_FLAG) {
 		occupiedBB ^= fromTo;
+		positional_score -= (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr]);
+		zobrist_key ^= ZOBRIST[color][piece][from_nr] ^ ZOBRIST[color][piece][to_nr];
+	} else if (flag == DOUBLE_PUSH) {
+		occupiedBB ^= fromTo;
+		enpassant_square = 0;
 		positional_score -= (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr]);
 		zobrist_key ^= ZOBRIST[color][piece][from_nr] ^ ZOBRIST[color][piece][to_nr];
 	} else if (flag == CAPTURE) {

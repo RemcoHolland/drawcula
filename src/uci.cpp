@@ -43,7 +43,7 @@ void Uci::loop() {
 }
 
 void Uci::uci() {
-	std::cout << "id name drawcula" << std::endl;
+	std::cout << "id name drawcula" << std::endl; //TODO add version for drawcula
 	std::cout << "id author R. Holland" << std::endl;
 	std::cout << "uciok" << std::endl;
 }

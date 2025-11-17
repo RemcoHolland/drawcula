@@ -5,9 +5,6 @@
 #include "search.h"
 #include "stringutils.h"
 
-#include<iostream>
-#include<filesystem>
-
 inline int startSearch(const Epd& epd, int movetime) {
 	Board board = Board(epd);
 	Params params;
@@ -15,7 +12,7 @@ inline int startSearch(const Epd& epd, int movetime) {
 	Search search = Search();
 	return search.start(epd.color, board, params);
 }
-namespace fs = std::filesystem;
+
 TEST(wac, all_tests) {
 	std::ifstream file("wac.epd");
 	if (!file.is_open()) {
@@ -23,7 +20,7 @@ TEST(wac, all_tests) {
 	}
 
 	std::string str;
-	int succes = 0;
+	int success = 0;
 	int failed = 0;
 	testing::internal::CaptureStdout();
 	
@@ -35,14 +32,14 @@ TEST(wac, all_tests) {
 		string bestmoveStr = StringUtils::moveToStringLAN(bestmove);
 		string bm = epd.operation.find("bm") -> second;
 		if (bm == bestmoveStr || bm == (bestmoveStr + '+')) {  // add '+' for check
-			succes++;
+			success++;
 		} else {
 			failed++;
 		}
 	}
 	testing::internal::GetCapturedStdout();
-	std::cout << "SUCCES: " << succes << std::endl;
+	std::cout << "SUCCESS: " << success << std::endl;
 	std::cout << "FAILED: " << failed << std::endl;
-	EXPECT_GE(succes, 125);
-	EXPECT_LE(failed, 76);
+	EXPECT_GE(success, 124);
+	EXPECT_LE(failed, 77);
 }

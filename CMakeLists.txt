@@ -3,7 +3,7 @@
 # Set project info
 project (
 drawcula
-VERSION 0.4.1
+VERSION 0.4.3
 DESCRIPTION "Drawcula chess engine"
 LANGUAGES CXX
 )
@@ -42,21 +42,15 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
 
 	enable_testing()
     
-	# Create a text executable but exclude src/main.cpp
-	file(GLOB_RECURSE TEST_SOURCES "test/*.cpp" "src/*.cpp")	
+	# Create a test executable but exclude src/main.cpp
+	file(GLOB_RECURSE TEST_SOURCES "test/*.cpp" "src/*.cpp")
 	list(FILTER TEST_SOURCES EXCLUDE REGEX src/main.cpp)
 	add_executable(drawculatest ${TEST_SOURCES})
 
     # Copy resource file to binary directory
     configure_file(test/resource/wac.epd ${CMAKE_CURRENT_BINARY_DIR}/wac.epd COPYONLY)
-    add_custom_target(resources ALL DEPENDS
-            ${CMAKE_CURRENT_BINARY_DIR}/wac.epd)
-    add_dependencies(drawculatest resources)
 
-	target_link_libraries(
-	  drawculatest
-	  gtest_main
-	)
+	target_link_libraries(drawculatest gtest_main gmock_main)
 
 	include(GoogleTest)
 	gtest_discover_tests(drawculatest)
