@@ -38,7 +38,7 @@ TEST(wac, all_tests) {
 		}
 	}
 	testing::internal::GetCapturedStdout();
-	std::cout << "SUCCES: " << succes << std::endl;
+	std::cout << "SUCCESS: " << succes << std::endl;
 	std::cout << "FAILED: " << failed << std::endl;
 	EXPECT_GE(succes, 124);
 	EXPECT_LE(failed, 77);
