@@ -4,6 +4,7 @@
 #include <limits>
 #include <vector>
 #include <atomic>
+#include <random>
 #include "board.h"
 
 extern std::atomic<bool> g_stop;
@@ -28,17 +29,19 @@ constexpr int EXPECTED_NR_MOVES = 40;
 class Search {
 public:
 	Search();
-	U64 getNodes();
-	int start(int, Board, Params);
+	[[nodiscard]] U64 getNodes() const;
+	int start(int, Board, const Params&);
 	~Search();
 
 private:	
 	Params params;
 	U64 nodes{ 0 };
+	std::mt19937 rng;
+	std::normal_distribution<> ndist;
 
 	int alphaBeta(int, int, int, int, Board&, std::vector<int>&);
-	bool timeToMove(int);
-	void updatePV(std::vector<int>&, const std::vector<int>&, int);
-	string printPV(const std::vector<int>&);
+	[[nodiscard]] bool timeToMove(int) const;
+	static void updatePV(std::vector<int>&, const std::vector<int>&, int);
+	static string printPV(const std::vector<int>&);
 };
 

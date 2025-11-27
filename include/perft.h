@@ -13,5 +13,5 @@ private:
 	U64 root_nodes = 0;
 	int search_depth = 0;
 	void negaMax(int, Board&, int);
-	void printRootNodes(int);
+	void printRootNodes(int) const;
 };

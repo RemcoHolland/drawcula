@@ -5,6 +5,6 @@
 int main() {
 	initmagicmoves();
 	zobrist::init();
-	Uci uci = Uci();
+	auto uci = Uci();
 	uci.loop();
 }

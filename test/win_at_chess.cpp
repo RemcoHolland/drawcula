@@ -40,6 +40,6 @@ TEST(wac, all_tests) {
 	testing::internal::GetCapturedStdout();
 	std::cout << "SUCCESS: " << success << std::endl;
 	std::cout << "FAILED: " << failed << std::endl;
-	EXPECT_GE(success, 124);
-	EXPECT_LE(failed, 77);
+	EXPECT_GE(success, 124);       // 148 on macbook
+	EXPECT_LE(failed, 77);         // 53 on macbook
 }

@@ -19,7 +19,6 @@ public:
 	static U64 flipBitVertical(U64);
 	static U64 flip1BBVertical(U64);
 	static int getLS1B(U64);
-private:
-	
+
 };
 

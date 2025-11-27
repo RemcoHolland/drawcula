@@ -13,8 +13,7 @@ std::atomic<bool> g_stop;
 
 using StringUtils::split;
 
-Uci::Uci() {
-}
+Uci::Uci() = default;
 
 void Uci::loop() {
 	string input;
@@ -71,9 +70,9 @@ void Uci::position(const std::vector<std::string>& commands) {
 	if (commands.size() > i && commands[i] == "moves") {
 		for (i++; i < commands.size(); i++) {
 			// TODO: remove color here
-			Movegen movelist = Movegen();
+			auto movelist = Movegen();
 			movelist.generateMoves(color, board);
-			int move = movelist.getLegalMove(stringToMove(color, commands[i]));
+			const int move = movelist.getLegalMove(stringToMove(commands[i]));
 			board.makeMove(color, move);
 			changeColor();
 		}
@@ -82,7 +81,7 @@ void Uci::position(const std::vector<std::string>& commands) {
 
 void Uci::go(const std::vector<std::string>& commands) {
 	g_stop = false;
-	struct Params params;
+	Params params;
 
 	for (std::vector<string>::size_type i = 1; i != commands.size(); i++) {
 		if (commands[i] == "movetime") {
@@ -105,14 +104,14 @@ void Uci::go(const std::vector<std::string>& commands) {
 			params.movetime = std::chrono::milliseconds(std::numeric_limits<long long>::max());
 		}
 	}
-	Search search = Search();
+	auto search = Search();
 	std::thread t1(&Search::start, search, color, board, params);
 	t1.detach();
 }
 
-void Uci::perft(bool divide, const std::vector<std::string>& commands) {
-	int depth = std::stoi(commands[1]);
-	Perft perft = Perft(divide, depth);
+void Uci::perft(const bool divide, const std::vector<std::string>& commands) {
+	const int depth = std::stoi(commands[1]);
+	auto perft = Perft(divide, depth);
 	std::thread t1(&Perft::calculate, perft, color, board);
 	t1.detach();
 }
@@ -135,15 +134,13 @@ void Uci::resetBoard(const Fen& fen) {
 	full_moves = fen.full_moves; // not used at the moment
 }
 
-int Uci::stringToMove(int color, const string& moveStr) {
-
-	int piece = NO_PIECE;
-	int from = StringUtils::getSquare(moveStr[0], moveStr[1]);
-	int to = StringUtils::getSquare(moveStr[2], moveStr[3]);
-	int promotion = moveStr.length() == 5 ? Piece::getPromotion(moveStr[4], color) : NO_PROMOTION;
+int Uci::stringToMove(const string& moveStr) {
+	constexpr int piece = NO_PIECE;
+	const int from = StringUtils::getSquare(moveStr[0], moveStr[1]);
+	const int to = StringUtils::getSquare(moveStr[2], moveStr[3]);
+	const int promotion = moveStr.length() == 5 ? Piece::getPromotion(moveStr[4]) : NO_PROMOTION;
 
 	return (from << 6) + (to << 12) + (piece << 18) + (promotion << 27);
 }
 
-Uci::~Uci() {
-}
+Uci::~Uci() = default;
