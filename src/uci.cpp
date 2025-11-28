@@ -8,6 +8,7 @@
 #include "search.h"
 #include "movegen.h"
 #include "stringutils.h"
+#include "version.h"
 
 std::atomic<bool> g_stop;
 
@@ -42,8 +43,8 @@ void Uci::loop() {
 }
 
 void Uci::uci() {
-	std::cout << "id name drawcula" << std::endl; //TODO add version for drawcula
-	std::cout << "id author R. Holland" << std::endl;
+	std::cout << "id name drawcula " << VERSION << std::endl;
+	std::cout << "id author " << AUTHOR << std::endl;
 	std::cout << "uciok" << std::endl;
 }
 
