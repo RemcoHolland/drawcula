@@ -15,9 +15,9 @@ jobs:
           run: cmake -B ${{github.workspace}}/build/debug -DCMAKE_BUILD_TYPE=Debug
         - name: Build
           run: cmake --build ${{github.workspace}}/build/debug --config Debug
-#        - name: Test
-#          run: ./drawculatest
-#          working-directory: ${{github.workspace}}/build/debug
+        - name: Test
+          run: ./drawculatest
+          working-directory: ${{github.workspace}}/build/debug
 
   build-docker-image:
     needs: [ build-and-test ]
@@ -25,15 +25,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v5
-      - name: Step 1
+      - name: Read version from file
         run: echo "VERSION=$(grep VERSION version.h | sed 's/.*"\(.*\)".*/\1/')" >> $GITHUB_ENV
         working-directory: ${{github.workspace}}/include
-      - name: Step 2
-        run: |
-          echo "State is: '${{ env.VERSION }}'" # Output works
-#      - name: Read version from file
-#        run: echo "0.4.4" >> $GITHUB_ENV
-#        working-directory: ${{github.workspace}}/include
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
