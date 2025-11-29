@@ -26,9 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Step 1
-        run: |
-          echo "VERSION=0.4.4" >> $GITHUB_ENV
-          echo "State is: '${{ env.VERSION }}'" # No output since same step
+        run: echo "VERSION=$(grep VERSION version.h | sed 's/.*"\(.*\)".*/\1/')" >> $GITHUB_ENV
+        working-directory: ${{github.workspace}}/include
       - name: Step 2
         run: |
           echo "State is: '${{ env.VERSION }}'" # Output works
