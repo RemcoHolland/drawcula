@@ -27,9 +27,10 @@ jobs:
       - name: Read version from file
         run: |
           echo ${{ github.workspace }}
+          ls ${{ github.workspace }}
           echo ${{ github.workspace }}/include
           echo ${{ github.action_path }}
-          ls
+          ls ${{ github.action_path }}/include
           VERSION=$(grep VERSION version.h | sed 's/.*"\(.*\)".*/\1/')
           echo "$VERSION" >> $GITHUB_ENV
       - name: Log in to Docker Hub
