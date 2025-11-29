@@ -1,10 +1,8 @@
 #include "piece.h"
 
-Piece::Piece() {
-}
+Piece::Piece() = default;
 
-char Piece::getPiece(int piece) {
-	char promotion = '\0';
+char Piece::getPiece(const int piece) {
 	switch (piece) {
 	case KNIGHT:
 		return 'N';
@@ -20,8 +18,7 @@ char Piece::getPiece(int piece) {
 	}
 }
 
-char Piece::getPromotion(int piece) {
-	char promotion = '\0';
+char Piece::getPromotion(const int piece) {
 	switch (piece) {
 	case KNIGHT:
 		return 'n';
@@ -35,7 +32,7 @@ char Piece::getPromotion(int piece) {
 	}
 }
 
-int Piece::getPromotion(char piece, int color) {
+int Piece::getPromotion(const char piece) {
 	switch (piece) {
 	case 'n': return KNIGHT;
 	case 'b': return BISHOP;
@@ -45,5 +42,4 @@ int Piece::getPromotion(char piece, int color) {
 	}
 }
 
-Piece::~Piece() {
-}
+Piece::~Piece() = default;

@@ -16,10 +16,10 @@ constexpr int MATERIAL_VALUE[PIECES] = { PAWN_VALUE, KNIGHT_VALUE,BISHOP_VALUE, 
 
 /****************************/
 
-constexpr U64 k1 = U64(0x5555555555555555); /*  -1/3   */
-constexpr U64 k2 = U64(0x3333333333333333); /*  -1/5   */
-constexpr U64 k4 = U64(0x0f0f0f0f0f0f0f0f); /*  -1/17  */
-constexpr U64 kf = U64(0x0101010101010101); /*  -1/255 */
+constexpr U64 k1 = 0x5555555555555555; /*  -1/3   */
+constexpr U64 k2 = 0x3333333333333333; /*  -1/5   */
+constexpr U64 k4 = 0x0f0f0f0f0f0f0f0f; /*  -1/17  */
+constexpr U64 kf = 0x0101010101010101; /*  -1/255 */
 
 // Piece Square tables, used to give pieces a certain square value
 constexpr int PIECE_SQUARE[COLORS][PIECES][SQUARES] = { { {
@@ -82,7 +82,6 @@ constexpr int PIECE_SQUARE[COLORS][PIECES][SQUARES] = { { {
    -30,-40,-40,-50,-50,-40,-40,-30,
    -30,-40,-40,-50,-50,-40,-40,-30,
    -30,-40,-40,-50,-50,-40,-40,-30}},
-
 
 	// BLACK PAWN
    {{0,  0,  0,  0,  0,  0,  0,  0,

@@ -12,7 +12,7 @@ public:
 	void loop();
 	void position(const std::vector<string>&);
 	void go(const std::vector<string>&);
-	void stop();
+	static void stop();
 	~Uci();
 
 private:
@@ -21,11 +21,11 @@ private:
 	int full_moves = 1;
 	const string startpos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	Board board = Board(FenReader::read(startpos));
-	void uci();
+	static void uci();
 	void ucinewgame();
-	void isready();
+	static void isready();
 	void perft(bool, const std::vector<std::string>&);	
 	void changeColor();
 	void resetBoard(const Fen&);
-	int stringToMove(int, const string&);
+	static int stringToMove(const string&);
 };

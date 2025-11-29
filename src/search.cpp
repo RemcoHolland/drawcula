@@ -7,38 +7,38 @@
 #include "stringutils.h"
 #include "evaluation.h"
 
-Search::Search() {
-	g_stop = false;  // reset global stop variable
+Search::Search() : rng(std::random_device{}()) {
+	g_stop = false;
+	ndist = std::normal_distribution<>(0, 3);
 }
 
-U64 Search::getNodes() {
+U64 Search::getNodes() const {
 	return nodes;
 }
 
-int Search::start(int color, Board board, const Params params) {
-	std::srand((unsigned)std::time(NULL));  // initialize random seed
+int Search::start(const int color, Board board, const Params& startParams) {
 	int depth = 1;
-	this->params = params;
+	this->params = startParams;
 	std::vector<int> PV;
 
 	do {
 		std::vector<int> currentPV;
 		nodes = 0;
 		std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
-		int score = alphaBeta(color, -MAX_INT, MAX_INT, depth, board, currentPV);
+		const int score = alphaBeta(color, -MAX_INT, MAX_INT, depth, board, currentPV);
 		if (!g_stop) {
 			string scoreStr;
 			if (std::abs(score) >= MATE) {
-				int multiplier = (score > 0) - (score < 0);
-				int64_t nr_moves = multiplier * ((currentPV.size() + 1) / 2); // print negative values for losing mates
-				scoreStr = "mate " + std::to_string(nr_moves);
+				const int multiplier = (score > 0) - (score < 0);
+				const int mate_in_nr_moves = static_cast<int>(currentPV.size() + 1) / 2;
+				scoreStr = "mate " + std::to_string(multiplier * mate_in_nr_moves); // print negative values for losing mates
 			} else {
 				scoreStr = "cp " + std::to_string(score);
 			}
 			PV = currentPV;
 			long long searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime).count();
 			searchtime = std::max(1LL, searchtime); // searchtime must be > 0 milliseconds
-			long long nps = nodes / searchtime * 1000;
+			const U64 nps = nodes / searchtime * 1000;
 			std::cout << "info depth " << depth << " score " << scoreStr << " time " << searchtime << " nodes " << nodes << " nps " << nps << " pv " << printPV(currentPV) << std::endl;
 		}
 	} while (!g_stop && depth++ != params.max_depth);
@@ -48,7 +48,7 @@ int Search::start(int color, Board board, const Params params) {
 }
 
 // Fail soft AlphaBeta search
-int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, std::vector<int>& PV) {
+int Search::alphaBeta(const int color, int alpha, const int beta, const int depth, Board& board, std::vector<int>& PV) {
 	if (g_stop) {
 		return 0;
 	}
@@ -57,20 +57,20 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 		return 0;
 	}
 	if (depth == 0) {
-		int random = (std::rand() % 21) - 10; // add some randomness (-10..10) to the evaluation
-		return  (-color | 1) * (board.getScore() + random); // -color | 1 changes to 1 or -1 when color is either 0 or 1
+		const int random = static_cast<int>(ndist(rng)); // add some randomness (mean 0, stdev 3) to the evaluation
+		return (-color | 1) * (board.getScore() + random); // -color | 1 changes to 1 or -1 when color is either 0 or 1
 	}
 	int bestscore = -MAX_INT;
-	Movegen movegen = Movegen();
+	auto movegen = Movegen();
 	movegen.generateMoves(color, board);
 	movegen.sortMoves();
-	for (int move : movegen.moves) {
+	for (const int move : movegen.moves) {
 		nodes++;
-		int unmake_info = board.makeMove(color, move);
+		const int unmake_info = board.makeMove(color, move);
 
 		if (!square::isAttacked(color, board, board.piece_list[color][KING])) {
 			std::vector<int> childPV;
-			int score = -alphaBeta(color ^ 1, -beta, -alpha, depth - 1, board, childPV);
+			const int score = -alphaBeta(color ^ 1, -beta, -alpha, depth - 1, board, childPV);
 			if (score >= beta) {
 				board.unmakeMove(color, move, unmake_info);
 				return score;
@@ -96,30 +96,29 @@ int Search::alphaBeta(int color, int alpha, int beta, int depth, Board& board, s
 	return bestscore;
 }
 
-bool Search::timeToMove(int color) {
+bool Search::timeToMove(const int color) const {
 	if (g_stop) {
 		return true;
 	}
-	std::chrono::milliseconds searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - params.startTime);
-	std::chrono::milliseconds movetime = params.movetime > std::chrono::milliseconds(0) ? params.movetime : color == WHITE ? (params.wtime + (params.winc * EXPECTED_NR_MOVES)) / EXPECTED_NR_MOVES : (params.btime + (params.binc * EXPECTED_NR_MOVES)) / EXPECTED_NR_MOVES;
+	const auto searchtime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - params.startTime);
+	const std::chrono::milliseconds movetime = params.movetime > std::chrono::milliseconds(0) ? params.movetime : color == WHITE ? (params.wtime + params.winc * EXPECTED_NR_MOVES) / EXPECTED_NR_MOVES : (params.btime + params.binc * EXPECTED_NR_MOVES) / EXPECTED_NR_MOVES;
 
 	return searchtime > movetime;
 }
 
-void Search::updatePV(std::vector<int>& PV, const std::vector<int>& childPV, int move) {
+void Search::updatePV(std::vector<int>& PV, const std::vector<int>& childPV, const int move) {
 	PV.clear();
 	PV.push_back(move);
-	std::copy(childPV.begin(), childPV.end(), back_inserter(PV));
+	std::ranges::copy(childPV, back_inserter(PV));
 }
 
 string Search::printPV(const std::vector<int>& PV) {
 	string pvStr;
-	for (int move : PV) {
+	for (const int move : PV) {
 		pvStr += StringUtils::moveToStringAN(move);
 		pvStr += " ";
 	}
-	return (pvStr.substr(0, pvStr.size() - 1));
+	return pvStr.substr(0, pvStr.size() - 1);
 }
 
-Search::~Search() {
-}
+Search::~Search() = default;

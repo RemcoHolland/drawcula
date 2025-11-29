@@ -31,18 +31,13 @@ class Movegen {
 
 public:
 	Movegen();
-	int getLegalMove(int);
+	int getLegalMove(int) const;
 	void generateMoves(int, const Board&);
 	void sortMoves();
 	std::vector<int> moves;
 	~Movegen();
 
 private:
-	void addPawnMoves(U64, U64, int);
-	void addPawnCaptures(const Board&, int, U64, U64);
-	void addEnPassantMoves(U64, U64);
-	void addPieceMoves(const Board&, int, int, int, U64, U64);
-	int determineCapture(const Board&, int, U64);
 	void whitePawnsPush(const Board&);
 	void whitePawnsDoublePush(const Board&);
 	void whitePawnsCaptureLeft(const Board&);
@@ -60,4 +55,9 @@ private:
 	void kingMoves(const Board&, int);
 	void castleWhite(const Board&);
 	void castleBlack(const Board&);
+	void addPawnMoves(U64, U64, int);
+	void addPawnCaptures(const Board&, int, U64, U64);
+	void addEnPassantMoves(U64, U64);
+	void addPieceMoves(const Board&, int, int, int, U64, U64);
+	static int determineCapture(const Board&, int, U64);
 };

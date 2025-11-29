@@ -120,11 +120,11 @@ constexpr int CASTLING_MASK = 0b1111 << 3;
 class Board {
 
 public:
-	Board(const Position&);
+	explicit Board(const Position&);
 
-	U64 piece_list[COLORS][PIECES];
+	U64 piece_list[COLORS][PIECES] = {};
 	U64 occupiedBB = 0;
-	U64 colorBB[2] = { 0 };
+	U64 colorBB[2] = {};
 	U64 enpassant_square = 0;
 	int castling_rights = 0;
 
@@ -134,10 +134,10 @@ public:
 	U64 zobrist_key = 0;
 
 	void setPosition(const Position&);
-	const int makeMove(int, int);
+	int makeMove(int, int);
 	void unmakeMove(int, int, int);
 
-	int getScore();
+	[[nodiscard]] int getScore() const;
 
 	~Board();
 

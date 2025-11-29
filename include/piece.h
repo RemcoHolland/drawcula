@@ -16,6 +16,6 @@ public:
 	Piece();
 	static char getPiece(int);
 	static char getPromotion(int);
-	static int getPromotion(char, int);
+	static int getPromotion(char);
 	~Piece();
 };
