@@ -27,11 +27,11 @@ jobs:
       - uses: actions/checkout@v5
       - name: Step 1
         run: |
-          echo "version=yellow" >> $GITHUB_ENV
-          echo "State is: '${{ env.version }}'" # No output since same step
+          echo "VERSION=0.4.4" >> $GITHUB_ENV
+          echo "State is: '${{ env.VERSION }}'" # No output since same step
       - name: Step 2
         run: |
-          echo "State is: '${{ env.version }}'" # Output works
+          echo "State is: '${{ env.VERSION }}'" # Output works
 #      - name: Read version from file
 #        run: echo "0.4.4" >> $GITHUB_ENV
 #        working-directory: ${{github.workspace}}/include
@@ -44,6 +44,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/drawcula:$VERSION
+          tags: ${{ secrets.DOCKER_USERNAME }}/drawcula:${{ env.VERSION }}
           build-args: |
             LICHESS_BOT_TOKEN=${{ secrets.LICHESS_BOT_TOKEN }}
