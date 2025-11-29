@@ -26,8 +26,11 @@ jobs:
     steps:
       - name: Read version from file
         run: |
+          echo ${{ github.workspace }}
+          echo ${{ github.workspace }}/include
+          echo ${{ github.action_path }}
           ls
-          VERSION=$(grep VERSION include/version.h | sed 's/.*"\(.*\)".*/\1/')
+          VERSION=$(grep VERSION version.h | sed 's/.*"\(.*\)".*/\1/')
           echo "$VERSION" >> $GITHUB_ENV
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
