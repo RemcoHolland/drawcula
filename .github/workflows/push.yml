@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/drawcula:${{ env.VERSION }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/drawcula:${{ env.VERSION }} , ${{ secrets.DOCKER_USERNAME }}/drawcula:latest
           build-args: |
             LICHESS_BOT_TOKEN=${{ secrets.LICHESS_BOT_TOKEN }}
 
@@ -50,3 +50,11 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy Docker image to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} << 'EOF'
+          docker pull ${{ secrets.DOCKER_USERNAME }}/drawcula:latest
+          docker stop drawcula
+          docker rm drawcula
+          docker run -d --restart always -it -p 8080:80 --name drawcula ${{ secrets.DOCKER_USERNAME }}/drawcula:latest
+          EOF
