@@ -52,5 +52,7 @@ jobs:
 #        with:
 #          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Deploy Docker image to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          echo ${{ secrets.SSH_PRIVATE_KEY }} > github-ec2.pem && chmod 600 github-ec2.pem
+          echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
