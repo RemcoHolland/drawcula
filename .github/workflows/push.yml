@@ -53,7 +53,7 @@ jobs:
 #          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Deploy Docker image to EC2
         run: |
-          echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
+          echo ${{ secrets.SSH_PRIVATE_KEY }} > github-ec2.pem && chmod 600 github-ec2.pem
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_INSTANCE_IP }} '
           echo "Current directory: $(pwd)"
           echo "Listing home directory:"
