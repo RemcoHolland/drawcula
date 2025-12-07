@@ -56,9 +56,8 @@ jobs:
           PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           USER_NAME: ${{secrets.EC2_USER}}
           HOSTNAME: ${{secrets.EC2_INSTANCE_IP}}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem $USER_NAME@$HOSTNAME '
-          docker pull chesster84/drawcula:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/drawcula:latest
           '
