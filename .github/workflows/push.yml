@@ -60,5 +60,5 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem $USER_NAME@$HOSTNAME '
-          docker pull $DOCKER_USERNAME/drawcula:latest
+          docker pull chesster84/drawcula:latest
           '
