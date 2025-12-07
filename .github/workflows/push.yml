@@ -59,9 +59,4 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
           echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
-          ssh -o StrictHostKeyChecking=no -i github-ec2.pem $USER_NAME@$HOSTNAME '
-#          docker pull $DOCKER_USERNAME/drawcula:latest
-#          docker stop drawcula
-#          docker rm drawcula
-#          docker run -d --restart always -it -p 8080:80 --name drawcula $DOCKER_USERNAME/drawcula:latest
-          '
+          ssh -o StrictHostKeyChecking=no -i github-ec2.pem $USER_NAME@$HOSTNAME
