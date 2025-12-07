@@ -15,9 +15,9 @@ jobs:
           run: cmake -B ${{github.workspace}}/build/debug -DCMAKE_BUILD_TYPE=Debug
         - name: Build
           run: cmake --build ${{github.workspace}}/build/debug --config Debug
-#        - name: Test
-#          run: ./drawculatest
-#          working-directory: ${{github.workspace}}/build/debug
+        - name: Test
+          run: ./drawculatest
+          working-directory: ${{github.workspace}}/build/debug
 
   build-docker-image:
     needs: [ build-and-test ]
@@ -48,10 +48,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Deploy Docker image to EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          USER_NAME: ${{secrets.EC2_USER}}
-          HOSTNAME: ${{secrets.EC2_INSTANCE_IP}}
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > github-ec2.pem && chmod 600 github-ec2.pem
           ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${{secrets.EC2_USER}}@${{secrets.EC2_INSTANCE_IP}} '
