@@ -1,9 +1,8 @@
 #include <random>
-#include <iostream>
 #include "zobrist.h"
 #include "utils.h"
 
-U64 ZOBRIST[COLORS][PIECES][SQUARES] = { {{0}} };
+U64 ZOBRIST[COLORS][PIECES][SQUARES] = { {{}} };
 U64 BLACK_TO_MOVE = 0;
 
 void zobrist::init() {
@@ -31,10 +30,10 @@ U64 zobrist::hash(const Position& position) {
 		for (int piece = 0; piece < PIECES; piece++) {
 			U64 from_squares = position.piece_list[color][piece];
 			while (from_squares) {
-				int from = Utils::getLS1B(from_squares);
+				const int from = Utils::getLS1B(from_squares);
 				key ^= ZOBRIST[color][piece][from];
 
-				from_squares &= (from_squares - 1); // clear LSB
+				from_squares &= from_squares - 1; // clear LSB
 			}
 		}
 	}

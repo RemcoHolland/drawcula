@@ -128,7 +128,6 @@ public:
 	U64 enpassant_square = 0;
 	int castling_rights = 0;
 
-	int material_score = 0;
 	int positional_score = 0;
 
 	U64 zobrist_key = 0;
