@@ -73,6 +73,7 @@
  * 
  *Changes by R.Holland: added typedef uint64_t and changed C64 to U64.
  */
+#pragma once
 
 #include <cstdint>
 

@@ -31,7 +31,7 @@ class Movegen {
 
 public:
 	Movegen();
-	int getLegalMove(int) const;
+	[[nodiscard]] int getLegalMove(int) const;
 	void generateMoves(int, const Board&);
 	void sortMoves();
 	std::vector<int> moves;

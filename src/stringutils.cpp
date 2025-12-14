@@ -5,8 +5,6 @@
 #include "board.h"
 #include "flag.h"
 
-const string whiteSpaces(" \f\n\r\t\v");
-
 int StringUtils::getSquare(const char file, const char rank) {
 	const int square = (file - 97) + (rank - 49) * 8;	// 97 and 49 are ascii codes
 	return square;
