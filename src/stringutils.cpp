@@ -10,11 +10,11 @@ int StringUtils::getSquare(const char file, const char rank) {
 	return square;
 }
 
-char StringUtils::getRank(const int square) {
+constexpr char StringUtils::getRank(const int square) {
 	return static_cast<char>(square / 8 + 49);
 }
 
-char StringUtils::getFile(const int square) {
+constexpr char StringUtils::getFile(const int square) {
 	return static_cast<char>(square % 8 + 97);
 }
 

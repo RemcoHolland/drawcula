@@ -15,7 +15,7 @@ void evaluation::initPieceSquareTable()
 						piece == BISHOP ? BISHOP_PSQT[FLIP[square]] :
 						piece == ROOK ? ROOK_PSQT[FLIP[square]] :
 						piece == QUEEN ? QUEEN_PSQT[FLIP[square]] :
-						KING_PSQT[FLIP[square]];
+						KING_MG_PSQT[FLIP[square]];
 				} else {
 					PIECE_SQUARE[color][piece][square] =
 						piece == PAWN ? PAWN_PSQT[square] :
@@ -23,7 +23,7 @@ void evaluation::initPieceSquareTable()
 						piece == BISHOP ? BISHOP_PSQT[square] :
 						piece == ROOK ? ROOK_PSQT[square] :
 						piece == QUEEN ? QUEEN_PSQT[square] :
-						KING_PSQT[square];
+						KING_MG_PSQT[square];
 				}
 			}
 		}
@@ -43,4 +43,16 @@ int evaluation::positionalScore(const U64(&piece_list)[COLORS][PIECES]) {
 		}
 	}
 	return score;
+}
+
+void useKingEndgamePSQT() {
+   for (int color = 0; color < COLORS; color++) {
+	   	  for (int square = 0; square < SQUARES; square++) {
+		 if (color == WHITE) {
+			PIECE_SQUARE[color][KING][square] = KING_EG_PSQT[FLIP[square]];
+		 } else {
+			PIECE_SQUARE[color][KING][square] = KING_EG_PSQT[square];
+		 }
+	  }
+   }
 }

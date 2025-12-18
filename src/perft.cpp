@@ -20,8 +20,6 @@ U64 Perft::calculate(const int color, Board board) {
 	return nodes;
 }
 
-Perft::~Perft() = default;
-
 //Improvement: make a root negaMax, see chess programming network.
 void Perft::negaMax(const int color, Board& board, const int depth) {
 	if (depth == 0) {
@@ -51,3 +49,5 @@ void Perft::negaMax(const int color, Board& board, const int depth) {
 void Perft::printRootNodes(const int move) const {
 	std::cout << StringUtils::moveToStringAN(move) << ' ' << root_nodes << std::endl;
 }
+
+Perft::~Perft() = default;

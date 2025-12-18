@@ -6,12 +6,12 @@
 using std::string;
 
 namespace ReadUtils {
-	Position read(std::vector<string>);
-	void fillPieceList(string, U64(&)[COLORS][PIECES]);
-	int getColor(char);
-	int getPieceColor(char);
-	int getPiece(char);
-	int getCastlingRight(char);
-	U64 getEnpassantSquare(char, char);
-	int getNumber(char);
+	Position read(const std::vector<string>&);
+	void fillPieceList(const string&, U64(&)[COLORS][PIECES]);
+	constexpr int getColor(char);
+	constexpr int getPieceColor(char);
+	constexpr int getPiece(char);
+	constexpr int getCastlingRight(char);
+	constexpr U64 getEnpassantSquare(char, char);
+	constexpr int getNumber(char);
 };

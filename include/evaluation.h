@@ -65,7 +65,7 @@ constexpr int QUEEN_PSQT[SQUARES] = {
 	890, 900, 905, 900, 900, 900, 900, 890,
 	880, 890, 890, 895, 895, 890, 890, 880};
 
-constexpr int KING_PSQT[SQUARES] = {
+constexpr int KING_MG_PSQT[SQUARES] = {
 	-30, -40, -40, -50, -50, -40, -40, -30,
     -30, -40, -40, -50, -50, -40, -40, -30,
     -30, -40, -40, -50, -50, -40, -40, -30,
@@ -73,6 +73,16 @@ constexpr int KING_PSQT[SQUARES] = {
     -20, -30, -30, -40, -40, -30, -30, -20,
     -10, -20, -20, -20, -20, -20, -20, -10,
  	  0,   0,   0, -10, -10,   0,   0,   0,
+	 10,  10,  20, -10, -10,  10,  30,  10};
+
+constexpr int KING_EG_PSQT[SQUARES] = {
+	-30, -40, -40, -50, -50, -40, -40, -30,
+	-30, -40, -40, -50, -50, -40, -40, -30,
+	-30, -40, -40, -50, -50, -40, -40, -30,
+	-30, -40, -40, -50, -50, -40, -40, -30,
+	-20, -30, -30, -40, -40, -30, -30, -20,
+	-10, -20, -20, -20, -20, -20, -20, -10,
+	   0,   0,   0, -10, -10,   0,   0,   0,
 	 10,  10,  20, -10, -10,  10,  30,  10};
 
 constexpr int FLIP[SQUARES] = {      // FLIP array for indexing piece-square tables for white pieces
@@ -91,4 +101,5 @@ extern int PIECE_SQUARE[COLORS][PIECES][SQUARES];
 namespace evaluation {
 	void initPieceSquareTable();
 	int positionalScore(const U64(&)[COLORS][PIECES]);
+	void useKingEndgamePSQT();
 }

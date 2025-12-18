@@ -7,6 +7,6 @@ using std::string;
 class EpdReader {
 public:
 	EpdReader();
-	static Epd read(string);
+	static Epd read(const string&);
 	~EpdReader();
 };
