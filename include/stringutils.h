@@ -6,8 +6,8 @@ using std::string;
 
 namespace StringUtils {
 	int getSquare(char, char);
-	char getRank(int);
-	char getFile(int);
+	constexpr char getRank(int);
+	constexpr char getFile(int);
 
 	string moveToStringAN(int);
 	string moveToStringLAN(int);

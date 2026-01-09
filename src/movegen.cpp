@@ -21,7 +21,7 @@ int Movegen::getLegalMove(const int move) const
 		const int lm_from = (legalMove & FROM_MASK) >> 6;
 		const int lm_to = (legalMove & TO_MASK) >> 12;
 		const int lm_promotion = (legalMove & PROMOTION_MASK) >> 27;
-		// move is legal if 'from', 'to'  and 'promotion piece' are the same
+		// move is legal if 'from', 'to' and 'promotion piece' are the same
 		if (lm_from == m_from && lm_to == m_to && lm_promotion == m_promotion) {
 			return legalMove;
 		}
@@ -31,7 +31,7 @@ int Movegen::getLegalMove(const int move) const
 
 void Movegen::sortMoves() {
 	// sort moves based on the sort_key value by using a lambda expression
-	std::ranges::sort(moves, [](const int& a, const int& b) { return (a & SORT_KEY_MASK) > (b & SORT_KEY_MASK); });
+	std::ranges::sort(moves, [](const int a, const int b) { return (a & SORT_KEY_MASK) > (b & SORT_KEY_MASK); });
 }
 
 void Movegen::generateMoves(const int color, const Board& board) {

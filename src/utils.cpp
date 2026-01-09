@@ -21,5 +21,5 @@ U64 Utils::flip1BBVertical(U64 bb) {
 */
 int Utils::getLS1B(const U64 bb) {
 	constexpr U64 debruijn64 = 0x03f79d71b4cb0a89;
-	return index64[((bb ^ bb - 1) * debruijn64) >> 58];
+	return INDEX_64[((bb ^ bb - 1) * debruijn64) >> 58];
 }
