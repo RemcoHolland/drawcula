@@ -11,6 +11,14 @@ constexpr int BISHOP_VALUE = 310;
 constexpr int ROOK_VALUE = 500;
 constexpr int QUEEN_VALUE = 900;
 
+constexpr int PIECE_VALUE[PIECES] = {
+	PAWN_VALUE,
+	KNIGHT_VALUE,
+	BISHOP_VALUE,
+	ROOK_VALUE,
+	QUEEN_VALUE,
+	0}; // king has no value
+
 /****************************
 *    PIECE SQUARE TABLES    *
 * ***************************/
@@ -76,14 +84,14 @@ constexpr int KING_MG_PSQT[SQUARES] = {
 	 10,  10,  20, -10, -10,  10,  30,  10};
 
 constexpr int KING_EG_PSQT[SQUARES] = {
-	-30, -40, -40, -50, -50, -40, -40, -30,
-	-30, -40, -40, -50, -50, -40, -40, -30,
-	-30, -40, -40, -50, -50, -40, -40, -30,
-	-30, -40, -40, -50, -50, -40, -40, -30,
-	-20, -30, -30, -40, -40, -30, -30, -20,
-	-10, -20, -20, -20, -20, -20, -20, -10,
-	   0,   0,   0, -10, -10,   0,   0,   0,
-	 10,  10,  20, -10, -10,  10,  30,  10};
+	-95, -95, -90, -90, -90, -90, -95, -95,
+	-95, -50, -50, -50, -50, -50, -50, -95,
+	-90, -50, -20, -20, -20, -20, -50, -90,
+	-90, -50, -20,   0,   0, -20, -50, -90,
+	-90, -50, -20,   0,   0, -20, -50, -90,
+	-90, -50, -20, -20, -20, -20, -50, -90,
+	-95, -50, -50, -50, -50, -50, -50, -95,
+	-95, -95, -90, -90, -90, -90, -95, -95};
 
 constexpr int FLIP[SQUARES] = {      // FLIP array for indexing piece-square tables for white pieces
 	56, 57, 58, 59, 60, 61, 62, 63,
@@ -96,10 +104,14 @@ constexpr int FLIP[SQUARES] = {      // FLIP array for indexing piece-square tab
 	 0,  1,  2,  3,  4,  5,  6,  7,
 };
 
-extern int PIECE_SQUARE[COLORS][PIECES][SQUARES];
+inline int PIECE_SQUARE[COLORS][PIECES][SQUARES] = { {{{}}} };
 
 namespace evaluation {
 	void initPieceSquareTable();
 	int positionalScore(const U64(&)[COLORS][PIECES]);
 	void useKingEndgamePSQT();
+	void useKingMiddlegamePSQT();
+	void increaseMaterial(int value);
+	void decreaseMaterial(int value);
+	void determineGamePhase();
 }

@@ -11,6 +11,12 @@ constexpr int KING = 5;
 
 constexpr int PIECES = 6;
 
+constexpr int NR_PAWNS = 16;
+constexpr int NR_KNIGHTS = 4;
+constexpr int NR_BISHOPS = 4;
+constexpr int NR_ROOKS = 4;
+constexpr int NR_QUEENS = 2;
+
 namespace Piece {
     char getPiece(int);
     char getPromotion(int);

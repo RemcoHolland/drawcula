@@ -24,7 +24,7 @@ constexpr int MVV_LVA[PIECES][PIECES] = {
 	{0,   0,  0,  0,  0,  0}   // victim King,   attacker p, N, B, R, Q, K, None
 };
 
-// number of moves available in a position
+// number of moves available in a position (approximately)
 constexpr int AVAILABLE_MOVES = 40;
 
 class Movegen {

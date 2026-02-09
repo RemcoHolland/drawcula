@@ -47,6 +47,7 @@ int Board::makeMove(const int color, const int move)
 		piece_list[color ^ 1][captured_piece] ^= to;
 		positional_score += (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 		zobrist_key ^= ZOBRIST[color][piece][from_nr] ^ ZOBRIST[color][piece][to_nr] ^ ZOBRIST[color ^ 1][captured_piece][to_nr];
+		evaluation::decreaseMaterial(PIECE_VALUE[captured_piece]);
 	} else if (flag == EN_PASSANT) {
 		const int capture_square_nr = color == WHITE ? to_nr - 8 : to_nr + 8;
 		const U64 capture_square = A1 << capture_square_nr;
@@ -55,6 +56,7 @@ int Board::makeMove(const int color, const int move)
 		piece_list[color ^ 1][PAWN] ^= capture_square;
 		positional_score += (-color | 1) * (PIECE_SQUARE[color][PAWN][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][PAWN][capture_square_nr]);
 		zobrist_key ^= ZOBRIST[color][PAWN][from_nr] ^ ZOBRIST[color][PAWN][to_nr] ^ ZOBRIST[color ^ 1][PAWN][capture_square_nr];
+		evaluation::decreaseMaterial(PAWN_VALUE);
 	} else if (flag == CASTLING) {
 		U64 rook_shift;
 		int rook_start_square_nr;
@@ -81,6 +83,7 @@ int Board::makeMove(const int color, const int move)
 		piece_list[color][promoted_piece] ^= to;
 		positional_score += (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr]);
 		zobrist_key ^= ZOBRIST[color][PAWN][from_nr] ^ ZOBRIST[color][promoted_piece][to_nr];
+		evaluation::increaseMaterial(PIECE_VALUE[promoted_piece] - PAWN_VALUE);
 	} else if (flag == PROMOCAPT) {
 		const int promoted_piece = (move & PROMOTION_MASK) >> 27;
 		occupiedBB ^= from;
@@ -90,7 +93,9 @@ int Board::makeMove(const int color, const int move)
 		piece_list[color][promoted_piece] ^= to;
 		positional_score += (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 		zobrist_key ^= ZOBRIST[color][PAWN][from_nr] ^ ZOBRIST[color][promoted_piece][to_nr] ^ ZOBRIST[color ^ 1][captured_piece][to_nr];
+		evaluation::increaseMaterial(PIECE_VALUE[promoted_piece] - PAWN_VALUE - PIECE_VALUE[captured_piece]);
 	}
+	evaluation::determineGamePhase();
 	const int unmake_info = captured_piece | castling_rights << 3;
 	setCastlingRights(color, piece, flag, from, to);
 	zobrist_key ^= color == BLACK ? BLACK_TO_MOVE : 0;
@@ -126,6 +131,7 @@ void Board::unmakeMove(const int color, const int move, const int unmake_info) {
 		piece_list[color ^ 1][captured_piece] ^= to;
 		positional_score -= (-color | 1) * (PIECE_SQUARE[color][piece][to_nr] - PIECE_SQUARE[color][piece][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 		zobrist_key ^= ZOBRIST[color][piece][from_nr] ^ ZOBRIST[color][piece][to_nr] ^ ZOBRIST[color ^ 1][captured_piece][to_nr];
+		evaluation::increaseMaterial(PIECE_VALUE[captured_piece]);
 	} else if (flag == EN_PASSANT) {
 		const int capture_square_nr = color == WHITE ? to_nr - 8 : to_nr + 8;
 		const U64 capture_square = A1 << capture_square_nr;
@@ -134,6 +140,7 @@ void Board::unmakeMove(const int color, const int move, const int unmake_info) {
 		piece_list[color ^ 1][PAWN] ^= capture_square;
 		positional_score -= (-color | 1) * (PIECE_SQUARE[color][PAWN][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][PAWN][capture_square_nr]);
 		zobrist_key ^= ZOBRIST[color][PAWN][from_nr] ^ ZOBRIST[color][PAWN][to_nr] ^ ZOBRIST[color ^ 1][PAWN][capture_square_nr];
+		evaluation::increaseMaterial(PAWN_VALUE);
 	} else if (flag == CASTLING) {
 		U64 rook_shift;
 		int rook_start_square_nr;
@@ -160,6 +167,7 @@ void Board::unmakeMove(const int color, const int move, const int unmake_info) {
 		piece_list[color][promoted_piece] ^= to;
 		positional_score -= (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr]);
 		zobrist_key ^= ZOBRIST[color][PAWN][from_nr] ^ ZOBRIST[color][promoted_piece][to_nr];
+		evaluation::decreaseMaterial(PIECE_VALUE[promoted_piece] - PAWN_VALUE);
 	} else if (flag == PROMOCAPT) {
 		const int promoted_piece = (move & PROMOTION_MASK) >> 27;
 		const int captured_piece = unmake_info & CAPTURE_MASK;
@@ -170,7 +178,9 @@ void Board::unmakeMove(const int color, const int move, const int unmake_info) {
 		piece_list[color][promoted_piece] ^= to;
 		positional_score -= (-color | 1) * (PIECE_SQUARE[color][promoted_piece][to_nr] - PIECE_SQUARE[color][PAWN][from_nr] + PIECE_SQUARE[color ^ 1][captured_piece][to_nr]);
 		zobrist_key ^= ZOBRIST[color][PAWN][from_nr] ^ ZOBRIST[color][promoted_piece][to_nr] ^ ZOBRIST[color ^ 1][captured_piece][to_nr];
+		evaluation::decreaseMaterial(PIECE_VALUE[promoted_piece] - PAWN_VALUE - PIECE_VALUE[captured_piece]);
 	}
+	evaluation::determineGamePhase();
 	//check if this works
 	zobrist_key ^= color == BLACK ? BLACK_TO_MOVE : 0;
 }
