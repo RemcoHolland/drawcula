@@ -32,7 +32,7 @@ TEST(play_game, stop_thinking) {
 	testing::internal::CaptureStdout();
 	uci.go({ "go", "infinite" });
 	std::this_thread::sleep_for(100ms);
-	uci.stop();
+	Uci::stop();
 	std::this_thread::sleep_for(100ms);
 	std::string output = testing::internal::GetCapturedStdout();
 	EXPECT_THAT(output, testing::HasSubstr("bestmove"));
