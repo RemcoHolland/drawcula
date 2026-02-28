@@ -4,6 +4,7 @@
 #include "reader/epdreader.h"
 #include "search.h"
 #include "stringutils.h"
+#include "util/test_helper.h"
 
 inline int startSearch(const Epd& epd, int movetime) {
 	Board board = Board(epd);
@@ -40,6 +41,14 @@ TEST(wac, all_tests) {
 	testing::internal::GetCapturedStdout();
 	std::cout << "SUCCESS: " << success << std::endl;
 	std::cout << "FAILED: " << failed << std::endl;
-	EXPECT_GE(success, 110);       // 148 on macbook
-	EXPECT_LE(failed, 91);         // 53 on macbook
+
+	if constexpr (kTestEnvironment == Environment::MacOS) {
+		std::cout << "On Mac" << std::endl;
+		EXPECT_GE(success, 144);
+		EXPECT_LE(failed, 57);
+	} else {
+		std::cout << "On Linux" << std::endl;
+		EXPECT_GE(success, 110);
+		EXPECT_LE(failed, 91);
+	}
 }

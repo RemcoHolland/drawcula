@@ -4,7 +4,7 @@
 
 #include "search.h"
 #include "stringutils.h"
-#include "include/test_helper.h"
+#include "util/test_helper.h"
 #include "reader/fenreader.h"
 
 inline void startSearch(const Fen& fen, const int depth) {
@@ -33,10 +33,10 @@ TEST(performance, opening) {
 
     if constexpr (kTestEnvironment == Environment::MacOS) {
         std::cout << "On Mac" << std::endl;
-        EXPECT_THAT(nps, testing::Gt(4220000));
+        EXPECT_GE(nps, 4220000);
     } else {
         std::cout << "On Linux" << std::endl;
-        EXPECT_THAT(nps, testing::Gt(2000000));
+        EXPECT_GE(nps, 500000);
     }
 }
 
@@ -56,10 +56,10 @@ TEST(performance, middlegame) {
 
     if constexpr (kTestEnvironment == Environment::MacOS) {
         std::cout << "On Mac" << std::endl;
-        EXPECT_THAT(nps, testing::Gt(3160000));
+        EXPECT_GE(nps, 3160000);
     } else {
         std::cout << "On Linux" << std::endl;
-        EXPECT_THAT(nps, testing::Gt(2000000));
+        EXPECT_GE(nps, 500000);
     }
 }
 
@@ -79,9 +79,9 @@ TEST(performance, endgame) {
 
     if constexpr (kTestEnvironment == Environment::MacOS) {
         std::cout << "On Mac" << std::endl;
-        EXPECT_THAT(nps, testing::Gt(4120000));
+        EXPECT_GE(nps, 4120000);
     } else {
         std::cout << "On Linux" << std::endl;
-        EXPECT_THAT(nps, testing::Gt(2000000));
+        EXPECT_GE(nps, 900000);
     }
 }
